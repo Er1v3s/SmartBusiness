@@ -1,4 +1,8 @@
 
+using Microsoft.EntityFrameworkCore;
+using SmartBusiness.Application;
+using SmartBusiness.Infrastructure;
+
 namespace SmartBusiness.Api
 {
     public class Program
@@ -15,6 +19,13 @@ namespace SmartBusiness.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddDbContext<SmartBusinessDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString"));
+            });
+
+            builder.Services.AddApplication();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -23,6 +34,17 @@ namespace SmartBusiness.Api
                 app.MapOpenApi();
                 app.UseSwagger();
                 app.UseSwaggerUI();
+
+                try
+                {
+                    using var serviceScope = app.Services.CreateScope();
+                    var dbContext = serviceScope.ServiceProvider.GetRequiredService<SmartBusinessDbContext>();
+                    dbContext.Database.Migrate();
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("info: Cannot execute migrations. Database is already up to date");
+                }
             }
 
             app.UseHttpsRedirection();
