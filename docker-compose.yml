@@ -1,0 +1,49 @@
+﻿
+networks:
+  smart_business_network:
+    driver: bridge
+
+services:
+  smart_business.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=2000
+      - ASPNETCORE_HTTPS_PORTS=2001
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/smartbusiness.pfx
+    container_name: smart_business.api
+    image: smart_business.api
+    build:
+      context: .
+      dockerfile: SmartBusiness.Api/Dockerfile
+    ports:
+      - "2000:2000"
+      - "2001:2001"
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    depends_on:
+      database.server:
+        condition: service_healthy
+    networks:
+      - smart_business_network
+
+  database.server:
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: database.server
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=y
+      - SA_PASSWORD=SuperPassword123
+    volumes:
+      - ./sqlserver/data:/var/opt/mssql/data
+      - ./sqlserver/log:/var/opt/mssql/log
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U SA -P "SuperPassword123" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+    networks:
+      - smart_business_network
+      
