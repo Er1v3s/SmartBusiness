@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.Contracts", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.Tests", "SmartBusiness.Tests\SmartBusiness.Tests.csproj", "{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "smartbusiness.web", "SmartBusiness.Web\smartbusiness.web.esproj", "{038F1F07-0586-0F0A-84DF-E7CA73A5866F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,12 @@ Global
 		{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{038F1F07-0586-0F0A-84DF-E7CA73A5866F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{038F1F07-0586-0F0A-84DF-E7CA73A5866F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{038F1F07-0586-0F0A-84DF-E7CA73A5866F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{038F1F07-0586-0F0A-84DF-E7CA73A5866F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{038F1F07-0586-0F0A-84DF-E7CA73A5866F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{038F1F07-0586-0F0A-84DF-E7CA73A5866F}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
