@@ -38,5 +38,7 @@ namespace SmartBusiness.Application.Commands.Auth.RegisterUser
 
             return user.Username;
         }
+
+        
     }
 }
