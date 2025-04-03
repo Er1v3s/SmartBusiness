@@ -1,8 +1,11 @@
-﻿namespace SmartBusiness.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SmartBusiness.Domain.Entities
 {
     public class BaseEntity
     {
-        public int Id { get; set; }
-        public DateTime CreationDate { get; set; } = DateTime.Now.ToUniversalTime();
+        [Key]
+        public Guid Id { get; } = Guid.NewGuid();
+        public DateTime CreatedAt { get; } = DateTime.Now.ToUniversalTime();
     }
 }
