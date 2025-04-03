@@ -21,8 +21,8 @@ namespace SmartBusiness.Api.Controllers
         {
             var command = new RegisterUserCommand(request.Username, request.Email, request.Password);
 
-            var user = await _mediator.Send(command);
-            return Ok(user);
+            var username = await _mediator.Send(command);
+            return Ok(username);
         }
     }
 }
