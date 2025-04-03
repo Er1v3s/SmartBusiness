@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35919.96 d17.13
+VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.Api", "SmartBusiness.Api\SmartBusiness.Api.csproj", "{328D5B25-A863-46AC-BD09-9063D7E03C6C}"
 EndProject
@@ -14,8 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.Contracts", "SmartBusiness.Contracts\SmartBusiness.Contracts.csproj", "{E7285402-F23F-4EB6-8160-693161A66774}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.Tests", "SmartBusiness.Tests\SmartBusiness.Tests.csproj", "{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}"
-EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "smartbusiness.web", "SmartBusiness.Web\smartbusiness.web.esproj", "{038F1F07-0586-0F0A-84DF-E7CA73A5866F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
@@ -52,12 +50,6 @@ Global
 		{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{038F1F07-0586-0F0A-84DF-E7CA73A5866F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{038F1F07-0586-0F0A-84DF-E7CA73A5866F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{038F1F07-0586-0F0A-84DF-E7CA73A5866F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{038F1F07-0586-0F0A-84DF-E7CA73A5866F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{038F1F07-0586-0F0A-84DF-E7CA73A5866F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{038F1F07-0586-0F0A-84DF-E7CA73A5866F}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
