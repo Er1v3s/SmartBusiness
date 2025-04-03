@@ -6,7 +6,7 @@ using SmartBusiness.Infrastructure;
 
 namespace SmartBusiness.Application.Commands.Auth.RegisterUser
 {
-    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, User>
+    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, string>
     {
         private readonly SmartBusinessDbContext _dbContext;
         private readonly IPasswordHasher<User> _passwordHasher;
@@ -17,7 +17,7 @@ namespace SmartBusiness.Application.Commands.Auth.RegisterUser
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<User> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
             var existingUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == request.Email, cancellationToken);
 
@@ -36,9 +36,7 @@ namespace SmartBusiness.Application.Commands.Auth.RegisterUser
             await _dbContext.Users.AddAsync(user, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            Console.WriteLine("Dodano użytkownika!");
-
-            return user;
+            return user.Username;
         }
     }
 }

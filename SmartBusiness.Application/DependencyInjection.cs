@@ -1,7 +1,8 @@
 ﻿using System.Reflection;
-using MediatR;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using SmartBusiness.Application.Behaviors;
 using SmartBusiness.Domain.Entities;
 
 namespace SmartBusiness.Application
@@ -13,10 +14,11 @@ namespace SmartBusiness.Application
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-                //cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
 
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             return services;
         }
