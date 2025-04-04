@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using SmartBusiness.Api.Handlers;
 using SmartBusiness.Application;
 using SmartBusiness.Infrastructure;
 
@@ -25,6 +26,7 @@ namespace SmartBusiness.Api
             });
 
             builder.Services.AddApplication();
+            builder.Services.AddExceptionHandler<ExceptionHandler>();
 
             var app = builder.Build();
 
@@ -47,6 +49,7 @@ namespace SmartBusiness.Api
                 }
             }
 
+            app.UseExceptionHandler(_ => { });
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
