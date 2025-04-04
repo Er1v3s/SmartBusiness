@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using SmartBusiness.Domain.Entities;
 
-namespace SmartBusiness.Application.Commands.Auth.RegisterUser
+namespace SmartBusiness.Application.Commands.Authentication
 {
-    public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
+    public class UserCommandValidator<T> : AbstractValidator<T> where T : UserCommand
     {
-        public RegisterUserCommandValidator()
+        public UserCommandValidator()
         {
             RuleFor(x => x.Username)
                 .NotNull()
@@ -28,17 +28,6 @@ namespace SmartBusiness.Application.Commands.Auth.RegisterUser
                 .WithMessage($"{nameof(User.Email)} must be in correct format. 'example@example.com'")
                 .Matches(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
                 .WithMessage($"{nameof(User.Email)} must be in correct format. 'example@example.com'");
-
-            RuleFor(x => x.Password)
-                .NotNull()
-                .NotEmpty()
-                .WithMessage("Password is required.")
-                .MinimumLength(8)
-                .WithMessage("Password must be at least 8 characters long.")
-                .MaximumLength(50)
-                .WithMessage("Password cannot be longer than 50 characters.")
-                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$")
-                .WithMessage("Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
         }
     }
 }

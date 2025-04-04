@@ -1,29 +1,23 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using SmartBusiness.Domain.Entities;
 using SmartBusiness.Infrastructure;
 
-namespace SmartBusiness.Application.Commands.Auth.RegisterUser
+namespace SmartBusiness.Application.Commands.Authentication.CreateUser
 {
-    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, string>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, string>
     {
         private readonly SmartBusinessDbContext _dbContext;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public RegisterUserCommandHandler(SmartBusinessDbContext dbContext, IPasswordHasher<User> passwordHasher)
+        public CreateUserCommandHandler(SmartBusinessDbContext dbContext, IPasswordHasher<User> passwordHasher)
         {
             _dbContext = dbContext;
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<string> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var existingUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == request.Email, cancellationToken);
-
-            if(existingUser != null)
-                throw new Exception("User with this email already exists");
-
             var passwordHash = _passwordHasher.HashPassword(new User(), request.Password);
 
             var user = new User
@@ -38,7 +32,5 @@ namespace SmartBusiness.Application.Commands.Auth.RegisterUser
 
             return user.Username;
         }
-
-        
     }
 }
