@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartBusiness.Application.Commands.Authentication.ChangeUserPassword;
 using SmartBusiness.Application.Commands.Authentication.CreateUser;
+using SmartBusiness.Application.Commands.Authentication.DeleteUser;
 using SmartBusiness.Application.Commands.Authentication.UpdateUser;
 using SmartBusiness.Contracts.Requests.Authentication;
 
@@ -22,9 +23,9 @@ namespace SmartBusiness.Api.Controllers
         public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
         {
             var command = new CreateUserCommand(request.Username, request.Email, request.Password);
-            var result = await _mediator.Send(command);
+            await _mediator.Send(command);
 
-            return Ok(result);
+            return Created();
         }
 
 
@@ -44,6 +45,15 @@ namespace SmartBusiness.Api.Controllers
             var result = await _mediator.Send(command);
 
             return Ok(result);
+        }
+
+        [HttpDelete("delete-user")]
+        public async Task<IActionResult> Delete([FromBody] Guid id)
+        {
+            var command = new DeleteUserCommand(id);
+            await _mediator.Send(command);
+
+            return NoContent();
         }
     }
 }
