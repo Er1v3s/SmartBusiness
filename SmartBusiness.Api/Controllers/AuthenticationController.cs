@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SmartBusiness.Application.Commands.Authentication.ChangeUserPassword;
 using SmartBusiness.Application.Commands.Authentication.CreateUser;
 using SmartBusiness.Application.Commands.Authentication.UpdateUser;
 using SmartBusiness.Contracts.Requests.Authentication;
@@ -36,13 +37,13 @@ namespace SmartBusiness.Api.Controllers
             return Ok(result);
         }
 
-        //[HttpPut("change-password")]
-        //public async Task<IActionResult> ChangePassword([FromBody] UpdateUserRequest request)
-        //{
-        //    var command = new ChangeUserPasswordCommand(request.Username, request.Email, request.Password);
-        //    var result = await _mediator.Send(command);
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangeUserPasswordRequest request)
+        {
+            var command = new ChangeUserPasswordCommand(request.Id, request.CurrentPassword, request.NewPassword);
+            var result = await _mediator.Send(command);
 
-        //    return Ok(result);
-        //}
+            return Ok(result);
+        }
     }
 }

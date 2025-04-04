@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Commands\Authentication\DeleteUser\" />
-    <Folder Include="Commands\Authentication\ChangeUserPassword\" />
   </ItemGroup>
 
   <ItemGroup>

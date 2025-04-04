@@ -23,7 +23,9 @@ namespace SmartBusiness.Api.Handlers
             ProblemDetails problemDetails = exception switch
             {
                 NotFoundException => CreateProblemDetails(StatusCodes.Status404NotFound, "Not Found", exception.Message),
-                DbUpdateException => CreateProblemDetails(StatusCodes.Status409Conflict, "User with this email address already exist", exception.Message),
+                DbUpdateException => CreateProblemDetails(StatusCodes.Status409Conflict, "An conflict occured in database", exception.Message),
+                ConflictException => CreateProblemDetails(StatusCodes.Status409Conflict, "An conflict occured", exception.Message),
+                InvalidPasswordException => CreateProblemDetails(StatusCodes.Status400BadRequest, "Bad request", exception.Message),
                 CustomValidationException => CreateProblemDetails(StatusCodes.Status400BadRequest, "Bad Request", exception.Message),
                 _ => CreateProblemDetails(StatusCodes.Status500InternalServerError, "Internal Server Error", "An unexpected error occured")
             };
