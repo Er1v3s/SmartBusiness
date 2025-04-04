@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SmartBusiness.Contracts.Errors;
 using SmartBusiness.Contracts.Exceptions;
 
@@ -22,6 +23,7 @@ namespace SmartBusiness.Api.Handlers
             ProblemDetails problemDetails = exception switch
             {
                 NotFoundException => CreateProblemDetails(StatusCodes.Status404NotFound, "Not Found", exception.Message),
+                DbUpdateException => CreateProblemDetails(StatusCodes.Status409Conflict, "User with this email address already exist", exception.Message),
                 CustomValidationException => CreateProblemDetails(StatusCodes.Status400BadRequest, "Bad Request", exception.Message),
                 _ => CreateProblemDetails(StatusCodes.Status500InternalServerError, "Internal Server Error", "An unexpected error occured")
             };

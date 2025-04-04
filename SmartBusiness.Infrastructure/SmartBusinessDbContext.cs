@@ -5,10 +5,7 @@ namespace SmartBusiness.Infrastructure
 {
     public class SmartBusinessDbContext : DbContext
     {
-        public SmartBusinessDbContext(DbContextOptions options) : base(options) 
-        {
-            
-        }
+        public SmartBusinessDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
 
@@ -17,6 +14,8 @@ namespace SmartBusiness.Infrastructure
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.Email).IsUnique();
+
                 entity.Property(e => e.Username).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.PasswordHash).IsRequired();

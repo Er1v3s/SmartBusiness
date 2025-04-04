@@ -25,5 +25,24 @@ namespace SmartBusiness.Api.Controllers
 
             return Ok(result);
         }
+
+
+        [HttpPut("update-user")]
+        public async Task<IActionResult> Update([FromBody] UpdateUserRequest request)
+        {
+            var command = new UpdateUserCommand(request.Id, request.Username, request.Email);
+            var result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+
+        //[HttpPut("change-password")]
+        //public async Task<IActionResult> ChangePassword([FromBody] UpdateUserRequest request)
+        //{
+        //    var command = new ChangeUserPasswordCommand(request.Username, request.Email, request.Password);
+        //    var result = await _mediator.Send(command);
+
+        //    return Ok(result);
+        //}
     }
 }
