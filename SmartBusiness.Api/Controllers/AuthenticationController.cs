@@ -48,9 +48,9 @@ namespace SmartBusiness.Api.Controllers
         }
 
         [HttpDelete("delete-user")]
-        public async Task<IActionResult> Delete([FromBody] Guid id)
+        public async Task<IActionResult> Delete([FromBody] DeleteUserRequest request)
         {
-            var command = new DeleteUserCommand(id);
+            var command = new DeleteUserCommand(request.Id);
             await _mediator.Send(command);
 
             return NoContent();
