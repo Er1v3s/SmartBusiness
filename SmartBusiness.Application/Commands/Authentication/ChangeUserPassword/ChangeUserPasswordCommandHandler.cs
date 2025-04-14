@@ -18,7 +18,6 @@ namespace SmartBusiness.Application.Commands.Authentication.ChangeUserPassword
             _passwordHasher = passwordHasher;
         }
 
-
         public async Task<string> Handle(ChangeUserPasswordCommand request, CancellationToken cancellationToken)
         {
             var user =  await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
