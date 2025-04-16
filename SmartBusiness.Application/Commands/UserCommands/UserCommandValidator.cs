@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SmartBusiness.Domain.Entities;
 
-namespace SmartBusiness.Application.Commands.Authentication
+namespace SmartBusiness.Application.Commands.UserCommands
 {
     public class UserCommandValidator<T> : AbstractValidator<T> where T : UserCommand
     {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartBusiness.Contracts.Errors;
 using SmartBusiness.Infrastructure;
 
-namespace SmartBusiness.Application.Commands.Authentication.DeleteUser
+namespace SmartBusiness.Application.Commands.UserCommands.Delete
 {
     public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
     {

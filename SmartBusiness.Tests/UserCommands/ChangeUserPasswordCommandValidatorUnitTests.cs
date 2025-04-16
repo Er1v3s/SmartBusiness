@@ -1,7 +1,7 @@
 using FluentValidation.TestHelper;
-using SmartBusiness.Application.Commands.Authentication.ChangeUserPassword;
+using SmartBusiness.Application.Commands.UserCommands.ChangePassword;
 
-namespace SmartBusiness.Tests.Authentication;
+namespace SmartBusiness.Tests.UserCommands;
 
 public class ChangeUserPasswordCommandValidatorUnitTests
 {

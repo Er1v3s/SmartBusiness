@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using SmartBusiness.Application.Behaviors;
+using SmartBusiness.Application.Services;
 using SmartBusiness.Domain.Entities;
 
 namespace SmartBusiness.Application
@@ -19,6 +20,8 @@ namespace SmartBusiness.Application
 
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return services;
         }

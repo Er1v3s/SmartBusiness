@@ -5,7 +5,7 @@ using SmartBusiness.Contracts.Errors;
 using SmartBusiness.Domain.Entities;
 using SmartBusiness.Infrastructure;
 
-namespace SmartBusiness.Application.Commands.Authentication.UpdateUser
+namespace SmartBusiness.Application.Commands.UserCommands.Update
 {
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, string>
     {

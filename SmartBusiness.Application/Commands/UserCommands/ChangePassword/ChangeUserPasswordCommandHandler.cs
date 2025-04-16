@@ -5,7 +5,7 @@ using SmartBusiness.Contracts.Errors;
 using SmartBusiness.Domain.Entities;
 using SmartBusiness.Infrastructure;
 
-namespace SmartBusiness.Application.Commands.Authentication.ChangeUserPassword
+namespace SmartBusiness.Application.Commands.UserCommands.ChangePassword
 {
     public class ChangeUserPasswordCommandHandler : IRequestHandler<ChangeUserPasswordCommand, string>
     {
