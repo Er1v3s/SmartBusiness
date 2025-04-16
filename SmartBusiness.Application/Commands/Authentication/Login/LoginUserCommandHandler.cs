@@ -8,7 +8,7 @@ using SmartBusiness.Contracts.Errors;
 using SmartBusiness.Domain.Entities;
 using SmartBusiness.Infrastructure;
 
-namespace SmartBusiness.Application.Commands.Authentication.LoginUser
+namespace SmartBusiness.Application.Commands.Authentication.Login
 {
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, string>
     {

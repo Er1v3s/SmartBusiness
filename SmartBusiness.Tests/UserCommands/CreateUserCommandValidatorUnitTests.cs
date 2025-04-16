@@ -1,7 +1,7 @@
 using FluentValidation.TestHelper;
-using SmartBusiness.Application.Commands.Authentication.CreateUser;
+using SmartBusiness.Application.Commands.UserCommands.Create;
 
-namespace SmartBusiness.Tests.Authentication;
+namespace SmartBusiness.Tests.UserCommands;
 
 public class CreateUserCommandValidatorUnitTests
 {

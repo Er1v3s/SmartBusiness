@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using SmartBusiness.Domain.Entities;
 using SmartBusiness.Infrastructure;
 
-namespace SmartBusiness.Application.Commands.Authentication.CreateUser
+namespace SmartBusiness.Application.Commands.UserCommands.Create
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, string>
     {
         private readonly SmartBusinessDbContext _dbContext;
-        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IPasswordHasher<Domain.Entities.User> _passwordHasher;
 
         public CreateUserCommandHandler(SmartBusinessDbContext dbContext, IPasswordHasher<User> passwordHasher)
         {

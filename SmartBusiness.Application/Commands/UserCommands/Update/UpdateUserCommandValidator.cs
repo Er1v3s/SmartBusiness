@@ -1,4 +1,4 @@
-﻿namespace SmartBusiness.Application.Commands.Authentication.UpdateUser
+﻿namespace SmartBusiness.Application.Commands.UserCommands.Update
 {
     public class UpdateUserCommandValidator : UserCommandValidator<UpdateUserCommand> { }
 }

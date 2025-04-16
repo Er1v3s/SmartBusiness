@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SmartBusiness.Domain.Entities;
 
-namespace SmartBusiness.Application.Commands.Authentication.LoginUser
+namespace SmartBusiness.Application.Commands.Authentication.Login
 {
 
     // TO CHANGE

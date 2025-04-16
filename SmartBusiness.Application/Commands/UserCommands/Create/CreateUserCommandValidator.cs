@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 
-namespace SmartBusiness.Application.Commands.Authentication.ChangeUserPassword
+namespace SmartBusiness.Application.Commands.UserCommands.Create
 {
-    public class ChangeUserPasswordCommandValidator : AbstractValidator<ChangeUserPasswordCommand>
+    public class CreateUserCommandValidator : UserCommandValidator<CreateUserCommand>
     {
-        public ChangeUserPasswordCommandValidator()
+        public CreateUserCommandValidator()
         {
-            RuleFor(x => x.NewPassword)
+            RuleFor(x => x.Password)
                 .NotNull()
                 .NotEmpty()
                 .WithMessage("Password is required.")
