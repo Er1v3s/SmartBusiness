@@ -19,6 +19,7 @@ namespace SmartBusiness.Application
 
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             return services;
         }
