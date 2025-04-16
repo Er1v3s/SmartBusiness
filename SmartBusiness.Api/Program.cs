@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
+using Scalar.AspNetCore;
 using SmartBusiness.Api.Handlers;
 using SmartBusiness.Application;
 using SmartBusiness.Infrastructure;
@@ -16,33 +17,16 @@ namespace SmartBusiness.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
-            builder.Services.AddOpenTelemetry()
-                .ConfigureResource(resource => resource
-                    .AddService("SmartBusiness.Api")) // Nazwa serwisu widoczna w metrykach
-                .WithMetrics(metrics => metrics
-                    .AddAspNetCoreInstrumentation()
-                    .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation()
-                    .AddProcessInstrumentation()
-                    .AddOtlpExporter(opt =>
-                    {
-                        opt.Endpoint = new Uri(builder.Configuration["Otel:Endpoint"]);
-                    }));
-
-            builder.Services.AddControllers();
-
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            #region database connection
 
             builder.Services.AddDbContext<SmartBusinessDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString"));
             });
+
+            #endregion
+
+            #region http policy
 
             builder.Services.AddCors(opt =>
             {
@@ -54,6 +38,10 @@ namespace SmartBusiness.Api
                         .AllowAnyHeader();
                 });
             });
+
+            #endregion
+
+            #region authentication
 
             var authenticationSettings = new AuthenticationSettings();
             builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
@@ -75,17 +63,51 @@ namespace SmartBusiness.Api
                 };
             });
 
+            #endregion
 
+            #region metrics
+
+            builder.Services.AddOpenTelemetry()
+                .ConfigureResource(resource => resource
+                    .AddService("SmartBusiness.Api")) // Nazwa serwisu widoczna w metrykach
+                .WithMetrics(metrics => metrics
+                    .AddAspNetCoreInstrumentation()
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddProcessInstrumentation()
+                    .AddOtlpExporter(opt =>
+                    {
+                        opt.Endpoint = new Uri(builder.Configuration["Otel:Endpoint"]);
+                    }));
+
+            #endregion
+
+            #region api documentation
+
+            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            builder.Services.AddOpenApi();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+            #endregion
+
+            builder.Services.AddControllers();
             builder.Services.AddApplication();
             builder.Services.AddExceptionHandler<ExceptionHandler>();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            #region dev tools
+
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
-                app.UseSwagger();
+                app.UseSwagger(options =>
+                {
+                    options.RouteTemplate = "/openapi/{documentName}.json";
+                });
+                app.MapScalarApiReference();
                 app.UseSwaggerUI();
 
                 try
@@ -100,14 +122,18 @@ namespace SmartBusiness.Api
                 }
             }
 
+            #endregion
+
+            // Configure the HTTP request pipeline.
             app.UseExceptionHandler(_ => { });
 
             app.UseCors("CorsPolicy");
+
             app.UseAuthentication();
             app.UseHttpsRedirection();
+
+            app.UseRouting();
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();
