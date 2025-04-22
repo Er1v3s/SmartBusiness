@@ -4,10 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
-using Scalar.AspNetCore;
 using SmartBusiness.Api.Handlers;
+using SmartBusiness.Api.Handlers.CustomExceptionHandlers;
 using SmartBusiness.Application;
+using SmartBusiness.Application.Abstracts;
 using SmartBusiness.Infrastructure;
+using SmartBusiness.Infrastructure.Options;
+using SmartBusiness.Infrastructure.Processors;
+using SmartBusiness.Infrastructure.Repositories;
 
 namespace SmartBusiness.Api
 {
@@ -43,23 +47,37 @@ namespace SmartBusiness.Api
 
             #region authentication
 
-            var authenticationSettings = new AuthenticationSettings();
-            builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
-            builder.Services.AddSingleton(authenticationSettings);
+            builder.Services.Configure<JwtOptions>(
+                builder.Configuration.GetSection(JwtOptions.JwtOptionsKey));
+
             builder.Services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(cfg =>
+                opt.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
             {
-                cfg.RequireHttpsMetadata = false;
-                cfg.SaveToken = true;
-                cfg.TokenValidationParameters = new TokenValidationParameters
+                var jwtOptions = builder.Configuration.GetSection(JwtOptions.JwtOptionsKey)
+                    .Get<JwtOptions>() ?? throw new ArgumentException(nameof(JwtOptions));
+
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = authenticationSettings.JwtIssuer,
-                    ValidAudience = authenticationSettings.JwtIssuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidAudience = jwtOptions.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret))
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies["ACCESS_TOKEN"];
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
@@ -94,7 +112,20 @@ namespace SmartBusiness.Api
 
             builder.Services.AddControllers();
             builder.Services.AddApplication();
-            builder.Services.AddExceptionHandler<ExceptionHandler>();
+            builder.Services.AddScoped<IAuthTokenProcessor, AuthTokenProcessor>();
+
+            #region exceptions
+
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddScoped<ICustomExceptionHandler, GenericExceptionHandler>();
+            builder.Services.AddScoped<ICustomExceptionHandler, UserExceptionHandler>();
+
+            #endregion
+
+            builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 
             var app = builder.Build();
 
@@ -103,11 +134,12 @@ namespace SmartBusiness.Api
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
-                app.UseSwagger(options =>
-                {
-                    options.RouteTemplate = "/openapi/{documentName}.json";
-                });
-                app.MapScalarApiReference();
+                //app.UseSwagger(options =>
+                //{
+                //    options.RouteTemplate = "/openapi/{documentName}.json";
+                //});
+                //app.MapScalarApiReference();
+                app.UseSwagger();
                 app.UseSwaggerUI();
 
                 try
@@ -126,6 +158,7 @@ namespace SmartBusiness.Api
 
             // Configure the HTTP request pipeline.
             app.UseExceptionHandler(_ => { });
+
 
             app.UseCors("CorsPolicy");
 

@@ -1,8 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SmartBusiness.Application.Commands.Authentication.Login;
-using SmartBusiness.Application.Commands.UserCommands.Create;
-using SmartBusiness.Contracts.Requests.Authentication;
+using SmartBusiness.Application.Commands.Users.Authentication.Login;
+using SmartBusiness.Application.Commands.Users.Create;
+using SmartBusiness.Contracts.Requests.Users;
+using SmartBusiness.Contracts.Requests.Users.Authentication;
 
 namespace SmartBusiness.Api.Controllers
 {
@@ -18,7 +19,7 @@ namespace SmartBusiness.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
+        public async Task<IActionResult> Create([FromBody] CreateRequest request)
         {
             var command = new CreateUserCommand(request.Username, request.Email, request.Password);
             await _mediator.Send(command);
@@ -28,7 +29,7 @@ namespace SmartBusiness.Api.Controllers
 
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var command = new LoginUserCommand(request.Email, request.Password);
             var result = await _mediator.Send(command);

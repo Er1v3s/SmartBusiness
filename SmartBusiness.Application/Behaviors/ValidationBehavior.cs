@@ -31,7 +31,7 @@ namespace SmartBusiness.Application.Behaviors
             if(failures.Any())
                 throw new CustomValidationException(failures);
 
-            var response = await next();
+            var response = await next(cancellationToken);
 
             return response;
         }
