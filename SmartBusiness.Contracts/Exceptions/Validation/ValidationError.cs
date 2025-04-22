@@ -1,4 +1,4 @@
-﻿namespace SmartBusiness.Contracts.Errors
+﻿namespace SmartBusiness.Contracts.Exceptions.Validation
 {
     public class ValidationError
     {

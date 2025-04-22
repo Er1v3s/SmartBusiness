@@ -1,6 +1,4 @@
-﻿using SmartBusiness.Contracts.Errors;
-
-namespace SmartBusiness.Contracts.Exceptions
+﻿namespace SmartBusiness.Contracts.Exceptions.Validation
 {
     public class CustomValidationException : Exception
     {

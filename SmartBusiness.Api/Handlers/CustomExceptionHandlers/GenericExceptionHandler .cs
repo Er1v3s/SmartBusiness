@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SmartBusiness.Contracts.Errors;
 using SmartBusiness.Contracts.Exceptions;
+using SmartBusiness.Contracts.Exceptions.Validation;
 
 namespace SmartBusiness.Api.Handlers.CustomExceptionHandlers
 {
