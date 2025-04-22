@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SmartBusiness.Application.Commands.Users.ChangePassword;
+using SmartBusiness.Application.Commands.Users.Create;
 using SmartBusiness.Application.Commands.Users.Delete;
 using SmartBusiness.Application.Commands.Users.Update;
 using SmartBusiness.Contracts.Requests.Users;
@@ -19,8 +21,17 @@ namespace SmartBusiness.Api.Controllers
             _mediator = mediator;
         }
 
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Create([FromBody] CreateRequest request)
+        {
+            var command = new CreateUserCommand(request.Username, request.Email, request.Password);
+            await _mediator.Send(command);
+
+            return Created();
+        }
+
         [HttpPut("update")]
-        [Authorize]
         public async Task<IActionResult> Update([FromBody] UpdateRequest request)
         {
             var command = new UpdateUserCommand(request.Id, request.Username, request.Email);
