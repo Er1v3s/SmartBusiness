@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using SmartBusiness.Application.Abstracts;
-using SmartBusiness.Contracts.Errors;
+using SmartBusiness.Contracts.Exceptions.Users;
 
 namespace SmartBusiness.Application.Commands.Users.Delete
 {
@@ -17,7 +17,7 @@ namespace SmartBusiness.Application.Commands.Users.Delete
             var user = await _userRepository.GetUserByIdAsync(request.Id, cancellationToken);
 
             if (user == null)
-                throw new NotFoundException("User not found");
+                throw new UserNotFoundException();
 
             await _userRepository.DeleteUserAsync(request.Id, cancellationToken);
         }

@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using SmartBusiness.Application.Abstracts;
 using SmartBusiness.Contracts.DataTransferObjects;
-using SmartBusiness.Contracts.Errors;
+using SmartBusiness.Contracts.Exceptions.Users;
 using SmartBusiness.Domain.Entities;
 
 namespace SmartBusiness.Application.Commands.Users.Authentication.Login
@@ -28,7 +28,7 @@ namespace SmartBusiness.Application.Commands.Users.Authentication.Login
             var user = await _userRepository.GetUserByEmailAsync(request.Email, cancellationToken);
 
             if(user == null)
-                throw new NotFoundException("User not found");
+                throw new UserNotFoundException();
 
             if (_passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password) != PasswordVerificationResult.Success)
                 throw new InvalidPasswordException("Incorrect password");

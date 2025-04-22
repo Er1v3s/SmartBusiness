@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using SmartBusiness.Application.Commands.Users;
 
 namespace SmartBusiness.Application.Commands.Users.Create
 {
