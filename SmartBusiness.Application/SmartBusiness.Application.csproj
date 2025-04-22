@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartBusiness.Contracts\SmartBusiness.Contracts.csproj" />
-    <ProjectReference Include="..\SmartBusiness.Infrastructure\SmartBusiness.Infrastructure.csproj" />
+    <ProjectReference Include="..\SmartBusiness.Domain\SmartBusiness.Domain.csproj" />
   </ItemGroup>
 
 </Project>

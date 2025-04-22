@@ -1,5 +1,5 @@
 using FluentValidation.TestHelper;
-using SmartBusiness.Application.Commands.UserCommands.Create;
+using SmartBusiness.Application.Commands.Users.Create;
 
 namespace SmartBusiness.Tests.UserCommands;
 

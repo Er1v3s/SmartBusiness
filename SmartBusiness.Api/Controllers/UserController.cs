@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartBusiness.Application.Commands.UserCommands.ChangePassword;
-using SmartBusiness.Application.Commands.UserCommands.Delete;
-using SmartBusiness.Application.Commands.UserCommands.Update;
-using SmartBusiness.Contracts.Requests.Authentication;
+using SmartBusiness.Application.Commands.Users.ChangePassword;
+using SmartBusiness.Application.Commands.Users.Delete;
+using SmartBusiness.Application.Commands.Users.Update;
+using SmartBusiness.Contracts.Requests.Users;
 
 namespace SmartBusiness.Api.Controllers
 {
@@ -21,7 +21,7 @@ namespace SmartBusiness.Api.Controllers
 
         [HttpPut("update")]
         [Authorize]
-        public async Task<IActionResult> Update([FromBody] UpdateUserRequest request)
+        public async Task<IActionResult> Update([FromBody] UpdateRequest request)
         {
             var command = new UpdateUserCommand(request.Id, request.Username, request.Email);
             var result = await _mediator.Send(command);
@@ -30,7 +30,7 @@ namespace SmartBusiness.Api.Controllers
         }
 
         [HttpPut("change-password")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangeUserPasswordRequest request)
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {
             var command = new ChangeUserPasswordCommand(request.Id, request.CurrentPassword, request.NewPassword);
             var result = await _mediator.Send(command);
@@ -39,7 +39,7 @@ namespace SmartBusiness.Api.Controllers
         }
 
         [HttpDelete("delete")]
-        public async Task<IActionResult> Delete([FromBody] DeleteUserRequest request)
+        public async Task<IActionResult> Delete([FromBody] DeleteRequest request)
         {
             var command = new DeleteUserCommand(request.Id);
             await _mediator.Send(command);

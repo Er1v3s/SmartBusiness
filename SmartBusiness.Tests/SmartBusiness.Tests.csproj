@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartBusiness.Application\SmartBusiness.Application.csproj" />
-    <ProjectReference Include="..\SmartBusiness.Domain\SmartBusiness.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

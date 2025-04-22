@@ -1,5 +1,5 @@
 using FluentValidation.TestHelper;
-using SmartBusiness.Application.Commands.UserCommands.ChangePassword;
+using SmartBusiness.Application.Commands.Users.ChangePassword;
 
 namespace SmartBusiness.Tests.UserCommands;
 
