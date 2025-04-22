@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Responses\Auth\" />
+    <Compile Remove="Responses\Auth\**" />
+    <EmbeddedResource Remove="Responses\Auth\**" />
+    <None Remove="Responses\Auth\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Responses\" />
   </ItemGroup>
 
 </Project>

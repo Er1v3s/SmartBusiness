@@ -1,7 +1,7 @@
 using FluentValidation.TestHelper;
-using SmartBusiness.Application.Commands.UserCommands.Update;
+using SmartBusiness.Application.Commands.Users.Update;
 
-namespace SmartBusiness.Tests.AuthenticatUserCommandsion;
+namespace SmartBusiness.Tests.UserCommands;
 
 public class UpdateUserCommandValidatorUnitTests
 {

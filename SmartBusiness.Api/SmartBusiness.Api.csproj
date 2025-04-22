@@ -42,7 +42,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartBusiness.Application\SmartBusiness.Application.csproj" />
-    <ProjectReference Include="..\SmartBusiness.Contracts\SmartBusiness.Contracts.csproj" />
     <ProjectReference Include="..\SmartBusiness.Infrastructure\SmartBusiness.Infrastructure.csproj" />
   </ItemGroup>
 
