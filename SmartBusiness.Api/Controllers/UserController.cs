@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SmartBusiness.Application.Commands.Users.ChangePassword;
 using SmartBusiness.Application.Commands.Users.Create;

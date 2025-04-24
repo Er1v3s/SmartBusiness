@@ -11,12 +11,12 @@ using SmartBusiness.Contracts.Requests.Users;
 
 namespace SmartBusiness.Tests.Controllers.Users
 {
-    public class UserControllerTests
+    public class UserControllerSuccessScenarioTests
     {
         private readonly Mock<IMediator> _mediatorMock;
         private readonly UserController _userController;
 
-        public UserControllerTests()
+        public UserControllerSuccessScenarioTests()
         {
             _mediatorMock = new Mock<IMediator>();
             _userController = new UserController(_mediatorMock.Object);
@@ -39,6 +39,7 @@ namespace SmartBusiness.Tests.Controllers.Users
             // Assert
             result.Should().BeOfType<CreatedResult>();
         }
+
 
         [Fact]
         public async Task Update_WhenSuccessful_ReturnsOkResult()
