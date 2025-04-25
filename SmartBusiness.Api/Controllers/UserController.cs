@@ -20,7 +20,7 @@ namespace SmartBusiness.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("register")]
+        [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] CreateRequest request)
         {
@@ -30,28 +30,28 @@ namespace SmartBusiness.Api.Controllers
             return Created();
         }
 
-        [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] UpdateRequest request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRequest request)
         {
-            var command = new UpdateUserCommand(request.Id, request.Username, request.Email);
+            var command = new UpdateUserCommand(id, request.Username, request.Email);
             var result = await _mediator.Send(command);
 
             return Ok(result);
         }
 
-        [HttpPut("change-password")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        [HttpPut("{id}/change-password")]
+        public async Task<IActionResult> ChangePassword(Guid id, [FromBody] ChangePasswordRequest request)
         {
-            var command = new ChangeUserPasswordCommand(request.Id, request.CurrentPassword, request.NewPassword);
+            var command = new ChangeUserPasswordCommand(id, request.CurrentPassword, request.NewPassword);
             var result = await _mediator.Send(command);
 
             return Ok(result);
         }
 
-        [HttpDelete("delete")]
-        public async Task<IActionResult> Delete([FromBody] DeleteRequest request)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var command = new DeleteUserCommand(request.Id);
+            var command = new DeleteUserCommand(id);
             await _mediator.Send(command);
 
             return NoContent();
