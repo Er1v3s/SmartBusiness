@@ -1,15 +1,15 @@
 using FluentValidation.TestHelper;
-using SmartBusiness.Application.Commands.Users.Update;
+using SmartBusiness.Application.Commands.Users.Create;
 
-namespace SmartBusiness.Tests.Validations.Users;
+namespace SmartBusiness.Tests.UnitTests.Validations.Users;
 
-public class UpdateUserCommandValidatorUnitTests
+public class CreateUserCommandValidatorUnitTests
 {
-    private readonly UpdateUserCommandValidator _validator;
-    
-    public UpdateUserCommandValidatorUnitTests()
+    private readonly CreateUserCommandValidator _validator;
+
+    public CreateUserCommandValidatorUnitTests()
     {
-        _validator = new UpdateUserCommandValidator();
+        _validator = new CreateUserCommandValidator();
     }
 
     public static IEnumerable<object[]> InvalidUsernames()
@@ -25,7 +25,7 @@ public class UpdateUserCommandValidatorUnitTests
     public void Validate_ForInvalidUsername_ShouldReturnValidationError(string invalidUsername)
     {
         // Arrange
-        var command = new UpdateUserCommand(Guid.NewGuid() , invalidUsername, "testEmail@gmail.com");
+        var command = new CreateUserCommand(invalidUsername, "testEmail@gmail.com", "testPasswordHash");
 
         // Act
         var result = _validator.TestValidate(command);
@@ -39,7 +39,7 @@ public class UpdateUserCommandValidatorUnitTests
     public void Validate_ForValidUsername_ShouldNotReturnValidationError(string invalidUsername)
     {
         // Arrange
-        var command = new UpdateUserCommand(Guid.NewGuid(), invalidUsername, "testEmail@gmail.com");
+        var command = new CreateUserCommand(invalidUsername, "testEmail@gmail.com", "testPasswordHash");
 
         // Act
         var result = _validator.TestValidate(command);
@@ -66,7 +66,7 @@ public class UpdateUserCommandValidatorUnitTests
     public void Validate_ForInvalidEmails_ShouldReturnValidationError(string invalidEmail)
     {
         // Arrange
-        var command = new UpdateUserCommand(Guid.NewGuid(), "test", invalidEmail);
+        var command = new CreateUserCommand("test", invalidEmail, "testPasswordHash");
 
         // Act
         var result = _validator.TestValidate(command);
@@ -80,12 +80,52 @@ public class UpdateUserCommandValidatorUnitTests
     public void Validate_ForValidEmails_ShouldNotReturnValidationError(string invalidEmail)
     {
         // Arrange
-        var command = new UpdateUserCommand(Guid.NewGuid(), "test", invalidEmail);
+        var command = new CreateUserCommand("test", invalidEmail, "testPasswordHash");
 
         // Act
         var result = _validator.TestValidate(command);
 
         // Assert
         result.ShouldNotHaveValidationErrorFor(r => r.Email);
+    }
+
+    public static IEnumerable<object[]> InvalidPassword()
+    {
+        yield return [$"{new string('t', 48)}!1X"]; // too long
+    }
+
+    [Theory]
+    [InlineData(null)] // not null 
+    [InlineData("")] // not empty
+    [InlineData("NoSpecialChar123")] // no special character
+    [InlineData("nouppercase123!")] // no uppercase letter
+    [InlineData("NOLOWERCASE123!")] // no lowercase letter
+    [InlineData("NoNumber!")] // no number
+    [InlineData("!1Ab")] // too short
+    [MemberData(nameof(InvalidPassword))]
+    public void Validate_ForInvalidPassword_ShouldReturnValidationError(string invalidPassword)
+    {
+        // Arrange
+        var command = new CreateUserCommand("test", "test@email.com", invalidPassword);
+
+        // Act
+        var result = _validator.TestValidate(command);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(r => r.Password);
+    }
+
+    [Theory]
+    [InlineData("!@TestPassword123")] // correct password
+    public void Validate_ForValidPassword_ShouldNotReturnValidationError(string invalidPassword)
+    {
+        // Arrange
+        var command = new CreateUserCommand("test", "test@email.com", invalidPassword);
+
+        // Act
+        var result = _validator.TestValidate(command);
+
+        // Assert
+        result.ShouldNotHaveValidationErrorFor(r => r.Password);
     }
 }

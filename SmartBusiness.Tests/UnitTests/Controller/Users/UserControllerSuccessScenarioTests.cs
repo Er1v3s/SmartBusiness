@@ -9,7 +9,7 @@ using SmartBusiness.Application.Commands.Users.Delete;
 using SmartBusiness.Application.Commands.Users.Update;
 using SmartBusiness.Contracts.Requests.Users;
 
-namespace SmartBusiness.Tests.Controllers.Users
+namespace SmartBusiness.Tests.UnitTests.Controller.Users
 {
     public class UserControllerSuccessScenarioTests
     {
@@ -21,7 +21,6 @@ namespace SmartBusiness.Tests.Controllers.Users
             _mediatorMock = new Mock<IMediator>();
             _userController = new UserController(_mediatorMock.Object);
         }
-
 
         [Fact]
         public async Task Create_WhenSuccessful_ReturnsCreatedResult()
@@ -52,7 +51,7 @@ namespace SmartBusiness.Tests.Controllers.Users
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            var result = await _userController.Update(request);
+            var result = await _userController.Update(Guid.NewGuid(), request);
 
             // Assert
             result.Should().BeOfType<OkObjectResult>();
@@ -69,7 +68,7 @@ namespace SmartBusiness.Tests.Controllers.Users
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            var result = await _userController.ChangePassword(request);
+            var result = await _userController.ChangePassword(Guid.NewGuid(), request);
 
             // Assert
             result.Should().BeOfType<OkObjectResult>();
@@ -85,7 +84,7 @@ namespace SmartBusiness.Tests.Controllers.Users
                 .Returns(Task.CompletedTask);
 
             // Act
-            var result = await _userController.Delete(request);
+            var result = await _userController.Delete(Guid.NewGuid());
 
             // Assert
             result.Should().BeOfType<NoContentResult>();
