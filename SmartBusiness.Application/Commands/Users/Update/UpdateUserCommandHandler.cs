@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using SmartBusiness.Application.Abstracts;
 using SmartBusiness.Contracts.DataTransferObjects;
-using SmartBusiness.Contracts.Errors;
+using SmartBusiness.Contracts.Exceptions.Users;
 using SmartBusiness.Domain.Entities;
 
 namespace SmartBusiness.Application.Commands.Users.Update
@@ -21,7 +21,7 @@ namespace SmartBusiness.Application.Commands.Users.Update
             var existingUser = await _userRepository.GetUserByIdAsync(request.Id, cancellationToken);
 
             if (existingUser == null)
-                throw new NotFoundException("User not found");
+                throw new UserNotFoundException();
 
             var userUpdated = new UserDto()
             {

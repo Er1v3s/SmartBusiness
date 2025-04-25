@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
-using SmartBusiness.Contracts.Errors;
-using SmartBusiness.Contracts.Exceptions;
+using SmartBusiness.Contracts.Exceptions.Validation;
 
 namespace SmartBusiness.Application.Behaviors
 {

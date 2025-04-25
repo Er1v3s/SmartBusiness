@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmartBusiness.Contracts.Errors;
 using SmartBusiness.Contracts.Exceptions.Users;
 
 namespace SmartBusiness.Api.Handlers.CustomExceptionHandlers

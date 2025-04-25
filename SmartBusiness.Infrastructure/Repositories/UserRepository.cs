@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartBusiness.Application.Abstracts;
 using SmartBusiness.Contracts.DataTransferObjects;
 using SmartBusiness.Domain.Entities;
