@@ -50,11 +50,10 @@ namespace SmartBusiness.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteUserAsync(Guid userId, CancellationToken cancellationToken)
+        public async Task DeleteUserAsync(User user, CancellationToken cancellationToken)
         {
-            await _dbContext.Users
-                .Where(u => u.Id == userId)
-                .ExecuteDeleteAsync(cancellationToken);
+            _dbContext.Users.Remove(user);
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task ChangeUserPasswordAsync(User user, string newPassword, CancellationToken cancellationToken)

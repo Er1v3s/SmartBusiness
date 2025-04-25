@@ -25,8 +25,10 @@ namespace SmartBusiness.Api
 
             builder.Services.AddDbContext<SmartBusinessDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString"));
+                if (builder.Environment.EnvironmentName != "Testing")
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString"));
             });
+
 
             #endregion
 

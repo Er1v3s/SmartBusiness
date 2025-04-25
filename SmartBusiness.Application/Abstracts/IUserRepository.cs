@@ -10,7 +10,7 @@ namespace SmartBusiness.Application.Abstracts
         Task<bool> IsEmailInUseAsync(string email, CancellationToken cancellationToken);
         Task AddUserAsync(User user, CancellationToken cancellationToken);
         Task UpdateUserAsync(User existingUser, UserDto userUpdated, CancellationToken cancellationToken);
-        Task DeleteUserAsync(Guid userId, CancellationToken cancellationToken);
+        Task DeleteUserAsync(User user, CancellationToken cancellationToken);
         Task ChangeUserPasswordAsync(User user, string newPassword, CancellationToken cancellationToken);
     }
 }

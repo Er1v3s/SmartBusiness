@@ -19,7 +19,7 @@ namespace SmartBusiness.Application.Commands.Users.Delete
             if (user == null)
                 throw new UserNotFoundException();
 
-            await _userRepository.DeleteUserAsync(request.Id, cancellationToken);
+            await _userRepository.DeleteUserAsync(user, cancellationToken);
         }
     }
 }
