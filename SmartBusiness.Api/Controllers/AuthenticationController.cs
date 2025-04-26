@@ -5,7 +5,7 @@ using SmartBusiness.Contracts.Requests.Users.Authentication;
 
 namespace SmartBusiness.Api.Controllers
 {
-    [Route("users/[controller]")]
+    [Route("api/user/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
@@ -16,7 +16,7 @@ namespace SmartBusiness.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("login")]
+        [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var command = new LoginUserCommand(request.Email, request.Password);
