@@ -9,7 +9,7 @@ using SmartBusiness.Application.Abstracts;
 using SmartBusiness.Domain.Entities;
 using SmartBusiness.Infrastructure;
 
-namespace SmartBusiness.Tests.ClientBuilder
+namespace SmartBusiness.Tests.Helpers
 {
     public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {

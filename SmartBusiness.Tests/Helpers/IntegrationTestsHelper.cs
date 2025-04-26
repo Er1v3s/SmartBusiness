@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SmartBusiness.Application.Abstracts;
 
-namespace SmartBusiness.Tests.ClientBuilder
+namespace SmartBusiness.Tests.Helpers
 {
     public class IntegrationTestsHelper : IIntegrationTestsHelper
     {

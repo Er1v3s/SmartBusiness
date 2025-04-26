@@ -1,6 +1,6 @@
 ﻿using SmartBusiness.Contracts.DataTransferObjects;
 
-namespace SmartBusiness.Tests.ClientBuilder
+namespace SmartBusiness.Tests.Helpers
 {
     public interface IIntegrationTestsHelper : IClassFixture<CustomWebApplicationFactory>
     {
