@@ -1,4 +1,5 @@
 ﻿using SmartBusiness.Contracts.DataTransferObjects;
+using SmartBusiness.Domain.Entities;
 
 namespace SmartBusiness.Tests.Helpers
 {
@@ -6,6 +7,8 @@ namespace SmartBusiness.Tests.Helpers
     {
         Task<(UserDto userDto, string token)> SeedDatabaseAndGenerateTokenAsync();
         (UserDto userDto, string token) GenerateUserAndToken();
+        Task<User> SeedDatabaseAndGenerateUserAsync();
         void SetAuthorizationHeader(string token);
+        Task EnsureThereIsNoDataInDb();
     }
 }

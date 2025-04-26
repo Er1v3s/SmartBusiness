@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using FluentAssertions;
 using SmartBusiness.Contracts.Requests.Users;
 using SmartBusiness.Tests.Helpers;
@@ -21,6 +22,7 @@ namespace SmartBusiness.Tests.IntegrationTests.Controller.Users
         public async Task Create_WhenSuccessful_ReturnsCreatedResult()
         {
             // Arrange
+            await _integrationTestsHelper.EnsureThereIsNoDataInDb();
             var request = new CreateRequest("JohnDoe", "johndoe@gmail.com", "!Qwerty123");
             var content = JsonContent.Create(request);
 

@@ -13,7 +13,6 @@ namespace SmartBusiness.Tests.Helpers
 {
     public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
-        private readonly IPasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
         public IAuthTokenProcessor? AuthTokenProcessor { get; private set; }
         public IMapper? Mapper { get; private set; }
 
@@ -37,14 +36,6 @@ namespace SmartBusiness.Tests.Helpers
                 AuthTokenProcessor = scope.ServiceProvider.GetRequiredService<IAuthTokenProcessor>();
                 Mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
             });
-        }
-
-        public void SeedInMemoryDatabase(SmartBusinessDbContext db, User user)
-        {
-            user.PasswordHash = _passwordHasher.HashPassword(user, user.PasswordHash);
-
-            db.Users.Add(user);
-            db.SaveChanges();
         }
     }
 }
