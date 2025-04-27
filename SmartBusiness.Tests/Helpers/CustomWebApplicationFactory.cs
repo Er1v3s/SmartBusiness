@@ -22,6 +22,16 @@ namespace SmartBusiness.Tests.Helpers
 
             builder.ConfigureServices(services =>
             {
+                var descriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(DbContextOptions<SmartBusinessDbContext>));
+
+                if (descriptor != null)
+                    services.Remove(descriptor);
+
+                services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
+
+                services.AddMvc(options => options.Filters.Add(new FakeUserFilter()));
+
                 services.AddDbContext<SmartBusinessDbContext>(options =>
                 {
                     options.UseInMemoryDatabase("TestDb");
