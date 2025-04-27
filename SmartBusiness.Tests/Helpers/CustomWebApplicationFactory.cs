@@ -1,50 +1,36 @@
-﻿using AutoMapper;
+﻿using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SmartBusiness.Api;
-using SmartBusiness.Application.Abstracts;
-using SmartBusiness.Domain.Entities;
 using SmartBusiness.Infrastructure;
 
-namespace SmartBusiness.Tests.ClientBuilder
+namespace SmartBusiness.Tests.Helpers
 {
     public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
-        private readonly IPasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
-        public IAuthTokenProcessor? AuthTokenProcessor { get; private set; }
-        public IMapper? Mapper { get; private set; }
-
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Testing");
 
             builder.ConfigureServices(services =>
             {
+                var descriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(DbContextOptions<SmartBusinessDbContext>));
+
+                if (descriptor != null)
+                    services.Remove(descriptor);
+
+                services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
+
+                services.AddMvc(options => options.Filters.Add(new FakeUserFilter()));
+
                 services.AddDbContext<SmartBusinessDbContext>(options =>
                 {
                     options.UseInMemoryDatabase("TestDb");
                 });
-
-                var sp = services.BuildServiceProvider();
-                using var scope = sp.CreateScope();
-                var db = scope.ServiceProvider.GetRequiredService<SmartBusinessDbContext>();
-                db.Database.EnsureCreated();
-
-                // Get instance of IAuthTokenProcessor from DI
-                AuthTokenProcessor = scope.ServiceProvider.GetRequiredService<IAuthTokenProcessor>();
-                Mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
             });
-        }
-
-        public void SeedInMemoryDatabase(SmartBusinessDbContext db, User user)
-        {
-            user.PasswordHash = _passwordHasher.HashPassword(user, user.PasswordHash);
-
-            db.Users.Add(user);
-            db.SaveChanges();
         }
     }
 }

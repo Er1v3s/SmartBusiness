@@ -1,11 +1,10 @@
-﻿using SmartBusiness.Contracts.DataTransferObjects;
+﻿using SmartBusiness.Domain.Entities;
 
-namespace SmartBusiness.Tests.ClientBuilder
+namespace SmartBusiness.Tests.Helpers
 {
     public interface IIntegrationTestsHelper : IClassFixture<CustomWebApplicationFactory>
     {
-        Task<(UserDto userDto, string token)> SeedDatabaseAndGenerateTokenAsync();
-        (UserDto userDto, string token) GenerateUserAndToken();
-        void SetAuthorizationHeader(string token);
+        Task SeedInMemoryDatabaseAsync(User user);
+        User GenerateUser();
     }
 }
