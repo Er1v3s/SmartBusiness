@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using SmartBusiness.Contracts.Requests.Users;
-using SmartBusiness.Tests.ClientBuilder;
+using SmartBusiness.Tests.Helpers;
 
 namespace SmartBusiness.Tests.IntegrationTests.Controller.Users
 {
