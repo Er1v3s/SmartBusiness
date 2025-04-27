@@ -1,33 +1,26 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using System.Text.Json;
 using FluentAssertions;
 using SmartBusiness.Contracts.Requests.Users;
 using SmartBusiness.Tests.Helpers;
 
 namespace SmartBusiness.Tests.IntegrationTests.Controller.Users
 {
-    public class UserControllerSuccessfulScenarioTests : IClassFixture<CustomWebApplicationFactory>
+    public class UserControllerSuccessfulScenarioTests(CustomWebApplicationFactory factory) 
+        : IntegrationTestBase(factory)
     {
-        private readonly HttpClient _client;
-        private readonly IIntegrationTestsHelper _integrationTestsHelper;
-
-        public UserControllerSuccessfulScenarioTests(CustomWebApplicationFactory factory)
-        {
-            _client = factory.CreateClient();
-            _integrationTestsHelper = new IntegrationTestsHelper(factory, _client);
-        }
-
         [Fact]
         public async Task Create_WhenSuccessful_ReturnsCreatedResult()
         {
             // Arrange
-            await _integrationTestsHelper.EnsureThereIsNoDataInDb();
-            var request = new CreateRequest("JohnDoe", "johndoe@gmail.com", "!Qwerty123");
+            const string password = "!Qwerty123";
+            var user = IntegrationTestsHelper.GenerateUser();
+
+            var request = new CreateRequest(user.Username, user.Email, password);
             var content = JsonContent.Create(request);
 
             // Act
-            var response = await _client.PostAsync("/api/user", content);
+            var response = await Client.PostAsync("/api/user", content);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -37,14 +30,14 @@ namespace SmartBusiness.Tests.IntegrationTests.Controller.Users
         public async Task Update_WhenSuccessful_ReturnsOkResult()
         {
             // Arrange
-            var (userDto, token) = await _integrationTestsHelper.SeedDatabaseAndGenerateTokenAsync();
-            _integrationTestsHelper.SetAuthorizationHeader(token);
+            var user = IntegrationTestsHelper.GenerateUser();
+            await IntegrationTestsHelper.SeedInMemoryDatabaseAsync(user);
 
-            var request = new UpdateRequest(userDto.Id, userDto.Username, userDto.Email);
+            var request = new UpdateRequest(user.Id, user.Username, user.Email);
             var content = JsonContent.Create(request);
 
             // Act
-            var response = await _client.PutAsync($"/api/user/{userDto.Id}", content);
+            var response = await Client.PutAsync($"/api/user/{user.Id}", content);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -54,11 +47,11 @@ namespace SmartBusiness.Tests.IntegrationTests.Controller.Users
         public async Task Delete_WhenSuccessful_ReturnsNoContent()
         {
             // Arrange
-            var (userDto, token) = await _integrationTestsHelper.SeedDatabaseAndGenerateTokenAsync();
-            _integrationTestsHelper.SetAuthorizationHeader(token);
+            var user = IntegrationTestsHelper.GenerateUser();
+            await IntegrationTestsHelper.SeedInMemoryDatabaseAsync(user);
 
             // Act
-            var response = await _client.DeleteAsync($"/api/user/{userDto.Id}");
+            var response = await Client.DeleteAsync($"/api/user/{user.Id}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -68,14 +61,14 @@ namespace SmartBusiness.Tests.IntegrationTests.Controller.Users
         public async Task ChangePassword_WhenSuccessful_ReturnsOkResult()
         {
             // Arrange
-            var (userDto, token) = await _integrationTestsHelper.SeedDatabaseAndGenerateTokenAsync();
-            _integrationTestsHelper.SetAuthorizationHeader(token);
+            var user = IntegrationTestsHelper.GenerateUser();
+            await IntegrationTestsHelper.SeedInMemoryDatabaseAsync(user);
 
-            var request = new ChangePasswordRequest(userDto.Id, "!Qwerty123", "!newPassword123");
+            var request = new ChangePasswordRequest(user.Id, "!Qwerty123", "!newPassword123");
             var content = JsonContent.Create(request);
 
             // Act
-            var response = await _client.PutAsync($"/api/user/{userDto.Id}/change-password", content);
+            var response = await Client.PutAsync($"/api/user/{user.Id}/change-password", content);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
