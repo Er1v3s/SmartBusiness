@@ -3,20 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 using SmartBusiness.Application.Commands.Users.Authentication.Login;
 using SmartBusiness.Contracts.Requests.Users.Authentication;
 
-namespace SmartBusiness.Api.Controllers
+namespace SmartBusiness.Auth.Controllers
 {
-    [Route("api/user/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticationController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public AuthenticationController(IMediator mediator)
+        public AuthController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpPost]
+        [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var command = new LoginUserCommand(request.Email, request.Password);

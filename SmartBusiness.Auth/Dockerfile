@@ -18,29 +18,29 @@ ARG BUILD_CONFIGURATION=Development
 
 WORKDIR /src
 
-COPY ["SmartBusiness.Api/SmartBusiness.Api.csproj", "SmartBusiness.Api/"]
+COPY ["SmartBusiness.Auth/SmartBusiness.Auth.csproj", "SmartBusiness.Auth/"]
 COPY ["SmartBusiness.Application/SmartBusiness.Application.csproj", "SmartBusiness.Application/"]
 COPY ["SmartBusiness.Infrastructure/SmartBusiness.Infrastructure.csproj", "SmartBusiness.Infrastructure/"]
 COPY ["SmartBusiness.Domain/SmartBusiness.Domain.csproj", "SmartBusiness.Domain/"]
 COPY ["SmartBusiness.Contracts/SmartBusiness.Contracts.csproj", "SmartBusiness.Contracts/"]
 
-RUN dotnet restore "./SmartBusiness.Api/SmartBusiness.Api.csproj"
+RUN dotnet restore "./SmartBusiness.Auth/SmartBusiness.Auth.csproj"
 
 COPY . .
 
-WORKDIR "/src/SmartBusiness.Api"
+WORKDIR "/src/SmartBusiness.Auth"
 
-RUN dotnet build "./SmartBusiness.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./SmartBusiness.Auth.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Development
 
-RUN dotnet publish "./SmartBusiness.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./SmartBusiness.Auth.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-ENTRYPOINT ["dotnet", "SmartBusiness.Api.dll"]
+ENTRYPOINT ["dotnet", "SmartBusiness.Auth.dll"]

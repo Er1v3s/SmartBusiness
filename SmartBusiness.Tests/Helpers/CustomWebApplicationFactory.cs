@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SmartBusiness.Api;
+using SmartBusiness.Auth;
 using SmartBusiness.Infrastructure;
 
 namespace SmartBusiness.Tests.Helpers

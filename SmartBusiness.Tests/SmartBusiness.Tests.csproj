@@ -20,8 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmartBusiness.Api\SmartBusiness.Api.csproj" />
+    <ProjectReference Include="..\SmartBusiness.Api\SmartBusiness.Auth.csproj" />
     <ProjectReference Include="..\SmartBusiness.Application\SmartBusiness.Application.csproj" />
+    <ProjectReference Include="..\SmartBusiness.Auth\SmartBusiness.Auth.csproj" />
   </ItemGroup>
 
   <ItemGroup>

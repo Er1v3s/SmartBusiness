@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartBusiness.Contracts.Exceptions;
 using SmartBusiness.Contracts.Exceptions.Validation;
 
-namespace SmartBusiness.Api.Handlers.CustomExceptionHandlers
+namespace SmartBusiness.Auth.Handlers.CustomExceptionHandlers
 {
     public class GenericExceptionHandler : ICustomExceptionHandler, IExceptionHandler
     {

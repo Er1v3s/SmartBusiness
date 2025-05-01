@@ -1,11 +1,11 @@
 using FluentAssertions;
 using MediatR;
 using Moq;
-using SmartBusiness.Api.Controllers;
 using SmartBusiness.Application.Commands.Users.ChangePassword;
 using SmartBusiness.Application.Commands.Users.Create;
 using SmartBusiness.Application.Commands.Users.Delete;
 using SmartBusiness.Application.Commands.Users.Update;
+using SmartBusiness.Auth.Controllers;
 using SmartBusiness.Contracts.Exceptions.Users;
 using SmartBusiness.Contracts.Requests.Users;
 

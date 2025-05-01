@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
-using SmartBusiness.Api.Handlers.CustomExceptionHandlers;
+using SmartBusiness.Auth.Handlers.CustomExceptionHandlers;
 
-namespace SmartBusiness.Api.Handlers
+namespace SmartBusiness.Auth.Handlers
 {
     public class GlobalExceptionHandler : IExceptionHandler
     {
