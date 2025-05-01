@@ -1,6 +1,6 @@
-@SmartBusiness.Api_HostAddress = http://localhost:2000
+@SmartBusiness.Auth_HostAddress = http://localhost:2000
 
-GET {{SmartBusiness.Api_HostAddress}}/status/
+GET {{SmartBusiness.Auth_HostAddress}}/status/
 Accept: application/json
 
 ###
