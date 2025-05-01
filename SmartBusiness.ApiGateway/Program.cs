@@ -43,7 +43,7 @@ namespace SmartBusiness.ApiGateway
 
             builder.Services.AddOpenTelemetry()
                 .ConfigureResource(resource => resource
-                    .AddService("SmartBusiness.Api")) // Name of service
+                    .AddService("smart-business.api-gateway")) // Name of service
                 .WithMetrics(metrics => metrics
                     .AddAspNetCoreInstrumentation()
                     .AddAspNetCoreInstrumentation()
