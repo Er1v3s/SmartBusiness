@@ -2,18 +2,17 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using SmartBusiness.Api.Handlers;
-using SmartBusiness.Api.Handlers.CustomExceptionHandlers;
+using Microsoft.OpenApi.Models;
 using SmartBusiness.Application;
 using SmartBusiness.Application.Abstracts;
+using SmartBusiness.Auth.Handlers;
+using SmartBusiness.Auth.Handlers.CustomExceptionHandlers;
 using SmartBusiness.Infrastructure;
 using SmartBusiness.Infrastructure.Options;
 using SmartBusiness.Infrastructure.Processors;
 using SmartBusiness.Infrastructure.Repositories;
 
-namespace SmartBusiness.Api
+namespace SmartBusiness.Auth
 {
     public class Program
     {
@@ -38,7 +37,7 @@ namespace SmartBusiness.Api
             {
                 opt.AddPolicy("CorsPolicy", policyBuilder =>
                 {
-                    policyBuilder.AllowAnyHeader()
+                    policyBuilder
                         .AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader();
@@ -85,64 +84,75 @@ namespace SmartBusiness.Api
 
             #endregion
 
-            #region metrics
-
-            builder.Services.AddOpenTelemetry()
-                .ConfigureResource(resource => resource
-                    .AddService("SmartBusiness.Api")) // Nazwa serwisu widoczna w metrykach
-                .WithMetrics(metrics => metrics
-                    .AddAspNetCoreInstrumentation()
-                    .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation()
-                    .AddProcessInstrumentation()
-                    .AddOtlpExporter(opt =>
-                    {
-                        opt.Endpoint = new Uri(builder.Configuration["Otel:Endpoint"]);
-                    }));
-
-            #endregion
-
-            #region api documentation
-
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            #endregion
-
-            builder.Services.AddControllers();
-            builder.Services.AddApplication();
-            builder.Services.AddScoped<IAuthTokenProcessor, AuthTokenProcessor>();
-
-            #region exceptions
+            #region exceptions handling
 
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddScoped<ICustomExceptionHandler, GenericExceptionHandler>();
             builder.Services.AddScoped<ICustomExceptionHandler, UserExceptionHandler>();
 
-            #endregion
+            #endregion 
 
+            builder.Services.AddApplication();
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.AddScoped<IAuthTokenProcessor, AuthTokenProcessor>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+            #region api documentation
+
+            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "SmartBusiness.Auth API",
+                    Version = "v1",
+                    Description = "SmartBusiness.Auth API",
+                });
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new List<string> {}
+                    }
+                });
+            });
+
+            #endregion
+
+            builder.Services.AddControllers();
 
             var app = builder.Build();
 
             #region dev tools
 
+            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
-                //app.UseSwagger(options =>
-                //{
-                //    options.RouteTemplate = "/openapi/{documentName}.json";
-                //});
-                //app.MapScalarApiReference();
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("http://localhost:2000/swagger/v1/swagger.json", "SmartBusiness.Auth API");
+                    c.RoutePrefix = string.Empty;
+                });
 
                 try
                 {
@@ -158,17 +168,16 @@ namespace SmartBusiness.Api
 
             #endregion
 
-            // Configure the HTTP request pipeline.
+            // DO NOT CHANGE ORDER !!!
             app.UseExceptionHandler(_ => { });
 
-
             app.UseCors("CorsPolicy");
+            app.UseHttpsRedirection();
+            app.UseRouting();
 
             app.UseAuthentication();
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
             app.UseAuthorization();
+
             app.MapControllers();
 
             app.Run();

@@ -22,7 +22,7 @@ namespace SmartBusiness.Tests.IntegrationTests.Controller.Authentication
             var content = JsonContent.Create(request); 
             
             // Act 
-            var result = await Client.PostAsync($"/api/user/authentication", content);
+            var result = await Client.PostAsync($"/api/auth/login", content);
             
             // Assert
             result.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -40,7 +40,7 @@ namespace SmartBusiness.Tests.IntegrationTests.Controller.Authentication
             var content = JsonContent.Create(request); 
             
             // Act 
-            var result = await Client.PostAsync($"/api/user/authentication", content);
+            var result = await Client.PostAsync($"/api/auth/login", content);
             
             // Assert
             result.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -57,7 +57,7 @@ namespace SmartBusiness.Tests.IntegrationTests.Controller.Authentication
             var content = JsonContent.Create(request); 
             
             // Act 
-            var result = await Client.PostAsync($"/api/user/authentication", content);
+            var result = await Client.PostAsync($"/api/auth/login", content);
             
             // Assert
             result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
