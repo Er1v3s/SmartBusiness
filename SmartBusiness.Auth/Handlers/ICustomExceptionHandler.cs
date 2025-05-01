@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 
-namespace SmartBusiness.Api.Handlers
+namespace SmartBusiness.Auth.Handlers
 {
     public interface ICustomExceptionHandler : IExceptionHandler
     {

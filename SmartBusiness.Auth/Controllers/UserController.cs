@@ -7,7 +7,7 @@ using SmartBusiness.Application.Commands.Users.Delete;
 using SmartBusiness.Application.Commands.Users.Update;
 using SmartBusiness.Contracts.Requests.Users;
 
-namespace SmartBusiness.Api.Controllers
+namespace SmartBusiness.Auth.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
