@@ -1,7 +1,7 @@
-﻿using SmartBusiness.Contracts.DataTransferObjects;
-using SmartBusiness.Domain.Entities;
+﻿using AuthService.Contracts.DataTransferObjects;
+using AuthService.Domain.Entities;
 
-namespace SmartBusiness.Application.Abstracts
+namespace AuthService.Application.Abstracts
 {
     public interface IUserRepository
     {

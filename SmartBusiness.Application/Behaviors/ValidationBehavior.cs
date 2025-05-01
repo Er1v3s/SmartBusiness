@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using MediatR;
-using SmartBusiness.Contracts.Exceptions.Validation;
+using AuthService.Contracts.Exceptions.Validation;
 
-namespace SmartBusiness.Application.Behaviors
+namespace AuthService.Application.Behaviors
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
     {

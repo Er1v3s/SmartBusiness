@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SmartBusiness.Contracts.Exceptions;
-using SmartBusiness.Contracts.Exceptions.Validation;
+using AuthService.Contracts.Exceptions;
+using AuthService.Contracts.Exceptions.Validation;
 
-namespace SmartBusiness.Auth.Handlers.CustomExceptionHandlers
+namespace AuthService.Api.Handlers.CustomExceptionHandlers
 {
     public class GenericExceptionHandler : ICustomExceptionHandler, IExceptionHandler
     {

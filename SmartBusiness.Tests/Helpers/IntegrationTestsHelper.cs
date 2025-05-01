@@ -1,10 +1,10 @@
-﻿using SmartBusiness.Domain.Entities;
-using SmartBusiness.Infrastructure;
+﻿using AuthService.Domain.Entities;
+using AuthService.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 
-namespace SmartBusiness.Tests.Helpers
+namespace AuthService.Tests.Helpers
 {
-    public class IntegrationTestsHelper(SmartBusinessDbContext dbContext) : IIntegrationTestsHelper
+    public class IntegrationTestsHelper(AuthServiceDbContext dbContext) : IIntegrationTestsHelper
     {
         private readonly IPasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
 

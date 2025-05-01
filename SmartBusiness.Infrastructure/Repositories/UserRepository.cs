@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartBusiness.Application.Abstracts;
-using SmartBusiness.Contracts.DataTransferObjects;
-using SmartBusiness.Domain.Entities;
+using AuthService.Application.Abstracts;
+using AuthService.Contracts.DataTransferObjects;
+using AuthService.Domain.Entities;
 
-namespace SmartBusiness.Infrastructure.Repositories
+namespace AuthService.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly SmartBusinessDbContext _dbContext;
+        private readonly AuthServiceDbContext _dbContext;
 
-        public UserRepository(SmartBusinessDbContext dbContext)
+        public UserRepository(AuthServiceDbContext dbContext)
         {
             _dbContext = dbContext;
         }

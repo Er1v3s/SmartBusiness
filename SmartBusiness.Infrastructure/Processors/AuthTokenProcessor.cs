@@ -5,11 +5,11 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using SmartBusiness.Application.Abstracts;
-using SmartBusiness.Contracts.DataTransferObjects;
-using SmartBusiness.Infrastructure.Options;
+using AuthService.Application.Abstracts;
+using AuthService.Contracts.DataTransferObjects;
+using AuthService.Infrastructure.Options;
 
-namespace SmartBusiness.Infrastructure.Processors
+namespace AuthService.Infrastructure.Processors
 {
     public class AuthTokenProcessor : IAuthTokenProcessor
     {

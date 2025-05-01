@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using SmartBusiness.Application.Abstracts;
-using SmartBusiness.Contracts.DataTransferObjects;
-using SmartBusiness.Contracts.Exceptions.Users;
-using SmartBusiness.Domain.Entities;
+using AuthService.Application.Abstracts;
+using AuthService.Contracts.DataTransferObjects;
+using AuthService.Contracts.Exceptions.Users;
+using AuthService.Domain.Entities;
 
-namespace SmartBusiness.Application.Commands.Users.Update
+namespace AuthService.Application.Commands.Users.Update
 {
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, string>
     {

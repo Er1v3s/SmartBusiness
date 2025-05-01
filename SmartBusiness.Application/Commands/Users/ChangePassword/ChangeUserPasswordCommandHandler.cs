@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using SmartBusiness.Application.Abstracts;
-using SmartBusiness.Contracts.Exceptions.Users;
-using SmartBusiness.Domain.Entities;
+using AuthService.Application.Abstracts;
+using AuthService.Contracts.Exceptions.Users;
+using AuthService.Domain.Entities;
 
-namespace SmartBusiness.Application.Commands.Users.ChangePassword
+namespace AuthService.Application.Commands.Users.ChangePassword
 {
     public class ChangeUserPasswordCommandHandler : IRequestHandler<ChangeUserPasswordCommand, string>
     {

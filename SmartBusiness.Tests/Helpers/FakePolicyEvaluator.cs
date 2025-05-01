@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
 
-namespace SmartBusiness.Tests.Helpers
+namespace AuthService.Tests.Helpers
 {
     internal class FakePolicyEvaluator : IPolicyEvaluator
     {

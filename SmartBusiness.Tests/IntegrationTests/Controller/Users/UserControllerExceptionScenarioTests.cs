@@ -1,10 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
+using AuthService.Tests.Helpers;
 using FluentAssertions;
-using SmartBusiness.Contracts.Requests.Users;
-using SmartBusiness.Tests.Helpers;
+using AuthService.Contracts.Requests.Users;
 
-namespace SmartBusiness.Tests.IntegrationTests.Controller.Users
+namespace AuthService.Tests.IntegrationTests.Controller.Users
 {
     public class UserControllerExceptionScenarioTests(CustomWebApplicationFactory factory)
         : IntegrationTestBase(factory)

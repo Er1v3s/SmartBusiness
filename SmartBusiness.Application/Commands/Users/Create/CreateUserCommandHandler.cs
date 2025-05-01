@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using SmartBusiness.Application.Abstracts;
-using SmartBusiness.Contracts.Exceptions.Users;
-using SmartBusiness.Domain.Entities;
+using AuthService.Application.Abstracts;
+using AuthService.Contracts.Exceptions.Users;
+using AuthService.Domain.Entities;
 
-namespace SmartBusiness.Application.Commands.Users.Create
+namespace AuthService.Application.Commands.Users.Create
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, string>
     {

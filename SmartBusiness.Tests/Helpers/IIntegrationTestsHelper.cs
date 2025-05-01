@@ -1,6 +1,6 @@
-﻿using SmartBusiness.Domain.Entities;
+﻿using AuthService.Domain.Entities;
 
-namespace SmartBusiness.Tests.Helpers
+namespace AuthService.Tests.Helpers
 {
     public interface IIntegrationTestsHelper : IClassFixture<CustomWebApplicationFactory>
     {

@@ -2,10 +2,10 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using SmartBusiness.Application.Behaviors;
-using SmartBusiness.Domain.Entities;
+using AuthService.Application.Behaviors;
+using AuthService.Domain.Entities;
 
-namespace SmartBusiness.Application
+namespace AuthService.Application
 {
     public static class DependencyInjection
     {

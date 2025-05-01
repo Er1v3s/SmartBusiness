@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace SmartBusiness.Infrastructure.Migrations
+namespace AuthService.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class Set_Email_As_Unique_Value : Migration

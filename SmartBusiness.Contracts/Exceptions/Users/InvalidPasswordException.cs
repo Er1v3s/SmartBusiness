@@ -1,4 +1,4 @@
-﻿namespace SmartBusiness.Contracts.Exceptions.Users
+﻿namespace AuthService.Contracts.Exceptions.Users
 {
     public class InvalidPasswordException(string message) : Exception(message);
 }

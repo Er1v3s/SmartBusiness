@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using SmartBusiness.Infrastructure;
-using SmartBusiness.Tests.Helpers;
+﻿using AuthService.Tests.Helpers;
+using Microsoft.Extensions.DependencyInjection;
+using AuthService.Infrastructure;
 
-namespace SmartBusiness.Tests.IntegrationTests
+namespace AuthService.Tests.IntegrationTests
 {
     public abstract class IntegrationTestBase : IClassFixture<CustomWebApplicationFactory>, IDisposable
     {
@@ -14,7 +14,7 @@ namespace SmartBusiness.Tests.IntegrationTests
         {
             _scope = factory.Services.CreateScope();
             Client = factory.CreateClient();
-            var dbContext = _scope.ServiceProvider.GetRequiredService<SmartBusinessDbContext>();
+            var dbContext = _scope.ServiceProvider.GetRequiredService<AuthServiceDbContext>();
             IntegrationTestsHelper = new IntegrationTestsHelper(dbContext);
         }
 

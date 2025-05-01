@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using SmartBusiness.Contracts.DataTransferObjects;
-using SmartBusiness.Domain.Entities;
+using AuthService.Contracts.DataTransferObjects;
+using AuthService.Domain.Entities;
 
-namespace SmartBusiness.Application.Mappings
+namespace AuthService.Application.Mappings
 {
     public class UserMappingProfile : Profile
     {

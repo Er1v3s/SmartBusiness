@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace SmartBusiness.Application.Commands.Users.Create
+namespace AuthService.Application.Commands.Users.Create
 {
     public class CreateUserCommandValidator : UserCommandValidator<CreateUserCommand>
     {

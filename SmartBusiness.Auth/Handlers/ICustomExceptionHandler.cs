@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 
-namespace SmartBusiness.Auth.Handlers
-{
+namespace AuthService.Api.Handlers
+{   
     public interface ICustomExceptionHandler : IExceptionHandler
     {
         bool CanHandle(Exception ex);

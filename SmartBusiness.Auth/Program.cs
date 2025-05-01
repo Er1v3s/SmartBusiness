@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SmartBusiness.Application;
-using SmartBusiness.Application.Abstracts;
-using SmartBusiness.Auth.Handlers;
-using SmartBusiness.Auth.Handlers.CustomExceptionHandlers;
-using SmartBusiness.Infrastructure;
-using SmartBusiness.Infrastructure.Options;
-using SmartBusiness.Infrastructure.Processors;
-using SmartBusiness.Infrastructure.Repositories;
+using AuthService.Application;
+using AuthService.Application.Abstracts;
+using AuthService.Api.Handlers;
+using AuthService.Api.Handlers.CustomExceptionHandlers;
+using AuthService.Infrastructure;
+using AuthService.Infrastructure.Options;
+using AuthService.Infrastructure.Processors;
+using AuthService.Infrastructure.Repositories;
 
-namespace SmartBusiness.Auth
+namespace AuthService.Api
 {
     public class Program
     {
@@ -22,7 +22,7 @@ namespace SmartBusiness.Auth
 
             #region database connection
 
-            builder.Services.AddDbContext<SmartBusinessDbContext>(options =>
+            builder.Services.AddDbContext<AuthServiceDbContext>(options =>
             {
                 if (builder.Environment.EnvironmentName != "Testing")
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString"));
@@ -105,9 +105,9 @@ namespace SmartBusiness.Auth
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "SmartBusiness.Auth API",
+                    Title = "SmartBusiness.AuthService API",
                     Version = "v1",
-                    Description = "SmartBusiness.Auth API",
+                    Description = "SmartBusiness.AuthService API",
                 });
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -150,14 +150,14 @@ namespace SmartBusiness.Auth
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("http://localhost:2000/swagger/v1/swagger.json", "SmartBusiness.Auth API");
+                    c.SwaggerEndpoint("http://localhost:2000/swagger/v1/swagger.json", "SmartBusiness.AuthService API");
                     c.RoutePrefix = string.Empty;
                 });
 
                 try
                 {
                     using var serviceScope = app.Services.CreateScope();
-                    var dbContext = serviceScope.ServiceProvider.GetRequiredService<SmartBusinessDbContext>();
+                    var dbContext = serviceScope.ServiceProvider.GetRequiredService<AuthServiceDbContext>();
                     dbContext.Database.Migrate();
                 }
                 catch (Exception)

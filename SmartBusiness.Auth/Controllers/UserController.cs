@@ -1,14 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartBusiness.Application.Commands.Users.ChangePassword;
-using SmartBusiness.Application.Commands.Users.Create;
-using SmartBusiness.Application.Commands.Users.Delete;
-using SmartBusiness.Application.Commands.Users.Update;
-using SmartBusiness.Contracts.Requests.Users;
+using AuthService.Application.Commands.Users.ChangePassword;
+using AuthService.Application.Commands.Users.Create;
+using AuthService.Application.Commands.Users.Delete;
+using AuthService.Application.Commands.Users.Update;
+using AuthService.Contracts.Requests.Users;
 
-namespace SmartBusiness.Auth.Controllers
-{
+namespace AuthService.Api.Controllers
+{   
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]

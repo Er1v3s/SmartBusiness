@@ -11,7 +11,7 @@ volumes:
 
 services:
 
-  smart-business.api-gateway:
+  gateway.smart-business:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=600
@@ -19,19 +19,17 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/smartbusiness.pfx
       - Otel__Endpoint=http://otel-collector:4317 
-    container_name: smart-business.api-gateway
-    image: smart-business.api-gateway
+    container_name: gateway.smart-business
+    image: gateway.smart-business
     build:
       context: .
-      dockerfile: SmartBusiness.ApiGateway/Dockerfile
+      dockerfile: /src/ApiGateway/SmartBusiness.ApiGateway/Dockerfile
     ports:
       - "600:600"
       - "601:601"
     volumes:
       - ~/.aspnet/https:/https:ro
     depends_on:
-      auth.smart-business:
-        condition: service_started
       otel-collector:
         condition: service_started
     networks:
@@ -48,15 +46,13 @@ services:
     image: auth.smart-business
     build:
       context: .
-      dockerfile: SmartBusiness.Auth/Dockerfile
+      dockerfile: /src/AuthService/AuthService.Api/Dockerfile
     ports:
       - "2000:2000"
       - "2001:2001"
     volumes:
       - ~/.aspnet/https:/https:ro
     depends_on:
-      otel-collector:
-        condition: service_started
       database.server:
         condition: service_healthy
     networks:

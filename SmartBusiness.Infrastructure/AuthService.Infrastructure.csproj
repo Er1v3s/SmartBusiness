@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmartBusiness.Application\SmartBusiness.Application.csproj" />
-    <ProjectReference Include="..\SmartBusiness.Contracts\SmartBusiness.Contracts.csproj" />
-    <ProjectReference Include="..\SmartBusiness.Domain\SmartBusiness.Domain.csproj" />
+    <ProjectReference Include="..\SmartBusiness.Application\AuthService.Application.csproj" />
+    <ProjectReference Include="..\SmartBusiness.Contracts\AuthService.Contracts.csproj" />
+    <ProjectReference Include="..\SmartBusiness.Domain\AuthService.Domain.csproj" />
   </ItemGroup>
 
 </Project>

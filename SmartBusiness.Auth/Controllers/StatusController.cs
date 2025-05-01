@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SmartBusiness.Auth.Controllers
+namespace AuthService.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]

@@ -1,4 +1,4 @@
-﻿namespace SmartBusiness.Contracts.DataTransferObjects
+﻿namespace AuthService.Contracts.DataTransferObjects
 {
     public class UserDto
     {

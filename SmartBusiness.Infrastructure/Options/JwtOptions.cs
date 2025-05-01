@@ -1,4 +1,4 @@
-﻿namespace SmartBusiness.Infrastructure.Options
+﻿namespace AuthService.Infrastructure.Options
 {
     public class JwtOptions
     {

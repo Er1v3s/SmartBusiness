@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using SmartBusiness.Application.Abstracts;
-using SmartBusiness.Contracts.Exceptions.Users;
+using AuthService.Application.Abstracts;
+using AuthService.Contracts.Exceptions.Users;
 
-namespace SmartBusiness.Application.Commands.Users.Delete
+namespace AuthService.Application.Commands.Users.Delete
 {
     public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
     {

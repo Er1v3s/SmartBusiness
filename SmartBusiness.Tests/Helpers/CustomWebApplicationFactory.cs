@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization.Policy;
+﻿using AuthService.Api;
+using AuthService.Infrastructure;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SmartBusiness.Auth;
-using SmartBusiness.Infrastructure;
-
-namespace SmartBusiness.Tests.Helpers
+    
+namespace AuthService.Tests.Helpers
 {
     public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
@@ -17,7 +17,8 @@ namespace SmartBusiness.Tests.Helpers
             builder.ConfigureServices(services =>
             {
                 var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<SmartBusinessDbContext>));
+                    d => d.ServiceType == typeof(DbContextOptions<
+                        DbContext>));
 
                 if (descriptor != null)
                     services.Remove(descriptor);
@@ -26,7 +27,7 @@ namespace SmartBusiness.Tests.Helpers
 
                 services.AddMvc(options => options.Filters.Add(new FakeUserFilter()));
 
-                services.AddDbContext<SmartBusinessDbContext>(options =>
+                services.AddDbContext<AuthServiceDbContext>(options =>
                 {
                     options.UseInMemoryDatabase("TestDb");
                 });

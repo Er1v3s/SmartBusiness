@@ -1,6 +1,6 @@
-﻿using SmartBusiness.Contracts.DataTransferObjects;
+﻿using AuthService.Contracts.DataTransferObjects;
 
-namespace SmartBusiness.Application.Abstracts
+namespace AuthService.Application.Abstracts
 {
     public interface IAuthTokenProcessor
     {

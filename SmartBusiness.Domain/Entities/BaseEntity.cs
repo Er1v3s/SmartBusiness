@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmartBusiness.Domain.Entities
+namespace AuthService.Domain.Entities
 {
     public class BaseEntity
     {

@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartBusiness.Domain.Entities;
+using AuthService.Domain.Entities;
 
-namespace SmartBusiness.Infrastructure
+namespace AuthService.Infrastructure
 {
-    public class SmartBusinessDbContext : DbContext
+    public class AuthServiceDbContext : DbContext
     {
-        public SmartBusinessDbContext(DbContextOptions options) : base(options) { }
+        public AuthServiceDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
 

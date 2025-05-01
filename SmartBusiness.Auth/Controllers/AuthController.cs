@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SmartBusiness.Application.Commands.Users.Authentication.Login;
-using SmartBusiness.Contracts.Requests.Users.Authentication;
-
-namespace SmartBusiness.Auth.Controllers
+using AuthService.Application.Commands.Users.Authentication.Login;
+using AuthService.Contracts.Requests.Users.Authentication;
+    
+namespace AuthService.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

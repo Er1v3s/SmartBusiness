@@ -3,24 +3,30 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.Auth", "SmartBusiness.Auth\SmartBusiness.Auth.csproj", "{328D5B25-A863-46AC-BD09-9063D7E03C6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Application", "SmartBusiness.Application\AuthService.Application.csproj", "{87CFDB75-9B4D-4154-BB44-DB7BC4F7C758}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.Application", "SmartBusiness.Application\SmartBusiness.Application.csproj", "{87CFDB75-9B4D-4154-BB44-DB7BC4F7C758}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Domain", "SmartBusiness.Domain\AuthService.Domain.csproj", "{6ABA22C4-8E5A-461D-8F10-269ECEBDD186}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.Domain", "SmartBusiness.Domain\SmartBusiness.Domain.csproj", "{6ABA22C4-8E5A-461D-8F10-269ECEBDD186}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Infrastructure", "SmartBusiness.Infrastructure\AuthService.Infrastructure.csproj", "{960DDF97-0163-4E43-8980-C37BD0FEAB74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.Infrastructure", "SmartBusiness.Infrastructure\SmartBusiness.Infrastructure.csproj", "{960DDF97-0163-4E43-8980-C37BD0FEAB74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Contracts", "SmartBusiness.Contracts\AuthService.Contracts.csproj", "{E7285402-F23F-4EB6-8160-693161A66774}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.Contracts", "SmartBusiness.Contracts\SmartBusiness.Contracts.csproj", "{E7285402-F23F-4EB6-8160-693161A66774}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Tests", "SmartBusiness.Tests\AuthService.Tests.csproj", "{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.Tests", "SmartBusiness.Tests\SmartBusiness.Tests.csproj", "{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.ApiGateway", "SmartBusiness.ApiGateway\SmartBusiness.ApiGateway.csproj", "{19276835-9846-4BFF-AB7E-C4BB2A7AF819}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4940A929-D68A-4A4B-A647-D2F63568B0E4}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.ApiGateway", "SmartBusiness.ApiGateway\SmartBusiness.ApiGateway.csproj", "{19276835-9846-4BFF-AB7E-C4BB2A7AF819}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateway", "ApiGateway", "{32A4AE2C-472A-4AAA-9BFC-FA9CA1EEE414}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthService", "AuthService", "{5CA453FB-AC70-482E-878E-12DFF1269BD8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{508166D5-EC71-489D-A175-A33ACA6483DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Api", "SmartBusiness.Auth\AuthService.Api.csproj", "{2BA74F84-5D58-BE3A-DED4-C49282D6D8CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +34,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{328D5B25-A863-46AC-BD09-9063D7E03C6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{328D5B25-A863-46AC-BD09-9063D7E03C6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{328D5B25-A863-46AC-BD09-9063D7E03C6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{328D5B25-A863-46AC-BD09-9063D7E03C6C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{87CFDB75-9B4D-4154-BB44-DB7BC4F7C758}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{87CFDB75-9B4D-4154-BB44-DB7BC4F7C758}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87CFDB75-9B4D-4154-BB44-DB7BC4F7C758}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,9 +58,24 @@ Global
 		{19276835-9846-4BFF-AB7E-C4BB2A7AF819}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19276835-9846-4BFF-AB7E-C4BB2A7AF819}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19276835-9846-4BFF-AB7E-C4BB2A7AF819}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BA74F84-5D58-BE3A-DED4-C49282D6D8CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BA74F84-5D58-BE3A-DED4-C49282D6D8CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BA74F84-5D58-BE3A-DED4-C49282D6D8CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BA74F84-5D58-BE3A-DED4-C49282D6D8CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{87CFDB75-9B4D-4154-BB44-DB7BC4F7C758} = {5CA453FB-AC70-482E-878E-12DFF1269BD8}
+		{6ABA22C4-8E5A-461D-8F10-269ECEBDD186} = {5CA453FB-AC70-482E-878E-12DFF1269BD8}
+		{960DDF97-0163-4E43-8980-C37BD0FEAB74} = {5CA453FB-AC70-482E-878E-12DFF1269BD8}
+		{E7285402-F23F-4EB6-8160-693161A66774} = {5CA453FB-AC70-482E-878E-12DFF1269BD8}
+		{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6} = {508166D5-EC71-489D-A175-A33ACA6483DA}
+		{19276835-9846-4BFF-AB7E-C4BB2A7AF819} = {32A4AE2C-472A-4AAA-9BFC-FA9CA1EEE414}
+		{32A4AE2C-472A-4AAA-9BFC-FA9CA1EEE414} = {4940A929-D68A-4A4B-A647-D2F63568B0E4}
+		{5CA453FB-AC70-482E-878E-12DFF1269BD8} = {4940A929-D68A-4A4B-A647-D2F63568B0E4}
+		{2BA74F84-5D58-BE3A-DED4-C49282D6D8CA} = {5CA453FB-AC70-482E-878E-12DFF1269BD8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {33B935BB-76C2-4284-B33B-A385930A9C02}

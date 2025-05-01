@@ -1,10 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
+using AuthService.Tests.Helpers;
 using FluentAssertions;
-using SmartBusiness.Contracts.Requests.Users.Authentication;
-using SmartBusiness.Tests.Helpers;
+using AuthService.Contracts.Requests.Users.Authentication;
 
-namespace SmartBusiness.Tests.IntegrationTests.Controller.Authentication
+namespace AuthService.Tests.IntegrationTests.Controller.Authentication
 {
     public class AuthenticationControllerTests(CustomWebApplicationFactory factory) : IntegrationTestBase(factory)
     {

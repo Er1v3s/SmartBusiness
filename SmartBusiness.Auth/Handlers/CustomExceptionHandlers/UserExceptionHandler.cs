@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmartBusiness.Contracts.Exceptions.Users;
+using AuthService.Contracts.Exceptions.Users;
 
-namespace SmartBusiness.Auth.Handlers.CustomExceptionHandlers
+namespace AuthService.Api.Handlers.CustomExceptionHandlers
 {
     public class UserExceptionHandler : GenericExceptionHandler
     {

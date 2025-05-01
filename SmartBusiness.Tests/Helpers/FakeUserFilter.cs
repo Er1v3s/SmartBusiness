@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System.Security.Claims;
 
-namespace SmartBusiness.Tests.Helpers
+namespace AuthService.Tests.Helpers
 {
     internal class FakeUserFilter : IAsyncActionFilter
     {

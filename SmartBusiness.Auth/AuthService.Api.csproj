@@ -33,8 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmartBusiness.Application\SmartBusiness.Application.csproj" />
-    <ProjectReference Include="..\SmartBusiness.Infrastructure\SmartBusiness.Infrastructure.csproj" />
+    <ProjectReference Include="..\SmartBusiness.Application\AuthService.Application.csproj" />
+    <ProjectReference Include="..\SmartBusiness.Infrastructure\AuthService.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

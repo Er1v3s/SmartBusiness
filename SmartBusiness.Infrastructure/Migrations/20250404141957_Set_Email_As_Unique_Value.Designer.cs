@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SmartBusiness.Infrastructure;
-
+using AuthService.Infrastructure;
+    
 #nullable disable
 
-namespace SmartBusiness.Infrastructure.Migrations
+namespace AuthService.Infrastructure.Migrations
 {
-    [DbContext(typeof(SmartBusinessDbContext))]
+    [DbContext(typeof(AuthServiceDbContext))]
     [Migration("20250404141957_Set_Email_As_Unique_Value")]
     partial class Set_Email_As_Unique_Value
     {
@@ -25,7 +25,7 @@ namespace SmartBusiness.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("SmartBusiness.Domain.Entities.User", b =>
+            modelBuilder.Entity("AuthService.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

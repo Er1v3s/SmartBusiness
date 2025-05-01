@@ -1,15 +1,15 @@
+using AuthService.Api.Controllers;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using SmartBusiness.Application.Commands.Users.ChangePassword;
-using SmartBusiness.Application.Commands.Users.Create;
-using SmartBusiness.Application.Commands.Users.Delete;
-using SmartBusiness.Application.Commands.Users.Update;
-using SmartBusiness.Auth.Controllers;
-using SmartBusiness.Contracts.Requests.Users;
+using AuthService.Application.Commands.Users.ChangePassword;
+using AuthService.Application.Commands.Users.Create;
+using AuthService.Application.Commands.Users.Delete;
+using AuthService.Application.Commands.Users.Update;
+using AuthService.Contracts.Requests.Users;
 
-namespace SmartBusiness.Tests.UnitTests.Controller.Users
+namespace AuthService.Tests.UnitTests.Controller.Users
 {
     public class UserControllerSuccessScenarioTests
     {

@@ -1,4 +1,4 @@
-﻿namespace SmartBusiness.Contracts.Exceptions.Validation
+﻿namespace AuthService.Contracts.Exceptions.Validation
 {
     public class CustomValidationException : Exception
     {

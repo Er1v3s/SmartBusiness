@@ -1,5 +1,5 @@
+using AuthService.Application.Commands.Users.Update;
 using FluentValidation.TestHelper;
-using SmartBusiness.Application.Commands.Users.Update;
 
 namespace SmartBusiness.Tests.UnitTests.Validation.Users;
 

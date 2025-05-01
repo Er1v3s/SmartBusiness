@@ -1,4 +1,4 @@
-﻿namespace SmartBusiness.Domain.Entities
+﻿namespace AuthService.Domain.Entities
 {
     public class User : BaseEntity
     {
