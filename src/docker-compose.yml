@@ -1,0 +1,146 @@
+﻿
+networks:
+  smart-business-network:
+    driver: bridge
+
+volumes:
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+services:
+
+  gateway.smart-business:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=600
+      - ASPNETCORE_HTTPS_PORTS=601
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/smartbusiness.pfx
+      - Otel__Endpoint=http://otel-collector:4317 
+    container_name: gateway.smart-business
+    image: gateway.smart-business
+    build:
+      context: .
+      dockerfile: ApiGateway/SmartBusiness.ApiGateway/Dockerfile
+    ports:
+      - "600:600"
+      - "601:601"
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    depends_on:
+      otel-collector:
+        condition: service_started
+    networks:
+      - smart-business-network
+
+  auth.smart-business:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=2000
+      - ASPNETCORE_HTTPS_PORTS=2001
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/smartbusiness.pfx
+    container_name: auth.smart-business
+    image: auth.smart-business
+    build:
+      context: .
+      dockerfile: Services/AuthService/AuthService.Api/Dockerfile
+    ports:
+      - "2000:2000"
+      - "2001:2001"
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    depends_on:
+      database.server:
+        condition: service_healthy
+    networks:
+      - smart-business-network
+
+  database.server:
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: database.server
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=y
+      - SA_PASSWORD=SuperPassword123
+    volumes:
+      - ./sqlserver/data:/var/opt/mssql/data
+      - ./sqlserver/log:/var/opt/mssql/log
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U SA -P "SuperPassword123" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+    networks:
+      - smart-business-network
+
+  otel-collector:
+    image: otel/opentelemetry-collector:0.95.0
+    container_name: otel-collector
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./ApiGateway/SmartBusiness.ApiGateway/config/otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+      - "8888:8888" 
+      - "8889:8889" 
+      - "13133:13133"
+      - "4317:4317"
+    networks:
+      - smart-business-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    volumes:
+      - ./ApiGateway/SmartBusiness.ApiGateway/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+    networks:
+      - smart-business-network
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=SuperPassword123
+    restart: unless-stopped
+    networks:
+      - smart-business-network
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:v1.5.0
+    container_name: node_exporter
+    command: '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - smart-business-network
+    
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    volumes:
+      - ./swagger_urls.json:/usr/share/nginx/html/swagger_urls.json
+    environment:
+      - URL=http://localhost:2000/swagger/v1/swagger.json
+    networks:
+      - smart-business-network
