@@ -1,10 +1,10 @@
-﻿using AuthService.Infrastructure;
-using Microsoft.AspNetCore.Authorization.Policy;
+﻿using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
+using AuthService.Api;
+using AuthService.Infrastructure;
 
 namespace AuthService.Tests.Helpers
 {
