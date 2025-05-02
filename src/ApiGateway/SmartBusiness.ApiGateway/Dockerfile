@@ -14,13 +14,13 @@ ARG BUILD_CONFIGURATION=Development
 
 WORKDIR /src
 
-COPY ["SmartBusiness.ApiGateway/SmartBusiness.ApiGateway.csproj", "SmartBusiness.ApiGateway/"]
+COPY ["ApiGateway/SmartBusiness.ApiGateway/SmartBusiness.ApiGateway.csproj", "SmartBusiness.ApiGateway/"]
 
-RUN dotnet restore "./SmartBusiness.ApiGateway/SmartBusiness.ApiGateway.csproj"
+RUN dotnet restore "./SmartBusiness.ApiGateway/./SmartBusiness.ApiGateway.csproj"
 
 COPY . .
 
-WORKDIR "/src/SmartBusiness.ApiGateway"
+WORKDIR "/src/ApiGateway/SmartBusiness.ApiGateway"
 
 RUN dotnet build "./SmartBusiness.ApiGateway.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

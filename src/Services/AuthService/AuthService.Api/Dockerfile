@@ -18,17 +18,17 @@ ARG BUILD_CONFIGURATION=Development
 
 WORKDIR /src
 
-COPY ["AuthService.Api/AuthService.Api.csproj", "AuthService.Api/"]
-COPY ["AuthService.Application/AuthService.Application.csproj", "AuthService.Application/"]
-COPY ["AuthService.Infrastructure/AuthService.Infrastructure.csproj", "AuthService.Infrastructure/"]
-COPY ["AuthService.Domain/AuthService.Domain.csproj", "AuthService.Domain/"]
-COPY ["AuthService.Contracts/AuthService.Contracts.csproj", "AuthService.Contracts/"]
+COPY ["Services/AuthService/AuthService.Api/AuthService.Api.csproj", "Services/AuthService/AuthService.Api/"]
+COPY ["Services/AuthService/AuthService.Application/AuthService.Application.csproj", "Services/AuthService/AuthService.Application/"]
+COPY ["Services/AuthService/AuthService.Infrastructure/AuthService.Infrastructure.csproj", "Services/AuthService/AuthService.Infrastructure/"]
+COPY ["Services/AuthService/AuthService.Domain/AuthService.Domain.csproj", "Services/AuthService/AuthService.Domain/"]
+COPY ["Services/AuthService/AuthService.Contracts/AuthService.Contracts.csproj", "Services/AuthService/AuthService.Contracts/"]
 
-RUN dotnet restore "./AuthService.Api/AuthService.Api.csproj"
+RUN dotnet restore "./Services/AuthService/AuthService.Api/AuthService.Api.csproj"
 
 COPY . .
 
-WORKDIR "/src/AuthService.Api"
+WORKDIR "/src/Services/AuthService/AuthService.Api"
 
 RUN dotnet build "./AuthService.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

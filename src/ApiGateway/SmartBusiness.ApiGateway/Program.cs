@@ -46,7 +46,6 @@ namespace SmartBusiness.ApiGateway
                     .AddService("smart-business.api-gateway")) // Name of service
                 .WithMetrics(metrics => metrics
                     .AddAspNetCoreInstrumentation()
-                    .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
                     .AddProcessInstrumentation()

@@ -23,7 +23,7 @@ services:
     image: gateway.smart-business
     build:
       context: .
-      dockerfile: /src/ApiGateway/SmartBusiness.ApiGateway/Dockerfile
+      dockerfile: ApiGateway/SmartBusiness.ApiGateway/Dockerfile
     ports:
       - "600:600"
       - "601:601"
@@ -46,7 +46,7 @@ services:
     image: auth.smart-business
     build:
       context: .
-      dockerfile: /src/AuthService/AuthService.Api/Dockerfile
+      dockerfile: Services/AuthService/AuthService.Api/Dockerfile
     ports:
       - "2000:2000"
       - "2001:2001"
@@ -83,7 +83,7 @@ services:
     container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yml"]
     volumes:
-      - ./SmartBusiness.ApiGateway/config/otel-collector-config.yml:/etc/otel-collector-config.yml
+      - ./ApiGateway/SmartBusiness.ApiGateway/config/otel-collector-config.yml:/etc/otel-collector-config.yml
     ports:
       - "8888:8888" 
       - "8889:8889" 
@@ -100,7 +100,7 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     volumes:
-      - ./SmartBusiness.ApiGateway/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./ApiGateway/SmartBusiness.ApiGateway/config/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
     restart: unless-stopped
     networks:
