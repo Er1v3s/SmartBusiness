@@ -15,7 +15,6 @@ namespace SmartBusiness.ApiGateway.Controllers
         }
 
         [HttpGet]
-        [Route("self")]
         public IActionResult GetServiceStatus() => Ok(new { status = "API Gateway is working correctly! \ud83d\udfe2" });
 
         [HttpGet]
@@ -26,7 +25,7 @@ namespace SmartBusiness.ApiGateway.Controllers
 
             var services = new Dictionary<string, string>
             {
-                ["AuthService"] = "http://auth.smart-business:2000/status",
+                ["AuthService"] = "http://auth.smart-business:2100/Status",
                 // Add another services
             };
 

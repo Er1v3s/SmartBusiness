@@ -151,8 +151,8 @@ namespace AuthService.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("http://localhost:2000/swagger/v1/swagger.json", "SmartBusiness.AuthService API");
-                    c.RoutePrefix = string.Empty;
+                    c.SwaggerEndpoint("http://localhost:2100/swagger/v1/swagger.json", "SmartBusiness.AuthService API");
+                    c.RoutePrefix = "swagger";
                 });
 
                 try
