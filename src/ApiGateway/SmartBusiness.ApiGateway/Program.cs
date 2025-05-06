@@ -86,8 +86,8 @@ namespace SmartBusiness.ApiGateway
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("http://localhost:600/swagger/v1/swagger.json", "SmartBusiness.ApiGateway v1");
-                    c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
+                    c.SwaggerEndpoint("http://localhost:2000/swagger/v1/swagger.json", "SmartBusiness.ApiGateway v1");
+                    c.RoutePrefix = "swagger";
                 });
             }
 

@@ -14,10 +14,10 @@ services:
   gateway.smart-business:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=600
-      - ASPNETCORE_HTTPS_PORTS=601
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=123
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/smartbusiness.pfx
+      - ASPNETCORE_HTTP_PORTS=2000
+      - ASPNETCORE_HTTPS_PORTS=2001
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
       - Otel__Endpoint=http://otel-collector:4317 
     container_name: gateway.smart-business
     image: gateway.smart-business
@@ -25,10 +25,10 @@ services:
       context: .
       dockerfile: ApiGateway/SmartBusiness.ApiGateway/Dockerfile
     ports:
-      - "600:600"
-      - "601:601"
+      - "2000:2000"
+      - "2001:2001"
     volumes:
-      - ~/.aspnet/https:/https:ro
+      - ./https:/https:ro
     depends_on:
       otel-collector:
         condition: service_started
@@ -38,20 +38,20 @@ services:
   auth.smart-business:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=2000
-      - ASPNETCORE_HTTPS_PORTS=2001
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=123
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/smartbusiness.pfx
+      - ASPNETCORE_HTTP_PORTS=2100
+      - ASPNETCORE_HTTPS_PORTS=2101
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
     container_name: auth.smart-business
     image: auth.smart-business
     build:
       context: .
       dockerfile: Services/AuthService/AuthService.Api/Dockerfile
     ports:
-      - "2000:2000"
-      - "2001:2001"
+      - "2100:2100"
+      - "2101:2101"
     volumes:
-      - ~/.aspnet/https:/https:ro
+      - ./https:/https:ro
     depends_on:
       database.server:
         condition: service_healthy
@@ -60,6 +60,7 @@ services:
 
   database.server:
     image: "mcr.microsoft.com/mssql/server"
+    platform: linux/amd64
     container_name: database.server
     ports:
       - "1433:1433"
@@ -96,7 +97,7 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     ports:
-      - 9090:9090
+      - "9090:9090"
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     volumes:
@@ -129,18 +130,5 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
-    networks:
-      - smart-business-network
-    
-  swagger-ui:
-    image: swaggerapi/swagger-ui
-    container_name: swagger-ui
-    ports:
-      - "8080:8080"
-      - "8081:8081"
-    volumes:
-      - ./swagger_urls.json:/usr/share/nginx/html/swagger_urls.json
-    environment:
-      - URL=http://localhost:2000/swagger/v1/swagger.json
     networks:
       - smart-business-network
