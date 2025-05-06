@@ -1,4 +1,4 @@
-@SmartBusiness.ApiGateway_HostAddress = http://localhost:600
+@SmartBusiness.ApiGateway_HostAddress = http://localhost:2000
 
 GET {{SmartBusiness.ApiGateway_HostAddress}}/status/
 Accept: application/json
