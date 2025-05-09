@@ -1,8 +1,8 @@
 ﻿using AuthService.Contracts.Exceptions;
-using AuthService.Contracts.Exceptions.Validation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shared.Exceptions;
 
 namespace AuthService.Api.Handlers.CustomExceptionHandlers
 {

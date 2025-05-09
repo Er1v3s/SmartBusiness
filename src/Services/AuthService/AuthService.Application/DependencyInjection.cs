@@ -2,8 +2,8 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using AuthService.Application.Behaviors;
 using AuthService.Domain.Entities;
+using Shared.Behaviors;
 
 namespace AuthService.Application
 {

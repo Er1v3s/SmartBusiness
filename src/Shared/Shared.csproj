@@ -7,13 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Responses\**" />
-    <EmbeddedResource Remove="Responses\**" />
-    <None Remove="Responses\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Exceptions\Validation\" />
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
   </ItemGroup>
 
 </Project>
