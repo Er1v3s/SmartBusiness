@@ -1,4 +1,4 @@
-﻿namespace AuthService.Contracts.Exceptions.Validation
+﻿namespace Shared.Exceptions
 {
     public class ValidationError
     {

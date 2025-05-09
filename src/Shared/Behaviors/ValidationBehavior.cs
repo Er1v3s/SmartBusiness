@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using FluentValidation;
-using AuthService.Contracts.Exceptions.Validation;
+using Shared.Exceptions;
 
-namespace AuthService.Application.Behaviors
+namespace Shared.Behaviors
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
     {
@@ -27,7 +27,7 @@ namespace AuthService.Application.Behaviors
                     ErrorMessage = x.ErrorMessage
                 }).ToList();
 
-            if(failures.Any())
+            if (failures.Any())
                 throw new CustomValidationException(failures);
 
             var response = await next(cancellationToken);

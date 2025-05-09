@@ -9,6 +9,8 @@ volumes:
   grafana-data:
     driver: local
 
+    # MONITORING SERVICE TURN OFF WHILE DEVELOPMENT
+
 services:
 
   gateway.smart-business:
@@ -18,7 +20,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=2001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
-      - Otel__Endpoint=http://otel-collector:4317 
+      # - Otel__Endpoint=http://otel-collector:4317 
     container_name: gateway.smart-business
     image: gateway.smart-business
     build:
@@ -29,9 +31,9 @@ services:
       - "2001:2001"
     volumes:
       - ./https:/https:ro
-    depends_on:
-      otel-collector:
-        condition: service_started
+    # depends_on:
+      # otel-collector:
+        # condition: service_started
     networks:
       - smart-business-network
 
@@ -58,6 +60,46 @@ services:
     networks:
       - smart-business-network
 
+  sales.smart-business:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=2200
+      - ASPNETCORE_HTTPS_PORTS=2201
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
+    container_name: sales.smart-business
+    image: sales.smart-business
+    build:
+      context: .
+      dockerfile: Services/SalesService/SalesService.Api/Dockerfile
+    ports:
+      - "2200:2200"
+      - "2201:2201"
+    volumes:
+      - ./https:/https:ro
+    depends_on:
+      database.server:
+        condition: service_healthy
+    networks:
+      - smart-business-network
+
+  frontend.smart-business:
+    container_name: frontend.smart-business
+    image: frontend.smart-business
+    build:
+      context: WebApp/smartbusiness.web
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./WebApp/smartbusiness.web:/app
+      - /app/node_modules
+    depends_on:
+      - gateway.smart-business
+      - auth.smart-business
+    networks:
+      - smart-business-network
+
   database.server:
     image: "mcr.microsoft.com/mssql/server"
     platform: linux/amd64
@@ -79,56 +121,58 @@ services:
     networks:
       - smart-business-network
 
-  otel-collector:
-    image: otel/opentelemetry-collector:0.95.0
-    container_name: otel-collector
-    command: ["--config=/etc/otel-collector-config.yml"]
-    volumes:
-      - ./ApiGateway/SmartBusiness.ApiGateway/config/otel-collector-config.yml:/etc/otel-collector-config.yml
-    ports:
-      - "8888:8888" 
-      - "8889:8889" 
-      - "13133:13133"
-      - "4317:4317"
-    networks:
-      - smart-business-network
+  # MONITORING SERVICES 
 
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    ports:
-      - "9090:9090"
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    volumes:
-      - ./ApiGateway/SmartBusiness.ApiGateway/config/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus-data:/prometheus
-    restart: unless-stopped
-    networks:
-      - smart-business-network
+  # otel-collector:
+  #   image: otel/opentelemetry-collector:0.95.0
+  #   container_name: otel-collector
+  #   command: ["--config=/etc/otel-collector-config.yml"]
+  #   volumes:
+  #     - ./ApiGateway/SmartBusiness.ApiGateway/config/otel-collector-config.yml:/etc/otel-collector-config.yml
+  #   ports:
+  #     - "8888:8888" 
+  #     - "8889:8889" 
+  #     - "13133:13133"
+  #     - "4317:4317"
+  #   networks:
+  #     - smart-business-network
 
-  grafana:
-    image: grafana/grafana-oss:latest
-    container_name: grafana
-    ports:
-      - '3000:3000'
-    volumes:
-      - grafana-data:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=SuperPassword123
-    restart: unless-stopped
-    networks:
-      - smart-business-network
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   command:
+  #     - '--config.file=/etc/prometheus/prometheus.yml'
+  #   volumes:
+  #     - ./ApiGateway/SmartBusiness.ApiGateway/config/prometheus.yml:/etc/prometheus/prometheus.yml
+  #     - prometheus-data:/prometheus
+  #   restart: unless-stopped
+  #   networks:
+  #     - smart-business-network
 
-  node_exporter:
-    image: quay.io/prometheus/node-exporter:v1.5.0
-    container_name: node_exporter
-    command: '--path.rootfs=/host'
-    pid: host
-    restart: unless-stopped
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    networks:
-      - smart-business-network
+  # grafana:
+  #   image: grafana/grafana-oss:latest
+  #   container_name: grafana
+  #   ports:
+  #     - '3000:3000'
+  #   volumes:
+  #     - grafana-data:/var/lib/grafana
+  #   environment:
+  #     - GF_SECURITY_ADMIN_PASSWORD=SuperPassword123
+  #   restart: unless-stopped
+  #   networks:
+  #     - smart-business-network
+
+  # node_exporter:
+  #   image: quay.io/prometheus/node-exporter:v1.5.0
+  #   container_name: node_exporter
+  #   command: '--path.rootfs=/host'
+  #   pid: host
+  #   restart: unless-stopped
+  #   volumes:
+  #     - /proc:/host/proc:ro
+  #     - /sys:/host/sys:ro
+  #     - /:/rootfs:ro
+  #   networks:
+  #     - smart-business-network

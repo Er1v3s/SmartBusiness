@@ -6,12 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AuthService.Api.Handlers;
 using AuthService.Api.Handlers.CustomExceptionHandlers;
 using AuthService.Application;
-using AuthService.Application.Abstracts;
 using AuthService.Infrastructure;
 using AuthService.Infrastructure.Options;
-using AuthService.Infrastructure.Processors;
-using AuthService.Infrastructure.Repositories;
-
 
 namespace AuthService.Api
 {
@@ -94,10 +90,11 @@ namespace AuthService.Api
             #endregion 
 
             builder.Services.AddApplication();
+            builder.Services.AddInfrastructure();
+
             builder.Services.AddHttpContextAccessor();
 
-            builder.Services.AddScoped<IAuthTokenProcessor, AuthTokenProcessor>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddControllers();
 
             #region api documentation
 
@@ -138,8 +135,6 @@ namespace AuthService.Api
             });
 
             #endregion
-
-            builder.Services.AddControllers();
 
             var app = builder.Build();
 

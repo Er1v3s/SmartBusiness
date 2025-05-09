@@ -39,22 +39,22 @@ namespace SmartBusiness.ApiGateway
 
             #endregion
 
-            #region metrics
+            //#region metrics
 
-            builder.Services.AddOpenTelemetry()
-                .ConfigureResource(resource => resource
-                    .AddService("smart-business.api-gateway")) // Name of service
-                .WithMetrics(metrics => metrics
-                    .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation()
-                    .AddProcessInstrumentation()
-                    .AddOtlpExporter(opt =>
-                    {
-                        opt.Endpoint = new Uri(builder.Configuration["Otel:Endpoint"]!);
-                    }));
+            //builder.Services.AddOpenTelemetry()
+            //    .ConfigureResource(resource => resource
+            //        .AddService("smart-business.api-gateway")) // Name of service
+            //    .WithMetrics(metrics => metrics
+            //        .AddAspNetCoreInstrumentation()
+            //        .AddHttpClientInstrumentation()
+            //        .AddRuntimeInstrumentation()
+            //        .AddProcessInstrumentation()
+            //        .AddOtlpExporter(opt =>
+            //        {
+            //            opt.Endpoint = new Uri(builder.Configuration["Otel:Endpoint"]!);
+            //        }));
 
-            #endregion
+            //#endregion
 
             #region api documentation
 
