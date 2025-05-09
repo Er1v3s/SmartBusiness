@@ -1,6 +1,8 @@
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using SalesService.Api.Handlers;
+using SalesService.Api.Handlers.CustomExceptionHandlers;
+using SalesService.Application;
 using SalesService.Infrastructure;
 
 namespace SalesService.Api
@@ -39,9 +41,20 @@ namespace SalesService.Api
 
             #endregion
 
+            #region exceptions handling
+
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddScoped<ICustomExceptionHandler, GenericExceptionHandler>();
+            builder.Services.AddScoped<ICustomExceptionHandler, ProductExceptionHandler>();
+
+            #endregion
+
+            builder.Services.AddApplication();
+            builder.Services.AddInfrastructure();
+
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
 
             #region api documentation
 
@@ -85,10 +98,11 @@ namespace SalesService.Api
 
             var app = builder.Build();
 
+            #region dev tools
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
@@ -108,9 +122,12 @@ namespace SalesService.Api
                 //}
             }
 
-            // DO NOT CHANGE ORDER !!!
-            app.UseCors("CorsPolicy");
+            #endregion
 
+            // DO NOT CHANGE ORDER !!!
+            app.UseExceptionHandler(_ => { });
+
+            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
             app.UseRouting();
 

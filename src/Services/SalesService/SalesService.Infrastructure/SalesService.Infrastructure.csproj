@@ -20,4 +20,9 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SalesService.Application\SalesService.Application.csproj" />
+    <ProjectReference Include="..\SalesService.Domain\SalesService.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
