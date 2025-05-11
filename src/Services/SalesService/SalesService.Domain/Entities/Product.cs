@@ -6,8 +6,8 @@
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public List<string> Category { get; set; } = new();
-        public decimal Price { get; set; }
-        public int Tax { get; set; }
+        public decimal Price { get; set; } = 0;
+        public int Tax { get; set; } = 0;
         public string? ImageFile { get; set; } = null;
         public DateTime CreatedAt { get; private set; } = DateTime.Now.ToUniversalTime();
         public DateTime? UpdatedAt { get; set; } = null;

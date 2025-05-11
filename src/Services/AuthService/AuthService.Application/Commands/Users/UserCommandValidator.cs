@@ -3,9 +3,9 @@ using AuthService.Domain.Entities;
 
 namespace AuthService.Application.Commands.Users
 {
-    public class UserCommandValidator<T> : AbstractValidator<T> where T : UserCommand
+    public abstract class UserCommandValidator<T> : AbstractValidator<T> where T : UserCommand
     {
-        public UserCommandValidator()
+        protected UserCommandValidator()
         {
             RuleFor(x => x.Username)
                 .NotNull()

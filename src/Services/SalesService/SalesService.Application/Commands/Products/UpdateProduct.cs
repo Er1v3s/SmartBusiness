@@ -1,29 +1,42 @@
 ﻿using FluentValidation;
+using MediatR;
+using SalesService.Application.Abstracts;
+using SalesService.Application.Commands.Products.Abstracts;
+using SalesService.Contracts.Dtos;
 
 namespace SalesService.Application.Commands.Products
 {
-    public record UpdateProductCommand(Guid Id, string Name, string Description, List<string> Category, decimal Price);
+    public record UpdateProductCommand(Guid Id, string Name, string Description, List<string> Category, decimal Price, int Tax, string ImageFile) 
+        : ProductCommand(Name, Description, Category, Price, Tax, ImageFile), IRequest<Guid>;
 
-    public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
+    public class UpdateProductCommandValidator : ProductCommandValidator<UpdateProductCommand> {}
+
+    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Guid>
     {
-        public UpdateProductCommandValidator()
+        private readonly IProductRepository _productRepository;
+
+        public UpdateProductCommandHandler(IProductRepository productRepository)
         {
-            RuleFor(x => x.Name)
-                .NotEmpty()
-                .WithMessage("Name is required.");
-            RuleFor(x => x.Description)
-                .NotEmpty()
-                .WithMessage("Description is required.");
-            RuleFor(x => x.Category)
-                .NotEmpty()
-                .WithMessage("Category is required.");
-            RuleFor(x => x.Price)
-                .GreaterThan(0)
-                .WithMessage("Price must be greater than 0.");
+            _productRepository = productRepository;
         }
-    }
+        
+        public async Task<Guid> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+        {
+            var product = new ProductDto
+            {
+                Id = request.Id,
+                Name = request.Name,
+                Description = request.Description,
+                Category = request.Category,
+                Price = request.Price,
+                Tax = request.Tax,
+                ImageFile = request.ImageFile,
+                UpdatedAt = DateTime.Now.ToUniversalTime(),
+            };
+            
+            // await _productRepository.UpdateProductAsync(product);
 
-    public class UpdateProductCommandHandler
-    {
+            return product.Id;
+        }
     }
 }

@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SalesService.Contracts.Dtos
+﻿namespace SalesService.Contracts.Dtos
 {
     public class ProductDto
     {
-        public Guid? Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Category { get; set; }
-        public string? CategoryString => string.Join(", ", Category);
-        public decimal Price { get; set; }
+        public required Guid Id { get; set; }
+        public required string Name { get; set; }
+        public required string Description { get; set; }
+        public required List<string> Category { get; set; }
+        public required decimal Price { get; set; }
+        public required int Tax { get; set; }
+        public string? ImageFile { get; set; } = null;
+        public required DateTime UpdatedAt { get; set; }
     }
 }
