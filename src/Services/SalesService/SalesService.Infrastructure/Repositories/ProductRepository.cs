@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesService.Application.Abstracts;
-using SalesService.Contracts.Dtos;
 using SalesService.Domain.Entities;
-using Shared.Exceptions;
 
 namespace SalesService.Infrastructure.Repositories
 {
@@ -17,11 +15,7 @@ namespace SalesService.Infrastructure.Repositories
 
         public async Task<Product> GetProductByIdAsync(Guid id)
         {
-            var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
-            if(product == null)
-                throw new NotFoundException($"Product with id: {id} was not found");
-            
-            return product;
+            return (await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id))!;
         }
 
         public async Task<List<Product>> GetProductsByNameAsync(string name)
@@ -56,29 +50,16 @@ namespace SalesService.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateProductAsync(ProductDto productDto)
+        public async Task UpdateProductAsync(Product updatedProduct)
         {
-            var productFromDb = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == productDto.Id);
-            if(productFromDb == null)
-                throw new NotFoundException("Product not found");
-            
-            productFromDb.Name = productDto.Name;
-            productFromDb.Description = productDto.Description;
-            productFromDb.Category = productDto.Category;
-            productFromDb.Price = productDto.Price;
-            productFromDb.Tax = productDto.Tax;
-            productFromDb.ImageFile = productDto.ImageFile;
-            productFromDb.UpdatedAt = productDto.UpdatedAt;
-            
+            var productFromDb = (await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == updatedProduct.Id))!;
+            _dbContext.Entry(productFromDb).CurrentValues.SetValues(updatedProduct);
+
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteProductAsync(Guid id)
+        public async Task DeleteProductAsync(Product product)
         {
-            var product = await GetProductByIdAsync(id);
-            if (product == null)
-                throw new NotFoundException("Product not found");
-            
             _dbContext.Products.Remove(product);
             await _dbContext.SaveChangesAsync();
         }

@@ -1,42 +1,33 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
 using MediatR;
 using SalesService.Application.Abstracts;
 using SalesService.Application.Commands.Products.Abstracts;
-using SalesService.Contracts.Dtos;
+using SalesService.Domain.Entities;
 
 namespace SalesService.Application.Commands.Products
 {
     public record UpdateProductCommand(Guid Id, string Name, string Description, List<string> Category, decimal Price, int Tax, string ImageFile) 
-        : ProductCommand(Name, Description, Category, Price, Tax, ImageFile), IRequest<Guid>;
+        : ProductCommand(Name, Description, Category, Price, Tax, ImageFile), IRequest<Product>;
 
     public class UpdateProductCommandValidator : ProductCommandValidator<UpdateProductCommand> {}
 
-    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Guid>
+    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Product>
     {
         private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
 
-        public UpdateProductCommandHandler(IProductRepository productRepository)
+        public UpdateProductCommandHandler(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
+            _mapper = mapper;
         }
         
-        public async Task<Guid> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+        public async Task<Product> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var product = new ProductDto
-            {
-                Id = request.Id,
-                Name = request.Name,
-                Description = request.Description,
-                Category = request.Category,
-                Price = request.Price,
-                Tax = request.Tax,
-                ImageFile = request.ImageFile,
-                UpdatedAt = DateTime.Now.ToUniversalTime(),
-            };
-            
+            var product = _mapper.Map<Product>(request);
             // await _productRepository.UpdateProductAsync(product);
 
-            return product.Id;
+            return product;
         }
     }
 }

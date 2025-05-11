@@ -1,5 +1,4 @@
-﻿using SalesService.Contracts.Dtos;
-using SalesService.Domain.Entities;
+﻿using SalesService.Domain.Entities;
 
 namespace SalesService.Application.Abstracts
 {
@@ -11,8 +10,8 @@ namespace SalesService.Application.Abstracts
         Task<List<Product>> GetProductsByCategoryAsync(string category, CancellationToken cancellationToken);
         Task<List<Product>> GetAllProductsAsync(CancellationToken cancellationToken);
         Task AddProductAsync(Product product);
-        Task UpdateProductAsync(ProductDto productDto);
-        Task DeleteProductAsync(Guid id);
+        Task UpdateProductAsync(Product product);
+        Task DeleteProductAsync(Product product);
         Task<bool> ProductExistsAsync(Guid id);
         Task<List<Product>> GetProductsByPriceRangeAsync(decimal minPrice, decimal maxPrice);
 
