@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SalesService.Application.Commands.Products;
-using SalesService.Contracts.Products;
+using SalesService.Contracts.Requests;
 
 namespace SalesService.Api.Controllers
 {
@@ -48,17 +48,17 @@ namespace SalesService.Api.Controllers
         {
             var command = new UpdateProductCommand(id, request.Name, request.Description, request.Category, request.Price, request.Tax, request.ImageFile);
             var result = await _mediator.Send(command);
-            
-            return Ok($"Product with ID {result} updated successfully.");
+
+            return Ok($"\"{result.Name}\" - updated successfully..");
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            // Simulate a delay to mimic a real-world scenario
-            System.Threading.Thread.Sleep(1000);
-            // Return a simple message
-            return Ok($"Product with ID {id} deleted successfully.");
+            var command = new DeleteProductCommand(id);
+            var result = await _mediator.Send(command);
+
+            return Ok($"\"{result.Name}\" - deleted successfully.");
         }
     }
 }
