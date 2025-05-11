@@ -26,12 +26,12 @@ namespace SalesService.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            // Simulate a delay to mimic a real-world scenario
-            System.Threading.Thread.Sleep(1000);
-            // Return a simple message
-            return Ok($"Product with ID {id} retrieved successfully.");
+            var command = new GetProductByIdCommand(id);
+            var result = await _mediator.Send(command);
+
+            return Ok(result);
         }
 
         [HttpPost]

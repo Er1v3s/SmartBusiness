@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SalesService.Application.Abstracts;
 using SalesService.Domain.Entities;
+using Shared.Exceptions;
 
 namespace SalesService.Application.Commands.Products
 {
@@ -14,9 +15,14 @@ namespace SalesService.Application.Commands.Products
         {
             _productRepository = productRepository;
         }
+
         public async Task<List<Product>> Handle(GetAllProductsCommand request, CancellationToken cancellationToken)
         {
-            return await _productRepository.GetAllProductsAsync(cancellationToken);
+            var products = await _productRepository.GetAllProductsAsync(cancellationToken);
+            if (products == null || products.Count == 0)
+                throw new NotFoundException("No products found.");
+
+            return products;
         }
     }
 }
