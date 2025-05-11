@@ -44,12 +44,12 @@ namespace SalesService.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] string product)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductRequest request)
         {
-            // Simulate a delay to mimic a real-world scenario
-            System.Threading.Thread.Sleep(1000);
-            // Return a simple message
-            return Ok($"Product with ID {id} updated successfully.");
+            var command = new UpdateProductCommand(id, request.Name, request.Description, request.Category, request.Price, request.Tax, request.ImageFile);
+            var result = await _mediator.Send(command);
+            
+            return Ok($"Product with ID {result} updated successfully.");
         }
 
         [HttpDelete("{id}")]

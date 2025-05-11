@@ -3,15 +3,15 @@ using SalesService.Application.Commands.Products;
 
 namespace SalesService.Tests.UnitTests.Validation
 {
-    public class CreateProductCommandValidatorUnitTests
+    public class UpdateProductCommandValidatorUnitTests
     {
-        private readonly CreateProductCommandValidator _validator;
+        private readonly UpdateProductCommandValidator _validator;
 
-        public CreateProductCommandValidatorUnitTests()
+        public UpdateProductCommandValidatorUnitTests()
         {
-            _validator = new CreateProductCommandValidator();
+            _validator = new UpdateProductCommandValidator();
         }
-
+        
         public static IEnumerable<object[]> InvalidProductName()
         {
             yield return [new string('a', 101)]; // max 100 characters
@@ -25,7 +25,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForInvalidProductName_ShouldReturnValidationError(string invalidProductName)
         {
             // Arrange
-            var command = new CreateProductCommand(invalidProductName, "testDescription", 
+            var command = new UpdateProductCommand(Guid.NewGuid(), invalidProductName, "testDescription", 
                 new List<string> { "testCategory" }, 99.99m, 5, "testImageFile");
 
             // Act
@@ -43,7 +43,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForValidProductName_ShouldNotReturnValidationError(string validProductName)
         {
             // Arrange
-            var command = new CreateProductCommand(validProductName, "testDescription", 
+            var command = new UpdateProductCommand(Guid.NewGuid(), validProductName, "testDescription", 
                 new List<string> { "testCategory" }, 99.99m, 5, "testImageFile");
 
             // Act
@@ -66,7 +66,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForInvalidProductDescription_ShouldReturnValidationError(string invalidProductDescription)
         {
             // Arrange
-            var command = new CreateProductCommand("TestProductName", invalidProductDescription, 
+            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", invalidProductDescription, 
                 new List<string> { "testCategory" }, 99.99m, 5, "testImageFile");
 
             // Act
@@ -90,7 +90,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForValidProductDescription_ShouldNotReturnValidationError(string validProductDescription)
         {
             // Arrange
-            var command = new CreateProductCommand("TestProductName", validProductDescription, 
+            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", validProductDescription, 
                 new List<string> { "testCategory" }, 99.99m, 5, "testImageFile");
 
             // Act
@@ -113,7 +113,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForInvalidProductCategory_ShouldReturnValidationError(string invalidProductCategory)
         {
             // Arrange
-            var command = new CreateProductCommand("TestProductName", "TestProductDescription", 
+            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", "TestProductDescription", 
                 new List<string> { invalidProductCategory }, 99.99m, 5, "testImageFile");
 
             // Act
@@ -137,7 +137,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForValidProductCategory_ShouldNotReturnValidationError(string validProductCategory)
         {
             // Arrange
-            var command = new CreateProductCommand("TestProductName", "TestProductDescription", 
+            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", "TestProductDescription", 
                 new List<string> { validProductCategory }, 99.99m, 5, "testImageFile");
 
             // Act
@@ -155,7 +155,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForInvalidProductPrice_ShouldReturnValidationError(decimal price)
         {
             // Arrange
-            var command = new CreateProductCommand("TestProductName", "TestProductDescription",
+            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", "TestProductDescription", 
                 new List<string> { "testCategory" }, price, 5, "testImageFile");
 
             // Act
@@ -174,7 +174,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForValidProductPrice_ShouldNotReturnValidationError(decimal price)
         {
             // Arrange
-            var command = new CreateProductCommand("TestProductName", "TestProductDescription",
+            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", "TestProductDescription", 
                 new List<string> { "testCategory" }, price, 5, "testImageFile");
 
             // Act
@@ -191,7 +191,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForInvalidProductTax_ShouldReturnValidationError(int tax)
         {
             // Arrange
-            var command = new CreateProductCommand("TestProductName", "TestProductDescription",
+            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", "TestProductDescription", 
                 new List<string> { "testCategory" }, 99.99m, tax, "testImageFile");
 
             // Act
@@ -208,7 +208,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForValidProductTax_ShouldNotReturnValidationError(int tax)
         {
             // Arrange
-            var command = new CreateProductCommand("TestProductName", "TestProductDescription",
+            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", "TestProductDescription", 
                 new List<string> { "testCategory" }, tax, 5, "testImageFile");
 
             // Act
