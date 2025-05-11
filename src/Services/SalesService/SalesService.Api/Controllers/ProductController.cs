@@ -17,12 +17,12 @@ namespace SalesService.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            // Simulate a delay to mimic a real-world scenario
-            System.Threading.Thread.Sleep(1000);
-            // Return a simple message
-            return Ok("Product data retrieved successfully.");
+            var command = new GetAllProductsCommand();
+            var result = await _mediator.Send(command);
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
