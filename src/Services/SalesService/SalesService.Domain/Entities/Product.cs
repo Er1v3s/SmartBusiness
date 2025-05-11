@@ -9,7 +9,7 @@
         public decimal Price { get; set; } = 0;
         public int Tax { get; set; } = 0;
         public string? ImageFile { get; set; } = null;
-        public DateTime CreatedAt { get; private set; } = DateTime.Now.ToUniversalTime();
+        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; } = null;
     }
 }

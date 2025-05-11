@@ -6,7 +6,7 @@ using SalesService.Contracts.Requests;
 namespace SalesService.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/product")]
     public class ProductController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -16,31 +16,27 @@ namespace SalesService.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var command = new GetAllProductsCommand();
-            var result = await _mediator.Send(command);
-
-            return Ok(result);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
-        {
-            var command = new GetProductByIdCommand(id);
-            var result = await _mediator.Send(command);
-
-            return Ok(result);
-        }
-
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateProductRequest request)
         {
             var command = new CreateProductCommand(request.Name, request.Description, request.Category, request.Price, request.Tax, request.ImageFile);
             var result = await _mediator.Send(command);
 
-            return CreatedAtRoute(result.Id, result);
+            return Created($"/api/product/{result.Id}", result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get(
+            [FromQuery] Guid? id,
+            [FromQuery] string? name,
+            [FromQuery] string? category,
+            [FromQuery] decimal? minPrice,
+            [FromQuery] decimal? maxPrice)
+        {
+            var command = new GetProductsCommand(id, name, category, minPrice, maxPrice);
+            var result = await _mediator.Send(command);
+
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
