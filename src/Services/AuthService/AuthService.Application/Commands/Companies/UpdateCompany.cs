@@ -1,3 +1,4 @@
+using AuthService.Domain.Entities;
 using FluentValidation;
 using MediatR;
 
@@ -15,6 +16,7 @@ namespace AuthService.Application.Commands.Companies
         public Task<Company> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
         {
             // TO DO
+            throw new NotImplementedException();
         }
     }
 }

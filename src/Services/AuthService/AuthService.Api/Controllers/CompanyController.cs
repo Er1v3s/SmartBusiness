@@ -1,3 +1,4 @@
+using AuthService.Application.Commands.Companies;
 using AuthService.Contracts.Requests.Companies;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace AuthService.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCompany([FromBody] CreateCompanyRequest request)
         {
-            var command = new CreateCompanyCommand(request);
+            var command = new CreateCompanyCommand(request.Name);
             var result = await _mediator.Send(command);
             
             return CreatedAtRoute($"/api/company/{result.Id}", result);
@@ -36,7 +37,7 @@ namespace AuthService.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCompany(string id, [FromBody] UpdateCompanyRequest request)
         {
-            var command = new UpdateCompanyCommand(request);
+            var command = new UpdateCompanyCommand(id, request.Name);
             var result = await _mediator.Send(command);
             
             return Ok(result);

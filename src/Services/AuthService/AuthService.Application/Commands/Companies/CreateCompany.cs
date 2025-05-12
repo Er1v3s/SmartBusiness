@@ -1,9 +1,10 @@
+using AuthService.Domain.Entities;
 using FluentValidation;
 using MediatR;
 
 namespace AuthService.Application.Commands.Companies
 {
-    public record CreateCompanyCommand(string? Id, string? Name) : IRequest<Company>;
+    public record CreateCompanyCommand(string? Name) : IRequest<Company> { }
 
     public class CreateCompanyCommandValidator : AbstractValidator<CreateCompanyCommand>
     {
@@ -12,9 +13,9 @@ namespace AuthService.Application.Commands.Companies
     
     public class CreateCompanyCommandHandler : IRequestHandler<CreateCompanyCommand, Company>
     {
-        public Task<string> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
+        public Task<Company> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
         {
-            
+            throw new NotImplementedException();
         }
     }
 }

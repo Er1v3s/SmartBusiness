@@ -1,3 +1,4 @@
+using AuthService.Domain.Entities;
 using FluentValidation;
 using MediatR;
 
@@ -10,11 +11,11 @@ namespace AuthService.Application.Commands.Companies
         
     }
     
-    public class GetCompanyCommandHandler : IRequestHandler<GetCompany, Company>
+    public class GetCompanyCommandHandler : IRequestHandler<GetCompanyCommand, List<Company>>
     {
-        public Task<string> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
+        public Task<List<Company>> Handle(GetCompanyCommand request, CancellationToken cancellationToken)
         {
-            // TO DO
+            throw new NotImplementedException();
         }
     }
 }
