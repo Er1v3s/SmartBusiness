@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesService.Application.Abstracts;
-using SalesService.Contracts.Dtos;
 using SalesService.Domain.Entities;
-using Shared.Exceptions;
 
 namespace SalesService.Infrastructure.Repositories
 {

@@ -1,5 +1,4 @@
-﻿using SalesService.Contracts.Dtos;
-using SalesService.Domain.Entities;
+﻿using SalesService.Domain.Entities;
 
 namespace SalesService.Application.Abstracts
 {
