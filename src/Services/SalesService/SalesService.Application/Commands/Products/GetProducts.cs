@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using SalesService.Application.Abstracts;
 using SalesService.Application.Commands.Products.Abstracts;
@@ -8,7 +7,7 @@ using Shared.Exceptions;
 
 namespace SalesService.Application.Commands.Products
 {
-    public record GetProductsCommand(Guid? Id, string? Name, string? Category, decimal? MinPrice, decimal? MaxPrice) 
+    public record GetProductsCommand(string? Id, string? Name, string? Category, decimal? MinPrice, decimal? MaxPrice) 
         : IRequest<List<Product>>;
 
     public class GetFilteredProductsCommandValidator : AbstractValidator<GetProductsCommand>
@@ -48,7 +47,7 @@ namespace SalesService.Application.Commands.Products
         {
             var query = _productRepository.GetQueryable(cancellationToken);
 
-            if(request.Id != Guid.Empty)
+            if(string.IsNullOrEmpty(request.Id))
                 query = query.Where(p => p.Id == request.Id);
 
             if (!string.IsNullOrEmpty(request.Name))
