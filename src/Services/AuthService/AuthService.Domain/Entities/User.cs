@@ -12,7 +12,6 @@
 
         public ICollection<UserCompanyRole> UserCompanyRoles { get; set; } = new List<UserCompanyRole>();
 
-
         public override string ToString()
         {
             return Username;
