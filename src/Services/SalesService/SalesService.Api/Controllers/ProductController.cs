@@ -26,14 +26,9 @@ namespace SalesService.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(
-            [FromQuery] Guid? id,
-            [FromQuery] string? name,
-            [FromQuery] string? category,
-            [FromQuery] decimal? minPrice,
-            [FromQuery] decimal? maxPrice)
+        public async Task<IActionResult> Get([FromQuery] GetProductRequest request)
         {
-            var command = new GetProductsCommand(id, name, category, minPrice, maxPrice);
+            var command = new GetProductsCommand(request.Id, request.Name, request.Category, request.MinPrice, request.MaxPrice);
             var result = await _mediator.Send(command);
 
             return Ok(result);
