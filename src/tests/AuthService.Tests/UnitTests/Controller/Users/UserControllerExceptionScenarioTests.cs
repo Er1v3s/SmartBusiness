@@ -2,37 +2,38 @@ using Moq;
 using MediatR;
 using FluentAssertions;
 using AuthService.Api.Controllers;
-using AuthService.Application.Commands.Users.ChangePassword;
-using AuthService.Application.Commands.Users.Create;
-using AuthService.Application.Commands.Users.Delete;
-using AuthService.Application.Commands.Users.Update;
+using AuthService.Application.Commands.Account;
 using AuthService.Contracts.Exceptions.Users;
-using AuthService.Contracts.Requests.Users;
+using AuthService.Contracts.Requests.Account;
+using AuthService.Application.Commands.Auth;
+using AuthService.Contracts.Requests.Auth;
 
 namespace AuthService.Tests.UnitTests.Controller.Users
 {
     public class UserControllerExceptionScenarioTests
     {
         private readonly Mock<IMediator> _mediatorMock;
-        private readonly UserController _userController;
+        private readonly AccountController _accountController;
+        private readonly AuthController _authController;
 
         public UserControllerExceptionScenarioTests()
         {
             _mediatorMock = new Mock<IMediator>();
-            _userController = new UserController(_mediatorMock.Object);
+            _accountController = new AccountController(_mediatorMock.Object);
+            _authController = new AuthController(_mediatorMock.Object);
         }
 
         [Fact]
         public async Task Create_WhenUserWithThisEmailExist_ThrowsUserAlreadyExistException()
         {
             // Arrange
-            var request = new CreateRequest("John", "john@gmail.com", "!Qwerty123");
+            var request = new RegisterUserRequest("John", "john@gmail.com", "!Qwerty123");
 
-            _mediatorMock.Setup(m => m.Send(It.IsAny<CreateUserCommand>(), It.IsAny<CancellationToken>()))
+            _mediatorMock.Setup(m => m.Send(It.IsAny<RegisterUserCommand>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new UserAlreadyExistsException());
 
             // Act
-            Func<Task> act = async () => await _userController.Create(request);
+            Func<Task> act = async () => await _authController.RegisterUser(request);
 
             // Assert
             await act.Should().ThrowAsync<UserAlreadyExistsException>();
@@ -43,13 +44,13 @@ namespace AuthService.Tests.UnitTests.Controller.Users
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var request = new UpdateRequest(userId, "John", "john@gmail.com");
+            var request = new UpdateUserRequest("John", "john@gmail.com");
 
             _mediatorMock.Setup(m => m.Send(It.IsAny<UpdateUserCommand>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new UserNotFoundException());
 
             // Act
-            Func<Task> act = async () => await _userController.Update(userId, request);
+            Func<Task> act = async () => await _accountController.UpdateUser(userId, request);
 
             // Assert
             await act.Should().ThrowAsync<UserNotFoundException>();
@@ -60,13 +61,13 @@ namespace AuthService.Tests.UnitTests.Controller.Users
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var request = new ChangePasswordRequest(userId, "!Qwerty123", "321ytrewQ!");
+            var request = new ChangePasswordRequest("!Qwerty123", "321ytrewQ!");
 
             _mediatorMock.Setup(m => m.Send(It.IsAny<ChangeUserPasswordCommand>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new UserNotFoundException());
 
             // Act
-            Func<Task> act = async () => await _userController.ChangePassword(userId, request);
+            Func<Task> act = async () => await _accountController.ChangePassword(userId, request);
 
             // Assert
             await act.Should().ThrowAsync<UserNotFoundException>();
@@ -77,13 +78,13 @@ namespace AuthService.Tests.UnitTests.Controller.Users
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var request = new ChangePasswordRequest(userId, "!Password123", "!Qwerty123");
+            var request = new ChangePasswordRequest("!Password123", "!Qwerty123");
 
             _mediatorMock.Setup(m => m.Send(It.IsAny<ChangeUserPasswordCommand>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidPasswordException("Incorrect current password"));
 
             // Act
-            Func<Task> act = async () => await _userController.ChangePassword(userId, request);
+            Func<Task> act = async () => await _accountController.ChangePassword(userId, request);
 
             // Assert
             await act.Should().ThrowAsync<InvalidPasswordException>();
@@ -94,14 +95,14 @@ namespace AuthService.Tests.UnitTests.Controller.Users
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var request = new ChangePasswordRequest(Guid.NewGuid(), "!Qwerty123", "!Qwerty123");
+            var request = new ChangePasswordRequest("!Qwerty123", "!Qwerty123");
             var expectedMessage = "New password cannot be the same as the old password";
 
             _mediatorMock.Setup(m => m.Send(It.IsAny<ChangeUserPasswordCommand>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidPasswordException(expectedMessage));
 
             // Act
-            Func<Task> act = async () => await _userController.ChangePassword(userId, request);
+            Func<Task> act = async () => await _accountController.ChangePassword(userId, request);
 
             // Assert
             await act.Should().ThrowAsync<InvalidPasswordException>().WithMessage("New password cannot be the same as the old password");
@@ -112,13 +113,13 @@ namespace AuthService.Tests.UnitTests.Controller.Users
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var request = new DeleteRequest(userId);
+            var request = new DeleteUserRequest(userId);
 
             _mediatorMock.Setup(m => m.Send(It.IsAny<DeleteUserCommand>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new UserNotFoundException());
 
             // Act
-            Func<Task> act = async () => await _userController.Delete(userId);
+            Func<Task> act = async () => await _accountController.DeleteUser(userId);
 
             // Assert
             await act.Should().ThrowAsync<UserNotFoundException>();

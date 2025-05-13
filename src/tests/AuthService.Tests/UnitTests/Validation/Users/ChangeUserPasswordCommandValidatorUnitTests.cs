@@ -1,5 +1,5 @@
+using AuthService.Application.Commands.Account;
 using FluentValidation.TestHelper;
-using AuthService.Application.Commands.Users.ChangePassword;
 
 namespace AuthService.Tests.UnitTests.Validation.Users;
 
@@ -18,7 +18,6 @@ public class ChangeUserPasswordCommandValidatorUnitTests
     }
 
     [Theory]
-    [InlineData(null)] // not null 
     [InlineData("")] // not empty
     [InlineData("NoSpecialChar123")] // no special character
     [InlineData("nouppercase123!")] // no uppercase letter

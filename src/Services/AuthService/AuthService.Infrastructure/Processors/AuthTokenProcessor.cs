@@ -35,7 +35,7 @@ namespace AuthService.Infrastructure.Processors
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret));
             var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddHours(_jwtOptions.ExpirationTimeInHours);
+            var expires = DateTime.Now.AddMinutes(_jwtOptions.ExpirationTimeInMinutes);
 
             var token = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,

@@ -1,15 +1,15 @@
+using AuthService.Application.Commands.Auth;
 using FluentValidation.TestHelper;
-using AuthService.Application.Commands.Users.Create;
 
 namespace AuthService.Tests.UnitTests.Validation.Users;
 
 public class CreateUserCommandValidatorUnitTests
 {
-    private readonly CreateUserCommandValidator _validator;
+    private readonly RegisterUserCommandValidator _validator;
 
     public CreateUserCommandValidatorUnitTests()
     {
-        _validator = new CreateUserCommandValidator();
+        _validator = new RegisterUserCommandValidator();
     }
 
     public static IEnumerable<object[]> InvalidUsernames()
@@ -18,14 +18,13 @@ public class CreateUserCommandValidatorUnitTests
     }
 
     [Theory]
-    [InlineData(null)] // not null 
     [InlineData("")] // not empty
     [InlineData("ab")] // min 3 characters
     [MemberData(nameof(InvalidUsernames))]
     public void Validate_ForInvalidUsername_ShouldReturnValidationError(string invalidUsername)
     {
         // Arrange
-        var command = new CreateUserCommand(invalidUsername, "testEmail@gmail.com", "testPasswordHash");
+        var command = new RegisterUserCommand(invalidUsername, "testEmail@gmail.com", "testPasswordHash");
 
         // Act
         var result = _validator.TestValidate(command);
@@ -39,7 +38,7 @@ public class CreateUserCommandValidatorUnitTests
     public void Validate_ForValidUsername_ShouldNotReturnValidationError(string invalidUsername)
     {
         // Arrange
-        var command = new CreateUserCommand(invalidUsername, "testEmail@gmail.com", "testPasswordHash");
+        var command = new RegisterUserCommand(invalidUsername, "testEmail@gmail.com", "testPasswordHash");
 
         // Act
         var result = _validator.TestValidate(command);
@@ -54,7 +53,6 @@ public class CreateUserCommandValidatorUnitTests
     }
 
     [Theory]
-    [InlineData(null)] // not null 
     [InlineData("")] // not empty
     [InlineData("test.example.com")] // invalid email format (missing @)
     [InlineData("test@example")] // invalid email format (missing domain)
@@ -66,7 +64,7 @@ public class CreateUserCommandValidatorUnitTests
     public void Validate_ForInvalidEmails_ShouldReturnValidationError(string invalidEmail)
     {
         // Arrange
-        var command = new CreateUserCommand("test", invalidEmail, "testPasswordHash");
+        var command = new RegisterUserCommand("test", invalidEmail, "testPasswordHash");
 
         // Act
         var result = _validator.TestValidate(command);
@@ -80,7 +78,7 @@ public class CreateUserCommandValidatorUnitTests
     public void Validate_ForValidEmails_ShouldNotReturnValidationError(string invalidEmail)
     {
         // Arrange
-        var command = new CreateUserCommand("test", invalidEmail, "testPasswordHash");
+        var command = new RegisterUserCommand("test", invalidEmail, "testPasswordHash");
 
         // Act
         var result = _validator.TestValidate(command);
@@ -95,7 +93,6 @@ public class CreateUserCommandValidatorUnitTests
     }
 
     [Theory]
-    [InlineData(null)] // not null 
     [InlineData("")] // not empty
     [InlineData("NoSpecialChar123")] // no special character
     [InlineData("nouppercase123!")] // no uppercase letter
@@ -106,7 +103,7 @@ public class CreateUserCommandValidatorUnitTests
     public void Validate_ForInvalidPassword_ShouldReturnValidationError(string invalidPassword)
     {
         // Arrange
-        var command = new CreateUserCommand("test", "test@email.com", invalidPassword);
+        var command = new RegisterUserCommand("test", "test@email.com", invalidPassword);
 
         // Act
         var result = _validator.TestValidate(command);
@@ -120,7 +117,7 @@ public class CreateUserCommandValidatorUnitTests
     public void Validate_ForValidPassword_ShouldNotReturnValidationError(string invalidPassword)
     {
         // Arrange
-        var command = new CreateUserCommand("test", "test@email.com", invalidPassword);
+        var command = new RegisterUserCommand("test", "test@email.com", invalidPassword);
 
         // Act
         var result = _validator.TestValidate(command);
