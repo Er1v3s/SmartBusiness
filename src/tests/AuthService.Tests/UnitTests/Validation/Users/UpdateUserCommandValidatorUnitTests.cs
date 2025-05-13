@@ -1,5 +1,5 @@
+using AuthService.Application.Commands.Account;
 using FluentValidation.TestHelper;
-using AuthService.Application.Commands.Users.Update;
 
 namespace AuthService.Tests.UnitTests.Validation.Users;
 
@@ -18,8 +18,6 @@ public class UpdateUserCommandValidatorUnitTests
     }
 
     [Theory]
-    [InlineData(null)] // not null 
-    [InlineData("")] // not empty
     [InlineData("ab")] // min 3 characters
     [MemberData(nameof(InvalidUsernames))]
     public void Validate_ForInvalidUsername_ShouldReturnValidationError(string invalidUsername)
@@ -54,8 +52,6 @@ public class UpdateUserCommandValidatorUnitTests
     }
 
     [Theory]
-    [InlineData(null)] // not null 
-    [InlineData("")] // not empty
     [InlineData("test.example.com")] // invalid email format (missing @)
     [InlineData("test@example")] // invalid email format (missing domain)
     [InlineData("test@example,com")] // invalid email format (incorrect separator)

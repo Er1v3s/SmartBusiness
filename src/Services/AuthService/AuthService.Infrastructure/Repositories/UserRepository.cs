@@ -1,5 +1,5 @@
 ﻿using AuthService.Application.Abstracts;
-using AuthService.Contracts.DataTransferObjects;
+using AuthService.Contracts.DTOs;
 using AuthService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,16 +38,27 @@ namespace AuthService.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateUserAsync(User existingUser, UserDto userUpdated, CancellationToken cancellationToken)
+        //public async Task UpdateUserAsync(User existingUser, UserDto userUpdated, CancellationToken cancellationToken)
+        //{
+        //    if (existingUser.Email != userUpdated.Email)
+        //        existingUser.Email = userUpdated.Email;
+
+        //    if (existingUser.Username != userUpdated.Username)
+        //        existingUser.Username = userUpdated.Username;
+
+        //    existingUser.RefreshToken = userUpdated.RefreshToken;
+        //    existingUser.RefreshTokenExpiresAtUtc = userUpdated.RefreshTokenExpiresAtUtc;
+
+        //    _dbContext.Users.Update(existingUser);
+        //    await _dbContext.SaveChangesAsync(cancellationToken);
+        //}
+
+        public async Task UpdateUserAsync(User updatedUser)
         {
-            if (existingUser.Email != userUpdated.Email)
-                existingUser.Email = userUpdated.Email;
+            var existingUser = (await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == updatedUser.Id))!;
+            _dbContext.Entry(existingUser).CurrentValues.SetValues(updatedUser);
 
-            if (existingUser.Username != userUpdated.Username)
-                existingUser.Username = userUpdated.Username;
-
-            _dbContext.Users.Update(existingUser);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteUserAsync(User user, CancellationToken cancellationToken)
@@ -61,6 +72,12 @@ namespace AuthService.Infrastructure.Repositories
             user.PasswordHash = newPassword;
             _dbContext.Users.Update(user);
             await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<User?> GetUserByRefreshTokenAsync(string refreshToken)
+        {
+            return await _dbContext.Users
+                .FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
         }
     }
 }

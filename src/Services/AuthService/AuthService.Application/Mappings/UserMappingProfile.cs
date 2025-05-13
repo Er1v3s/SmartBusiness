@@ -1,6 +1,6 @@
-﻿using AutoMapper;
+﻿using AuthService.Contracts.DTOs;
+using AutoMapper;
 using AuthService.Domain.Entities;
-using AuthService.Contracts.DataTransferObjects;
 
 namespace AuthService.Application.Mappings
 {

@@ -7,9 +7,14 @@
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public string? RefreshToken { get; set; } = null;
-        public DateTime? RefreshTokenExpiryTime { get; set; } = null;
+        public DateTime? RefreshTokenExpiresAtUtc { get; set; } = null;
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
         public ICollection<UserCompanyRole> UserCompanyRoles { get; set; } = new List<UserCompanyRole>();
+
+        public override string ToString()
+        {
+            return Username;
+        }
     }
 }

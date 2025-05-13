@@ -1,9 +1,11 @@
-﻿using MediatR;
-using AuthService.Application.Abstracts;
+﻿using AuthService.Application.Abstracts;
 using AuthService.Contracts.Exceptions.Users;
+using MediatR;
 
-namespace AuthService.Application.Commands.Users.Delete
+namespace AuthService.Application.Commands.Account
 {
+    public record DeleteUserCommand(Guid Id) : IRequest;
+
     public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
     {
         private readonly IUserRepository _userRepository;
@@ -14,10 +16,8 @@ namespace AuthService.Application.Commands.Users.Delete
 
         public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByIdAsync(request.Id, cancellationToken);
-
-            if (user == null)
-                throw new UserNotFoundException();
+            var user = await _userRepository.GetUserByIdAsync(request.Id, cancellationToken)
+                ?? throw new UserNotFoundException();
 
             await _userRepository.DeleteUserAsync(user, cancellationToken);
         }

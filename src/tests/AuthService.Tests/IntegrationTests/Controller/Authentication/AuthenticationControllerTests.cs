@@ -1,8 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
-using AuthService.Contracts.Requests.Users.Authentication;
+using AuthService.Contracts.Requests.Auth;
 using AuthService.Tests.Helpers;
 using FluentAssertions;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace AuthService.Tests.IntegrationTests.Controller.Authentication
 {
@@ -18,7 +19,7 @@ namespace AuthService.Tests.IntegrationTests.Controller.Authentication
             await IntegrationTestsHelper.SeedInMemoryDatabaseAsync(user);
 
             // user.PasswordHash is hashed because of the seed db method.
-            var request = new LoginRequest(user.Email, password);
+            var request = new LoginUserRequest(user.Email, password);
             var content = JsonContent.Create(request); 
             
             // Act 
@@ -36,7 +37,7 @@ namespace AuthService.Tests.IntegrationTests.Controller.Authentication
             var user = IntegrationTestsHelper.GenerateUser();
 
             // user.PasswordHash is hashed because of the seed db method.
-            var request = new LoginRequest(user.Email, password);
+            var request = new LoginUserRequest(user.Email, password);
             var content = JsonContent.Create(request); 
             
             // Act 
@@ -53,7 +54,7 @@ namespace AuthService.Tests.IntegrationTests.Controller.Authentication
             var user = IntegrationTestsHelper.GenerateUser();
             await IntegrationTestsHelper.SeedInMemoryDatabaseAsync(user);
 
-            var request = new LoginRequest(user.Email, "!invalidPassword123");
+            var request = new LoginUserRequest(user.Email, "!invalidPassword123");
             var content = JsonContent.Create(request); 
             
             // Act 
