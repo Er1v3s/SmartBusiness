@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AuthService.Contracts.Exceptions.Auth;
+using Microsoft.AspNetCore.Mvc;
 using AuthService.Contracts.Exceptions.Users;
 
 namespace AuthService.Api.Handlers.CustomExceptionHandlers
@@ -9,7 +10,8 @@ namespace AuthService.Api.Handlers.CustomExceptionHandlers
         {
             typeof(UserNotFoundException),
             typeof(UserAlreadyExistsException),
-            typeof(InvalidPasswordException)
+            typeof(InvalidPasswordException),
+            typeof(RefreshTokenException),
         };
 
         public override bool CanHandle(Exception ex) => HandledExceptions.Contains(ex.GetType());
@@ -21,6 +23,7 @@ namespace AuthService.Api.Handlers.CustomExceptionHandlers
                 UserNotFoundException => CreateProblemDetails(StatusCodes.Status404NotFound, "Not Found", exception.Message),
                 UserAlreadyExistsException => CreateProblemDetails(StatusCodes.Status409Conflict, "Conflict", exception.Message),
                 InvalidPasswordException => CreateProblemDetails(StatusCodes.Status400BadRequest, "Bad request", exception.Message),
+                RefreshTokenException => CreateProblemDetails(StatusCodes.Status401Unauthorized, "Unauthorized", exception.Message),
                 _ => base.CreateProblemDetails(exception)
             };
         }

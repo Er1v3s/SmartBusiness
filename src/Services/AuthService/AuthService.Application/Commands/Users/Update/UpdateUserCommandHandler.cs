@@ -1,6 +1,5 @@
 ﻿using AuthService.Application.Abstracts;
-using AuthService.Application.Commands.Users.Update;
-using AuthService.Contracts.DataTransferObjects;
+using AuthService.Contracts.DTOs;
 using AuthService.Contracts.Exceptions.Users;
 using AuthService.Domain.Entities;
 using MediatR;

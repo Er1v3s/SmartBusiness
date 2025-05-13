@@ -21,9 +21,12 @@ namespace AuthService.Api.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var command = new LoginUserCommand(request.Email, request.Password);
-            var result = await _mediator.Send(command);
+            //var result = await _mediator.Send(command);
 
-            return Ok(result);
+            //return Ok(result);
+
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }

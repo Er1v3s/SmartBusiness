@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using AuthService.Application.Abstracts;
-using AuthService.Contracts.DataTransferObjects;
+using AuthService.Contracts.DTOs;
+using AuthService.Domain.Entities;
 using AuthService.Infrastructure.Options;
 
 namespace AuthService.Infrastructure.Processors
@@ -22,14 +23,14 @@ namespace AuthService.Infrastructure.Processors
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public (string jwtToken, DateTime expiresAtUtc) GenerateJwtToken(UserDto userDto)
+        public (string jwtToken, DateTime expiresAtUtc) GenerateJwtToken(User user)
         {
             var claims = new List<Claim>
             {
-                new (JwtRegisteredClaimNames.Sub, userDto.Id.ToString()),
+                new (JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new (JwtRegisteredClaimNames.Email, userDto.Email),
-                new (ClaimTypes.NameIdentifier, userDto.Username),
+                new (JwtRegisteredClaimNames.Email, user.Email),
+                new (ClaimTypes.NameIdentifier, user.Username),
             };
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret));

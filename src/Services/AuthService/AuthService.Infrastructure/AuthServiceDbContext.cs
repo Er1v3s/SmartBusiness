@@ -33,7 +33,7 @@ namespace AuthService.Infrastructure
                 entity.Property(e => e.PasswordHash).IsRequired();
 
                 entity.Property(e => e.RefreshToken).IsRequired(false);
-                entity.Property(e => e.RefreshTokenExpiryTime).IsRequired(false);
+                entity.Property(e => e.RefreshTokenExpiresAtUtc).IsRequired(false);
 
                 
             });
