@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using AuthService.Application.Abstracts;
-using AuthService.Contracts.DTOs;
 using AuthService.Domain.Entities;
 using AuthService.Infrastructure.Options;
 
@@ -30,7 +29,6 @@ namespace AuthService.Infrastructure.Processors
                 new (JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new (JwtRegisteredClaimNames.Email, user.Email),
-                new (ClaimTypes.NameIdentifier, user.Username),
             };
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret));
