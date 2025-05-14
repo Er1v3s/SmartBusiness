@@ -7,7 +7,7 @@ namespace SalesService.Application.Abstracts
         Task AddProductAsync(Product product);
         Task UpdateProductAsync(Product product);
         Task DeleteProductAsync(Product product);
-        IQueryable<Product> GetQueryable(CancellationToken cancellationToken);
+        IQueryable<Product> GetQueryable();
         Task<List<Product>> GetFilteredProductsAsync(IQueryable<Product> query, CancellationToken cancellationToken);
     }
 }

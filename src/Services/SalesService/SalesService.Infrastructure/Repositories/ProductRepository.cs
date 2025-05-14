@@ -33,7 +33,7 @@ namespace SalesService.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public IQueryable<Product> GetQueryable(CancellationToken cancellationToken)
+        public IQueryable<Product> GetQueryable()
         {
             return _dbContext.Products.AsQueryable();
         }
