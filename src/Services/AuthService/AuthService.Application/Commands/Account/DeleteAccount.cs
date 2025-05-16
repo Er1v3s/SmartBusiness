@@ -1,6 +1,6 @@
-﻿using AuthService.Application.Abstracts;
+﻿using MediatR;
+using AuthService.Application.Abstracts;
 using AuthService.Contracts.Exceptions.Users;
-using MediatR;
 
 namespace AuthService.Application.Commands.Account
 {

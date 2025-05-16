@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using AuthService.Application.Commands.Auth;
 using AuthService.Contracts.Requests.Auth;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace AuthService.Api.Controllers
 {
@@ -26,6 +28,18 @@ namespace AuthService.Api.Controllers
             return Ok();
         }
 
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            var command = new LogoutUserCommand(userId);
+            await _mediator.Send(command);
+
+            return Ok();
+        }
+
+
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequest request)
         {
@@ -36,13 +50,13 @@ namespace AuthService.Api.Controllers
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        public async Task<IActionResult> RefreshToken()
         {
-            var command = new RefreshTokenCommand(request.RefreshToken);
-
+            var refreshToken = Request.Cookies["REFRESH_TOKEN"];
+            var command = new RefreshTokenCommand(refreshToken);
             await _mediator.Send(command);
+
             return Ok();
         }
     }
 }
-

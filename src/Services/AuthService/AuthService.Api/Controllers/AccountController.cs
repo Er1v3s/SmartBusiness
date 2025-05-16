@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AuthService.Application.Commands.Account;
 using AuthService.Contracts.Requests.Account;
+using System.Security.Claims;
 
 namespace AuthService.Api.Controllers
 {   
@@ -17,34 +18,31 @@ namespace AuthService.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPut("{id}/update")]
-        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserRequest request)
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
         {
-            var command = new UpdateUserCommand(id, request.Username, request.Email);
-
-            //var result = await _mediator.Send(command);
-            //return Ok(result);
-
+            Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            var command = new UpdateUserCommand(userId, request.Username, request.Email);
             await _mediator.Send(command);
+
             return Ok();
         }
 
-        [HttpPut("{id}/change-password")]
-        public async Task<IActionResult> ChangePassword(Guid id, [FromBody] ChangePasswordRequest request)
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {
-            var command = new ChangeUserPasswordCommand(id, request.CurrentPassword, request.NewPassword);
-
-            //var result = await _mediator.Send(command);
-            //return Ok(result);
-
+            Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            var command = new ChangeUserPasswordCommand(userId, request.CurrentPassword, request.NewPassword);
             await _mediator.Send(command);
+
             return Ok();
         }
 
-        [HttpDelete("{id}/delete")]
+        [HttpDelete("delete")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
-            var command = new DeleteUserCommand(id);
+            Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            var command = new DeleteUserCommand(userId);
             await _mediator.Send(command);
 
             return NoContent();
