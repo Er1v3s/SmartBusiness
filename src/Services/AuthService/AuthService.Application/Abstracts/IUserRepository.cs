@@ -1,18 +1,18 @@
-﻿using AuthService.Contracts.DTOs;
-using AuthService.Domain.Entities;
+﻿using AuthService.Domain.Entities;
 
 namespace AuthService.Application.Abstracts
 {
     public interface IUserRepository
     {
-        Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken);
-        Task<User?> GetUserByIdAsync(Guid userId, CancellationToken cancellationToken);
-        Task<bool> IsEmailInUseAsync(string email, CancellationToken cancellationToken);
-        Task AddUserAsync(User user, CancellationToken cancellationToken);
-        //Task UpdateUserAsync(User existingUser, UserDto userUpdated, CancellationToken cancellationToken);
+        Task<User?> GetUserByEmailAsync(string email);
+        IQueryable<User> GetQueryableIncludingProperties();
+        Task<User?> GetFilteredUserAsync(IQueryable<User> query, CancellationToken cancellationToken);
+        Task<User?> GetUserByIdAsync(Guid userId);
+        Task<bool> IsEmailInUseAsync(string email);
+        Task AddUserAsync(User user);
         Task UpdateUserAsync(User updatedUser);
-        Task DeleteUserAsync(User user, CancellationToken cancellationToken);
-        Task ChangeUserPasswordAsync(User user, string newPassword, CancellationToken cancellationToken);
+        Task DeleteUserAsync(User user);
+        Task ChangeUserPasswordAsync(User user, string newPassword);
         Task<User?> GetUserByRefreshTokenAsync(string refreshToken);
     }
 }

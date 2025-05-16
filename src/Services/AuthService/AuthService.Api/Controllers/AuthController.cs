@@ -21,11 +21,8 @@ namespace AuthService.Api.Controllers
         public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
         {
             var command = new LoginUserCommand(request.Email, request.Password);
-
-            //var result = await _mediator.Send(command);
-            //return Ok(result);
-
             await _mediator.Send(command);
+
             return Ok();
         }
 
@@ -42,9 +39,6 @@ namespace AuthService.Api.Controllers
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
             var command = new RefreshTokenCommand(request.RefreshToken);
-
-            //var result = await _mediator.Send(command);
-            //return Ok(result);
 
             await _mediator.Send(command);
             return Ok();

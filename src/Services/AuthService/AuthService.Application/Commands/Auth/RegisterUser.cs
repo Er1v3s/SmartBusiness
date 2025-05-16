@@ -51,7 +51,7 @@ namespace AuthService.Application.Commands.Auth
 
         public async Task Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            var isEmailInUse = await _userRepository.IsEmailInUseAsync(request.Email, cancellationToken);
+            var isEmailInUse = await _userRepository.IsEmailInUseAsync(request.Email);
             if (isEmailInUse)
                 throw new UserAlreadyExistsException("Email is already in use");
 
@@ -64,7 +64,7 @@ namespace AuthService.Application.Commands.Auth
                 PasswordHash = passwordHash
             };
 
-            await _userRepository.AddUserAsync(user, cancellationToken);
+            await _userRepository.AddUserAsync(user);
         }
     }
 }

@@ -16,10 +16,10 @@ namespace AuthService.Application.Commands.Account
 
         public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByIdAsync(request.Id, cancellationToken)
+            var user = await _userRepository.GetUserByIdAsync(request.Id)
                 ?? throw new UserNotFoundException();
 
-            await _userRepository.DeleteUserAsync(user, cancellationToken);
+            await _userRepository.DeleteUserAsync(user);
         }
     }
 }

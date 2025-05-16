@@ -45,7 +45,7 @@ namespace SalesService.Application.Commands.Products
 
         public async Task<List<Product>> Handle(GetProductsCommand request, CancellationToken cancellationToken)
         {
-            var query = _productRepository.GetQueryable(cancellationToken);
+            var query = _productRepository.GetQueryable();
 
             if(string.IsNullOrEmpty(request.Id))
                 query = query.Where(p => p.Id == request.Id);

@@ -42,7 +42,6 @@ namespace AuthService.Infrastructure
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
-                
             });
 
             modelBuilder.Entity<Role>(entity =>
