@@ -4,7 +4,6 @@ using AuthService.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthService.Infrastructure.Migrations
 {
     [DbContext(typeof(AuthServiceDbContext))]
-    [Migration("20250512123803_Rename_CreatedBy_Field")]
-    partial class Rename_CreatedBy_Field
+    partial class AuthServiceDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,12 +30,6 @@ namespace AuthService.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("CreatedByUserId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -46,18 +37,13 @@ namespace AuthService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId1");
-
                     b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("AuthService.Domain.Entities.Role", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -90,7 +76,7 @@ namespace AuthService.Infrastructure.Migrations
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                    b.Property<DateTime?>("RefreshTokenExpiresAtUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Username")
@@ -114,8 +100,8 @@ namespace AuthService.Infrastructure.Migrations
                     b.Property<string>("CompanyId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("UserId", "CompanyId", "RoleId");
 
@@ -124,15 +110,6 @@ namespace AuthService.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserCompanyRoles");
-                });
-
-            modelBuilder.Entity("AuthService.Domain.Entities.Company", b =>
-                {
-                    b.HasOne("AuthService.Domain.Entities.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId1");
-
-                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("AuthService.Domain.Entities.UserCompanyRole", b =>
