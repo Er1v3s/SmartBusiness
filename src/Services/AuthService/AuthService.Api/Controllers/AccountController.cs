@@ -39,7 +39,7 @@ namespace AuthService.Api.Controllers
         }
 
         [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteUser(Guid id)
+        public async Task<IActionResult> DeleteUser()
         {
             Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
             var command = new DeleteUserCommand(userId);

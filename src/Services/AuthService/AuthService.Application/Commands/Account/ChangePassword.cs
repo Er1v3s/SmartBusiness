@@ -40,8 +40,8 @@ namespace AuthService.Application.Commands.Account
         public async Task Handle(ChangeUserPasswordCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetUserByIdAsync(request.Id)
-                ?? throw new UserNotFoundException();
-            
+                       ?? throw new UserNotFoundException();
+
             if (_passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.CurrentPassword) != PasswordVerificationResult.Success)
                 throw new InvalidPasswordException("Incorrect current password");
 
