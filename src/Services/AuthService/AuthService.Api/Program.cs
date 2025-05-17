@@ -83,9 +83,7 @@ namespace AuthService.Api
 
             #region exceptions handling
 
-            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-            builder.Services.AddScoped<ICustomExceptionHandler, GenericExceptionHandler>();
-            builder.Services.AddScoped<ICustomExceptionHandler, UserExceptionHandler>();
+            builder.Services.AddExceptionHandling();
 
             #endregion 
 

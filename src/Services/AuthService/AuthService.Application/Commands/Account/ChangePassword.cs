@@ -39,9 +39,9 @@ namespace AuthService.Application.Commands.Account
 
         public async Task Handle(ChangeUserPasswordCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByIdAsync(request.Id, cancellationToken)
-                ?? throw new UserNotFoundException();
-            
+            var user = await _userRepository.GetUserByIdAsync(request.Id)
+                       ?? throw new UserNotFoundException();
+
             if (_passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.CurrentPassword) != PasswordVerificationResult.Success)
                 throw new InvalidPasswordException("Incorrect current password");
 
@@ -50,7 +50,7 @@ namespace AuthService.Application.Commands.Account
 
             var newPasswordHash = _passwordHasher.HashPassword(user, request.NewPassword);
 
-            await _userRepository.ChangeUserPasswordAsync(user, newPasswordHash, cancellationToken);
+            await _userRepository.ChangeUserPasswordAsync(user, newPasswordHash);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace AuthService.Application.Commands.Account
 
         public async Task Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByIdAsync(request.Id, cancellationToken)
+            var user = await _userRepository.GetUserByIdAsync(request.Id)
                 ?? throw new UserNotFoundException();
 
             if(!string.IsNullOrEmpty(request.Username))

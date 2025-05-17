@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using AuthService.Application.Abstracts;
-using AuthService.Contracts.DTOs;
 using AuthService.Domain.Entities;
 using AuthService.Infrastructure.Options;
 
@@ -27,11 +26,15 @@ namespace AuthService.Infrastructure.Processors
         {
             var claims = new List<Claim>
             {
-                new (JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new (JwtRegisteredClaimNames.Email, user.Email),
-                new (ClaimTypes.NameIdentifier, user.Username),
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new(ClaimTypes.Email, user.Email),
             };
+
+            foreach (var userCompanyRole in user.UserCompanyRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, userCompanyRole.Role.Name));
+                claims.Add(new Claim("companyId", userCompanyRole.CompanyId));
+            }
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret));
             var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);

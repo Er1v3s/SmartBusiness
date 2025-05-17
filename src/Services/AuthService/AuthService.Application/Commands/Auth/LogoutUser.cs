@@ -1,0 +1,35 @@
+﻿using MediatR;
+using AuthService.Application.Abstracts;
+using AuthService.Contracts.Exceptions.Users;
+
+namespace AuthService.Application.Commands.Auth
+{
+    public record LogoutUserCommand(Guid UserId) : IRequest;
+
+    public class LogoutUserCommandHandler : IRequestHandler<LogoutUserCommand>
+    {
+        private readonly IUserRepository _userRepository;
+        private readonly IAuthTokenProcessor _authTokenProcessor;
+
+        public LogoutUserCommandHandler(IUserRepository userRepository, IAuthTokenProcessor authTokenProcessor)
+        {
+            _userRepository = userRepository;
+            _authTokenProcessor = authTokenProcessor;
+        }
+        public async Task Handle(LogoutUserCommand request, CancellationToken cancellationToken)
+        {
+            var user = await _userRepository.GetUserByIdAsync(request.UserId)
+                ?? throw new UserNotFoundException();
+
+            var expirationTimeInUtc = DateTime.UtcNow.AddHours(-1);
+
+            _authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("ACCESS_TOKEN", "", expirationTimeInUtc);
+            _authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("REFRESH_TOKEN", "", expirationTimeInUtc);
+
+            user.RefreshToken = null;
+            user.RefreshTokenExpiresAtUtc = null;
+
+            await _userRepository.UpdateUserAsync(user);
+        }
+    }
+}

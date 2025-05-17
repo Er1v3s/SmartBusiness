@@ -1,6 +1,6 @@
-﻿using AuthService.Application.Abstracts;
+﻿using MediatR;
+using AuthService.Application.Abstracts;
 using AuthService.Contracts.Exceptions.Auth;
-using MediatR;
 
 namespace AuthService.Application.Commands.Auth
 {
@@ -11,7 +11,9 @@ namespace AuthService.Application.Commands.Auth
         private readonly IUserRepository _userRepository;
         private readonly IAuthTokenProcessor _authTokenProcessor;
 
-        public RefreshTokenCommandHandler(IUserRepository userRepository, IAuthTokenProcessor authTokenProcessor)
+        public RefreshTokenCommandHandler(
+            IUserRepository userRepository,
+            IAuthTokenProcessor authTokenProcessor)
         {
             _userRepository = userRepository;
             _authTokenProcessor = authTokenProcessor;
@@ -22,10 +24,15 @@ namespace AuthService.Application.Commands.Auth
             if (string.IsNullOrEmpty(request.RefreshToken))
                 throw new RefreshTokenException("Refresh token is missing.");
 
-            var user = await _userRepository.GetUserByRefreshTokenAsync(request.RefreshToken)
+            var decodedRefreshToken = Uri.UnescapeDataString(request.RefreshToken);
+
+            var query = _userRepository.GetQueryableIncludingProperties();
+            query = query.Where(u => u.RefreshToken == request.RefreshToken);
+
+            var user = await _userRepository.GetFilteredUserAsync(query, cancellationToken)
                        ?? throw new RefreshTokenException("Unable to retrieve user for refresh token.");
 
-            if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiresAtUtc < DateTime.UtcNow)
+            if (user.RefreshToken != decodedRefreshToken || user.RefreshTokenExpiresAtUtc < DateTime.UtcNow)
                 throw new RefreshTokenException("Refresh token is expired.");
 
             var (jwtToken, expirationDateInUtc) = _authTokenProcessor.GenerateJwtToken(user);

@@ -1,13 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NanoidDotNet;
+using System.ComponentModel.DataAnnotations;
 
 namespace AuthService.Domain.Entities
 {
-    public class Role
+    public class Role(string name)
     {
         [Key]
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-
+        public string Id { get; set; } = Nanoid.Generate(size: 11);
+        public string Name { get; set; } = name;
         public ICollection<UserCompanyRole> UserCompanyRoles { get; set; } = new List<UserCompanyRole>();
     }
 }

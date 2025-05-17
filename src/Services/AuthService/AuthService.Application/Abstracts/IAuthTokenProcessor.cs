@@ -1,5 +1,4 @@
-﻿using AuthService.Contracts.DTOs;
-using AuthService.Domain.Entities;
+﻿using AuthService.Domain.Entities;
 
 namespace AuthService.Application.Abstracts
 {
@@ -10,4 +9,3 @@ namespace AuthService.Application.Abstracts
         void WriteAuthTokenAsHttpOnlyCookie(string cookieName, string token, DateTime expiration);
     }
 }
-

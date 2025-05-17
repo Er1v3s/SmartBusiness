@@ -32,7 +32,10 @@ namespace AuthService.Application.Commands.Auth
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IAuthTokenProcessor _authTokenProcessor;
 
-        public LoginUserCommandHandler(IUserRepository userRepository, IPasswordHasher<User> passwordHasher, IAuthTokenProcessor authTokenProcessor)
+        public LoginUserCommandHandler(
+            IUserRepository userRepository,
+            IPasswordHasher<User> passwordHasher,
+            IAuthTokenProcessor authTokenProcessor)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
@@ -41,7 +44,10 @@ namespace AuthService.Application.Commands.Auth
 
         public async Task Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByEmailAsync(request.Email, cancellationToken)
+            var query = _userRepository.GetQueryableIncludingProperties();
+            query = query.Where(u => u.Email == request.Email);
+
+            var user = await _userRepository.GetFilteredUserAsync(query, cancellationToken)
                 ?? throw new UserNotFoundException();
 
             if (_passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password) !=
