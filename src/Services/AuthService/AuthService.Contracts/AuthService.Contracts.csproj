@@ -16,4 +16,9 @@
     <Folder Include="Exceptions\Validation\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AuthService.Domain\AuthService.Domain.csproj" />
+      <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+  </ItemGroup>
+
 </Project>

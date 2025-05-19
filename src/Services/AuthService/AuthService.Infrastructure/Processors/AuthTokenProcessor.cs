@@ -65,6 +65,7 @@ namespace AuthService.Infrastructure.Processors
                 Expires = expiration,
                 IsEssential = true,
                 Secure = true,
+                // SameSite = SameSiteMode.None,
                 SameSite = SameSiteMode.Strict,
             };
 
