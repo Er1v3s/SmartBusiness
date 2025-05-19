@@ -1,51 +1,51 @@
-using AuthService.Contracts.Requests.Companies;
 using MediatR;
 using System.Security.Claims;
+using AuthService.Application.Commands.CompanyRole;
+using AuthService.Contracts.Requests.CompanyRole;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using AuthService.Application.Commands.Companies;
-using AuthService.Contracts.Requests.Companies;
 
 namespace AuthService.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/company/role")]
     [Authorize]
-    public class CompanyController : ControllerBase
+    public class CompanyRoleController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public CompanyController(IMediator mediator)
+        public CompanyRoleController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCompany([FromQuery] GetCompanyRequest request)
+        public async Task<IActionResult> GetCompanyRoles([FromQuery] GetCompanyRoleRequest request)
         {
             Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new GetCompanyCommand(userId, request.Id, request.Name);
+            var command = new GetCompanyRoleCommand(userId, request.Id, request.Name);
             var result = await _mediator.Send(command);
             
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCompany([FromBody] CreateCompanyRequest request)
+        [Authorize(Roles = "Owner")]
+        public async Task<IActionResult> CreateCompanyRole([FromBody] CreateCompanyRoleRequest request)
         {
             Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new CreateCompanyCommand(userId, request.Name);
+            var command = new CreateCompanyRoleCommand(userId, request.Id, request.Name);
             var result = await _mediator.Send(command);
             
-            return Created($"/api/company?Id={result.Id}", result);
+            return Created($"/api/company/role?Id={result.Id}", result);
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Owner")]
-        public async Task<IActionResult> UpdateCompany(string id, [FromBody] UpdateCompanyRequest request)
+        public async Task<IActionResult> UpdateCompanyRole(string id, [FromBody] UpdateCompanyRoleRequest request)
         {
             Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new UpdateCompanyCommand(userId, id, request.Name);
+            var command = new UpdateCompanyRoleCommand(userId, id, request.Name);
             var result = await _mediator.Send(command);
             
             return Ok(result);
@@ -53,10 +53,10 @@ namespace AuthService.Api.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Owner")]
-        public async Task<IActionResult> DeleteCompany(string id)
+        public async Task<IActionResult> DeleteCompanyRole(string id)
         {
             Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new DeleteCompanyCommand(userId, id);
+            var command = new DeleteCompanyRoleCommand(userId, id);
             await _mediator.Send(command);
             
             return NoContent();

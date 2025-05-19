@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using FluentValidation;
 using AuthService.Application.Abstracts;
@@ -12,14 +13,14 @@ namespace AuthService.Application.Commands.Companies
     public class GetCompanyCommandHandler : IRequestHandler<GetCompanyCommand, List<CompanyDto>>
     {
         private readonly ICompanyRepository _companyRepository;
-
+        
         public GetCompanyCommandHandler(ICompanyRepository companyRepository)
         {
             _companyRepository = companyRepository;
-        }
-
+    }
+    
         public async Task<List<CompanyDto>> Handle(GetCompanyCommand request, CancellationToken cancellationToken)
-        {
+    {
             var query = _companyRepository.GetQueryableIncludingProperties();
 
             // Get only the companies created by the user

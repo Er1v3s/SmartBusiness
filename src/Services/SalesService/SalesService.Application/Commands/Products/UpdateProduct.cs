@@ -1,33 +1,42 @@
-﻿using AutoMapper;
+﻿using FluentValidation;
 using MediatR;
 using SalesService.Application.Abstracts;
 using SalesService.Application.Commands.Products.Abstracts;
-using SalesService.Domain.Entities;
+using SalesService.Contracts.Dtos;
 
 namespace SalesService.Application.Commands.Products
 {
     public record UpdateProductCommand(Guid Id, string Name, string Description, List<string> Category, decimal Price, int Tax, string ImageFile) 
-        : ProductCommand(Name, Description, Category, Price, Tax, ImageFile), IRequest<Product>;
+        : ProductCommand(Name, Description, Category, Price, Tax, ImageFile), IRequest<Guid>;
 
     public class UpdateProductCommandValidator : ProductCommandValidator<UpdateProductCommand> {}
 
-    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Product>
+    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Guid>
     {
         private readonly IProductRepository _productRepository;
-        private readonly IMapper _mapper;
 
-        public UpdateProductCommandHandler(IProductRepository productRepository, IMapper mapper)
+        public UpdateProductCommandHandler(IProductRepository productRepository)
         {
             _productRepository = productRepository;
-            _mapper = mapper;
         }
         
-        public async Task<Product> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var product = _mapper.Map<Product>(request);
+            var product = new ProductDto
+            {
+                Id = request.Id,
+                Name = request.Name,
+                Description = request.Description,
+                Category = request.Category,
+                Price = request.Price,
+                Tax = request.Tax,
+                ImageFile = request.ImageFile,
+                UpdatedAt = DateTime.Now.ToUniversalTime(),
+            };
+            
             // await _productRepository.UpdateProductAsync(product);
 
-            return product;
+            return product.Id;
         }
     }
 }

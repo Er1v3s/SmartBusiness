@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Shared.Exceptions;
 using AuthService.Domain.Entities;
@@ -17,15 +18,15 @@ namespace AuthService.Application.Commands.Companies
     {
         private readonly ICompanyRepository _companyRepository;
         private readonly IUserRepository _userRepository;
-
+        
         public CreateCompanyCommandHandler(ICompanyRepository companyRepository, IUserRepository userRepository)
         {
             _companyRepository = companyRepository;
             _userRepository = userRepository;
-        }
-
+    }
+    
         public async Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
-        {
+    {
             // Check if the user exists to avoid creating a company without a user
             // This is important because JWT might be still valid but the user might not exist anymore
             var query = _userRepository.GetQueryableIncludingProperties();
@@ -42,7 +43,7 @@ namespace AuthService.Application.Commands.Companies
             var company = new Company(request.Name);
             var role = new Role(RoleType.Owner);
             var ucr = new UserCompanyRole(user.Id, company.Id, role.Id)
-            {
+        {
                 User = user,
                 Company = company,
                 Role = role,
@@ -53,7 +54,7 @@ namespace AuthService.Application.Commands.Companies
             await _companyRepository.AddCompanyAsync(company);
 
             var companyDto = CompanyDto.CreateDto(company);
-
+            
             return companyDto;
         }
     }
