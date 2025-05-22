@@ -1,33 +1,32 @@
 using FluentValidation;
 using MediatR;
-using FluentValidation;
 using AuthService.Application.Abstracts;
 using AuthService.Contracts.DTOs;
+using AuthService.Domain.DataTypes;
 
 namespace AuthService.Application.Commands.Companies
 {
-    public record GetCompanyCommand(Guid UserId, string? Id, string? Name) : IRequest<List<CompanyDto>>;
+    public record GetCompanyCommand(Guid UserId, string? Name) : IRequest<List<CompanyDto>>;
 
     public class GetCompanyCommandValidator : AbstractValidator<GetCompanyCommand>;
     
     public class GetCompanyCommandHandler : IRequestHandler<GetCompanyCommand, List<CompanyDto>>
     {
         private readonly ICompanyRepository _companyRepository;
-        
-        public GetCompanyCommandHandler(ICompanyRepository companyRepository)
+        private readonly IUserCompanyRoleRepository _userCompanyRoleRepository;
+
+        public GetCompanyCommandHandler(ICompanyRepository companyRepository, IUserCompanyRoleRepository userCompanyRoleRepository)
         {
             _companyRepository = companyRepository;
-    }
-    
+            _userCompanyRoleRepository = userCompanyRoleRepository;
+        }
+
+        // Get only the companies created by the user
         public async Task<List<CompanyDto>> Handle(GetCompanyCommand request, CancellationToken cancellationToken)
-    {
+        {
             var query = _companyRepository.GetQueryableIncludingProperties();
 
-            // Get only the companies created by the user
-            query = query.Where(c => c.UserCompanyRoles.Any(uc => uc.UserId == request.UserId));
-
-            if (!string.IsNullOrEmpty(request.Id))
-                query = query.Where(c => c.Id == request.Id);
+            query = query.Where(c => c.UserCompanyRoles.Any(uc => uc.UserId == request.UserId && uc.Role.Name == RoleType.Owner));
 
             if (!string.IsNullOrEmpty(request.Name))
                 query = query.Where(c => c.Name.Contains(request.Name));

@@ -10,5 +10,10 @@ namespace AuthService.Domain.Entities
         public string Name { get; set; } = name;
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public ICollection<UserCompanyRole> UserCompanyRoles { get; set; } = new List<UserCompanyRole>();
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

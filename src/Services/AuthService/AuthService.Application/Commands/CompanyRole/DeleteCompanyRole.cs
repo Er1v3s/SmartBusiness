@@ -1,22 +1,30 @@
 ﻿using MediatR;
 using AuthService.Application.Abstracts;
+using Shared.Exceptions;
 
 namespace AuthService.Application.Commands.CompanyRole
 {
-    public record DeleteCompanyRoleCommand(Guid UserId, string CompanyId) : IRequest;
+    public record DeleteCompanyRoleCommand(string CompanyId, string RoleId) : IRequest;
 
-    public class DeleteCompanyCommandHandler : IRequestHandler<DeleteCompanyRoleCommand>
+    public class DeleteCompanyRoleCommandHandler : IRequestHandler<DeleteCompanyRoleCommand>
     {
-        private readonly ICompanyRepository _companyRepository;
+        private readonly IUserCompanyRoleRepository _userCompanyRoleRepository;
 
-        public DeleteCompanyCommandHandler(ICompanyRepository companyRepository)
+        public DeleteCompanyRoleCommandHandler(IUserCompanyRoleRepository userCompanyRoleRepository)
         {
-            _companyRepository = companyRepository;
+            _userCompanyRoleRepository = userCompanyRoleRepository;
         }
-        
+
         public async Task Handle(DeleteCompanyRoleCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var query = _userCompanyRoleRepository.GetQueryableIncludingProperties();
+            query = query.Where(ucr => ucr.CompanyId == request.CompanyId);
+            query = query.Where(ucr => ucr.RoleId == request.RoleId);
+
+            var userCompanyRole = await _userCompanyRoleRepository.GetFilteredUserCompanyRoleAsync(query, cancellationToken)
+                                  ?? throw new NotFoundException("Role not found");
+
+            await _userCompanyRoleRepository.RemoveUserCompanyRoleAsync(userCompanyRole);
         }
     }
 }

@@ -5,7 +5,7 @@ namespace AuthService.Application.Abstracts
     public interface IUserCompanyRoleRepository
     {
         Task AddUserCompanyRoleAsync(UserCompanyRole ucr);
-        Task UpdateUserCompanyRoleAsync(UserCompanyRole ucr);
+        Task UpdateUserCompanyRoleAsync(UserCompanyRole updatedUcr);
         Task RemoveUserCompanyRoleAsync(UserCompanyRole ucr);
         IQueryable<UserCompanyRole> GetQueryable();
         IQueryable<UserCompanyRole> GetQueryableIncludingProperties();

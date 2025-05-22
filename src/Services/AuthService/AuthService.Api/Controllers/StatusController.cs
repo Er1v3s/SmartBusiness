@@ -3,7 +3,7 @@
 namespace AuthService.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("status")]
     public class StatusController : Controller
     {
         [HttpGet]

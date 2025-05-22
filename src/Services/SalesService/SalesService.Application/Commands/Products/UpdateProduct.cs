@@ -1,8 +1,7 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using SalesService.Application.Abstracts;
 using SalesService.Application.Commands.Products.Abstracts;
-using SalesService.Contracts.Dtos;
+using SalesService.Contracts.DTOs;
 
 namespace SalesService.Application.Commands.Products
 {

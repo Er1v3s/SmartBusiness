@@ -19,14 +19,18 @@ namespace AuthService.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateUserCompanyRoleAsync(UserCompanyRole ucr)
+        public async Task UpdateUserCompanyRoleAsync(UserCompanyRole updatedUcr)
         {
-            throw new NotImplementedException();
+            var ucrFromDb = await _dbContext.UserCompanyRoles.FirstAsync(ucr => ucr.RoleId == updatedUcr.RoleId);
+            _dbContext.Entry(ucrFromDb).CurrentValues.SetValues(updatedUcr);
+
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task RemoveUserCompanyRoleAsync(UserCompanyRole ucr)
         {
-            throw new NotImplementedException();
+            _dbContext.UserCompanyRoles.Remove(ucr);
+            await _dbContext.SaveChangesAsync();
         }
 
         public IQueryable<UserCompanyRole> GetQueryable()
@@ -37,8 +41,9 @@ namespace AuthService.Infrastructure.Repositories
         public IQueryable<UserCompanyRole> GetQueryableIncludingProperties()
         {
             return _dbContext.UserCompanyRoles
-                .Include(u => u.User)
-                .Include(u => u.Company)
+                .Include(ucr => ucr.User)
+                .Include(ucr => ucr.Company)
+                .Include(ucr => ucr.Role)
                 .AsQueryable();
         }
 

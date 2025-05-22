@@ -7,13 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Exceptions\Validation\**" />
     <Compile Remove="Responses\**" />
+    <EmbeddedResource Remove="Exceptions\Validation\**" />
     <EmbeddedResource Remove="Responses\**" />
+    <None Remove="Exceptions\Validation\**" />
     <None Remove="Responses\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Exceptions\Validation\" />
   </ItemGroup>
 
   <ItemGroup>

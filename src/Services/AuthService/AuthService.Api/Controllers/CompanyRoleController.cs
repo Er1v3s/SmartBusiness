@@ -1,5 +1,6 @@
 using MediatR;
 using System.Security.Claims;
+using AuthService.Api.Attributes;
 using AuthService.Application.Commands.CompanyRole;
 using AuthService.Contracts.Requests.CompanyRole;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace AuthService.Api.Controllers
 {
     [ApiController]
-    [Route("api/company/role")]
+    [Route("api/company/{companyId}/role")]
     [Authorize]
     public class CompanyRoleController : ControllerBase
     {
@@ -20,43 +21,52 @@ namespace AuthService.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCompanyRoles([FromQuery] GetCompanyRoleRequest request)
+        [TypeFilter(typeof(AuthorizeCompanyOwnerAttribute))]
+        public async Task<IActionResult> GetCompanyRoles([FromRoute] string companyId, [FromQuery] GetCompanyRoleRequest request)
         {
             Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new GetCompanyRoleCommand(userId, request.Id, request.Name);
+            var command = new GetCompanyRolesCommand(userId, companyId, request.Name);
             var result = await _mediator.Send(command);
             
+            return Ok(result);
+        }
+
+        [HttpGet("{roleId}")]
+        [TypeFilter(typeof(AuthorizeCompanyOwnerAttribute))]
+        public async Task<IActionResult> GetCompanyRoleById([FromRoute] string companyId, [FromRoute] string roleId)
+        {
+            Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            var command = new GetCompanyRoleByIdCommand(userId, companyId, roleId);
+            var result = await _mediator.Send(command);
+
             return Ok(result);
         }
 
         [HttpPost]
-        [Authorize(Roles = "Owner")]
-        public async Task<IActionResult> CreateCompanyRole([FromBody] CreateCompanyRoleRequest request)
+        [TypeFilter(typeof(AuthorizeCompanyOwnerAttribute))]
+        public async Task<IActionResult> CreateCompanyRole([FromRoute] string companyId, [FromBody] CreateCompanyRoleRequest request)
         {
-            Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new CreateCompanyRoleCommand(userId, request.Id, request.Name);
+            var command = new CreateCompanyRoleCommand(request.UserId, companyId, request.Name);
             var result = await _mediator.Send(command);
-            
-            return Created($"/api/company/role?Id={result.Id}", result);
+
+            return Created($"/api/company/{companyId}/role/{result.Role.Id}", result);
         }
 
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Owner")]
-        public async Task<IActionResult> UpdateCompanyRole(string id, [FromBody] UpdateCompanyRoleRequest request)
+        [HttpPut("{roleId}")]
+        [TypeFilter(typeof(AuthorizeCompanyOwnerAttribute))]
+        public async Task<IActionResult> UpdateCompanyRole([FromRoute] string companyId, [FromRoute] string roleId, [FromBody] UpdateCompanyRoleRequest request)
         {
-            Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new UpdateCompanyRoleCommand(userId, id, request.Name);
+            var command = new UpdateCompanyRoleCommand(companyId, roleId, request.Name);
             var result = await _mediator.Send(command);
-            
+
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Owner")]
-        public async Task<IActionResult> DeleteCompanyRole(string id)
+        [HttpDelete("{roleId}")]
+        [TypeFilter(typeof(AuthorizeCompanyOwnerAttribute))]
+        public async Task<IActionResult> DeleteCompanyRole([FromRoute] string companyId, [FromRoute] string roleId)
         {
-            Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new DeleteCompanyRoleCommand(userId, id);
+            var command = new DeleteCompanyRoleCommand(companyId, roleId);
             await _mediator.Send(command);
             
             return NoContent();

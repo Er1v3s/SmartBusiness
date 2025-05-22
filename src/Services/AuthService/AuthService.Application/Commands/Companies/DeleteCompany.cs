@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Shared.Exceptions;
 using AuthService.Application.Abstracts;
-using AuthService.Contracts.Exceptions.Auth;
 
 namespace AuthService.Application.Commands.Companies
 {
@@ -21,12 +20,6 @@ namespace AuthService.Application.Commands.Companies
         {
             var company = await _companyRepository.GetCompanyByIdAsync(request.CompanyId)
                 ?? throw new NotFoundException($"Company with ID {request.CompanyId} not found.");
-
-            // Check if the user is the owner of the company
-            // Controller decorator check this, but user might have "Owner" claim of other company
-            var isUserOwnerOfCompany = await _companyRepository.IsUserOwnerOfCompanyAsync(request.UserId, company.Id);
-            if (!isUserOwnerOfCompany)
-                throw new ForbiddenException("User should be owner of the company");
 
             await _companyRepository.DeleteCompanyAsync(company);
         }

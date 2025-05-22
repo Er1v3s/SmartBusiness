@@ -1,4 +1,3 @@
-using FluentValidation;
 using MediatR;
 using Shared.Exceptions;
 using AuthService.Application.Abstracts;
@@ -41,12 +40,6 @@ namespace AuthService.Application.Commands.Companies
             // Check if the user already has a company with the same name
             if (user.UserCompanyRoles.Any(uc => uc.Company.Name == request.Name))
                 throw new ConflictException("User already has a company with the same name");
-
-            // Check if the user is the owner of the company
-            // Controller decorator check this, but user might have "Owner" claim of the other company
-            var isUserOwnerOfCompany = await _companyRepository.IsUserOwnerOfCompanyAsync(user.Id, company.Id);
-            if (!isUserOwnerOfCompany)
-                throw new ForbiddenException("User should be owner of the company");
 
             company.Name = request.Name;
             await _companyRepository.UpdateCompanyAsync(company);

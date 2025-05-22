@@ -12,6 +12,7 @@ namespace AuthService.Infrastructure
             services.AddScoped<IAuthTokenProcessor, AuthTokenProcessor>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IUserCompanyRoleRepository, UserCompanyRoleRepository>();
 
             return services;
         }

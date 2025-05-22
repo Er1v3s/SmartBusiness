@@ -2,24 +2,24 @@ using MediatR;
 using AuthService.Application.Abstracts;
 using AuthService.Application.Commands.Abstracts;
 using AuthService.Contracts.DTOs;
-using AuthService.Contracts.Exceptions.Auth;
 using AuthService.Contracts.Exceptions.Users;
 using AuthService.Domain.Entities;
+using Shared.Exceptions;
 
 namespace AuthService.Application.Commands.CompanyRole
 {
     public record CreateCompanyRoleCommand(Guid UserId, string CompanyId, string Name) : UserCompanyRoleCommand(Name),
         IRequest<UserCompanyRoleDto>;
 
-    public class CreateCompanyCommandValidator : UserCompanyRoleCommandValidator<CreateCompanyRoleCommand>;
-    
-    public class CreateCompanyCommandHandler : IRequestHandler<CreateCompanyRoleCommand, UserCompanyRoleDto>
+    public class CreateCompanyRoleCommandValidator : UserCompanyRoleCommandValidator<CreateCompanyRoleCommand>;
+
+    public class CreateCompanyRoleCommandHandler : IRequestHandler<CreateCompanyRoleCommand, UserCompanyRoleDto>
     {
         private readonly ICompanyRepository _companyRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserCompanyRoleRepository _userCompanyRoleRepository;
 
-        public CreateCompanyCommandHandler(
+        public CreateCompanyRoleCommandHandler(
             ICompanyRepository companyRepository,
             IUserRepository userRepository,
             IUserCompanyRoleRepository userCompanyRoleRepository
@@ -32,29 +32,25 @@ namespace AuthService.Application.Commands.CompanyRole
 
         public async Task<UserCompanyRoleDto> Handle(CreateCompanyRoleCommand request, CancellationToken cancellationToken)
         {
-            var query = _userRepository.GetQueryableIncludingProperties();
-            query = query.Where(u => u.Id == request.UserId);
-
             // Check if the user exists
-            var user = await _userRepository.GetFilteredUserAsync(query, cancellationToken)
-                       ?? throw new UserNotFoundException("User not found");
-            
-            // Check if the user is the owner of the company
-            // Controller decorator check this, but user might have "Owner" claim of the other company
-            var isUserOwnerOfCompany = await _companyRepository.IsUserOwnerOfCompanyAsync(user.Id, request.CompanyId);
-            if (!isUserOwnerOfCompany)
-                throw new ForbiddenException("User should be owner of the company");
-            
+            var user = await _userRepository.GetUserByIdAsync(request.UserId)
+                           ?? throw new UserNotFoundException("User not found");
+
+            // Check if the company exists
+            var company = await _companyRepository.GetCompanyByIdAsync(request.CompanyId)
+                          ?? throw new NotFoundException("Company not found");
+
             var role = new Role(request.Name);
-            var ucr = new UserCompanyRole(user.Id, request.CompanyId, role.Id);
-
-            await _userCompanyRoleRepository.AddUserCompanyRoleAsync(ucr);
-
-            var userCompanyRoleDto = new UserCompanyRoleDto
+            var userCompanyRole = new UserCompanyRole(user.Id, company.Id, role.Id)
             {
-                UserId = ucr.UserId,
-                Username = ucr.User.Username
+                User = user,
+                Company = company,
+                Role = role
             };
+
+            await _userCompanyRoleRepository.AddUserCompanyRoleAsync(userCompanyRole);
+
+            var userCompanyRoleDto = UserCompanyRoleDto.CreateDto(userCompanyRole);
             
             return userCompanyRoleDto;
         }

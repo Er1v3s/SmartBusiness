@@ -1,4 +1,3 @@
-using FluentValidation;
 using MediatR;
 using Shared.Exceptions;
 using AuthService.Domain.Entities;

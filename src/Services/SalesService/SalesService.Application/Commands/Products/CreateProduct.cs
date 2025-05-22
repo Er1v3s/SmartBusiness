@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using SalesService.Application.Abstracts;
 using SalesService.Application.Commands.Products.Abstracts;
 using SalesService.Domain.Entities;
