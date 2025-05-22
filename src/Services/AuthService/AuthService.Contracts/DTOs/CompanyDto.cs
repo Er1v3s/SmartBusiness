@@ -18,15 +18,15 @@ namespace AuthService.Contracts.DTOs
                 Name = company.Name,
                 CreatedAt = company.CreatedAt,
                 Users = company.UserCompanyRoles
-                    .Select(u => new UserCompanyRoleDto
+                    .Select(ucr => new UserCompanyRoleDto
                     {
-                        UserId = u.User.Id,
-                        Username = u.User.Username,
-                        Email = u.User.Email,
+                        UserId = ucr.User.Id,
+                        Username = ucr.User.Username,
+                        Email = ucr.User.Email,
                         Role = new RoleDto
                         {
-                            Id = u.Role.Id,
-                            Name = u.Role.Name
+                            Id = ucr.Role.Id,
+                            Name = ucr.Role.Name
                         }
                     }).ToList()
             };

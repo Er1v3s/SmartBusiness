@@ -8,7 +8,7 @@ using System.Security.Claims;
 namespace AuthService.Api.Controllers
 {   
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/account")]
     [Authorize]
     public class AccountController : ControllerBase
     {

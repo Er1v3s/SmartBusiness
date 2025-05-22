@@ -9,5 +9,10 @@ namespace AuthService.Domain.Entities
         public string Id { get; set; } = Nanoid.Generate(size: 11);
         public string Name { get; set; } = name;
         public ICollection<UserCompanyRole> UserCompanyRoles { get; set; } = new List<UserCompanyRole>();
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

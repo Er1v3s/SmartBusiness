@@ -22,7 +22,7 @@ namespace AuthService.Infrastructure.Repositories
 
         public async Task UpdateCompanyAsync(Company updatedCompany)
         {
-            var companyFromDb = _dbContext.Companies.FirstOrDefault(c => c.Id == updatedCompany.Id)!;
+            var companyFromDb = await _dbContext.Companies.FirstAsync(c => c.Id == updatedCompany.Id);
             _dbContext.Entry(companyFromDb).CurrentValues.SetValues(updatedCompany);
 
             await _dbContext.SaveChangesAsync();

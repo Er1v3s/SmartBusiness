@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AuthService.Application.Commands.Companies;
 using AuthService.Contracts.Requests.Companies;
+using AuthService.Api.Attributes;
 
 namespace AuthService.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/company")]
     [Authorize]
     public class CompanyController : ControllerBase
     {
@@ -20,12 +21,22 @@ namespace AuthService.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCompany([FromQuery] GetCompanyRequest request)
+        public async Task<IActionResult> GetCompanies([FromQuery] GetCompanyRequest request)
         {
             Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new GetCompanyCommand(userId, request.Id, request.Name);
+            var command = new GetCompanyCommand(userId, request.Name);
             var result = await _mediator.Send(command);
             
+            return Ok(result);
+        }
+
+        [HttpGet("{companyId}")]
+        public async Task<IActionResult> GetCompanyById([FromRoute] string companyId)
+        {
+            Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            var command = new GetCompanyByIdCommand(userId, companyId);
+            var result = await _mediator.Send(command);
+
             return Ok(result);
         }
 
@@ -36,26 +47,26 @@ namespace AuthService.Api.Controllers
             var command = new CreateCompanyCommand(userId, request.Name);
             var result = await _mediator.Send(command);
             
-            return Created($"/api/company/{result.Id}", result.Id);
+            return Created($"/api/company?Id={result.Id}", result);
         }
 
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Owner")]
-        public async Task<IActionResult> UpdateCompany(string id, [FromBody] UpdateCompanyRequest request)
+        [HttpPut("{companyId}")]
+        [TypeFilter(typeof(AuthorizeCompanyOwnerAttribute))]
+        public async Task<IActionResult> UpdateCompany([FromRoute] string companyId, [FromBody] UpdateCompanyRequest request)
         {
             Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new UpdateCompanyCommand(userId, id, request.Name);
+            var command = new UpdateCompanyCommand(userId, companyId, request.Name!);
             var result = await _mediator.Send(command);
             
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Owner")]
-        public async Task<IActionResult> DeleteCompany(string id)
+        [HttpDelete("{companyId}")]
+        [TypeFilter(typeof(AuthorizeCompanyOwnerAttribute))]
+        public async Task<IActionResult> DeleteCompany([FromRoute] string companyId)
         {
             Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new DeleteCompanyCommand(userId, id);
+            var command = new DeleteCompanyCommand(userId, companyId);
             await _mediator.Send(command);
             
             return NoContent();

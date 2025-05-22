@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using NanoidDotNet;
 using SalesService.Application.Commands.Products;
 
 namespace SalesService.Tests.UnitTests.Validation
@@ -25,7 +26,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForInvalidProductName_ShouldReturnValidationError(string invalidProductName)
         {
             // Arrange
-            var command = new UpdateProductCommand(Guid.NewGuid(), invalidProductName, "testDescription", 
+            var command = new UpdateProductCommand(Nanoid.Generate(size: 17), invalidProductName, "testDescription", 
                 new List<string> { "testCategory" }, 99.99m, 5, "testImageFile");
 
             // Act
@@ -43,7 +44,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForValidProductName_ShouldNotReturnValidationError(string validProductName)
         {
             // Arrange
-            var command = new UpdateProductCommand(Guid.NewGuid(), validProductName, "testDescription", 
+            var command = new UpdateProductCommand(Nanoid.Generate(size: 17), validProductName, "testDescription", 
                 new List<string> { "testCategory" }, 99.99m, 5, "testImageFile");
 
             // Act
@@ -66,7 +67,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForInvalidProductDescription_ShouldReturnValidationError(string invalidProductDescription)
         {
             // Arrange
-            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", invalidProductDescription, 
+            var command = new UpdateProductCommand(Nanoid.Generate(size: 17), "TestProductName", invalidProductDescription, 
                 new List<string> { "testCategory" }, 99.99m, 5, "testImageFile");
 
             // Act
@@ -90,7 +91,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForValidProductDescription_ShouldNotReturnValidationError(string validProductDescription)
         {
             // Arrange
-            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", validProductDescription, 
+            var command = new UpdateProductCommand(Nanoid.Generate(size: 17), "TestProductName", validProductDescription, 
                 new List<string> { "testCategory" }, 99.99m, 5, "testImageFile");
 
             // Act
@@ -113,7 +114,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForInvalidProductCategory_ShouldReturnValidationError(string invalidProductCategory)
         {
             // Arrange
-            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", "TestProductDescription", 
+            var command = new UpdateProductCommand(Nanoid.Generate(size: 17), "TestProductName", "TestProductDescription", 
                 new List<string> { invalidProductCategory }, 99.99m, 5, "testImageFile");
 
             // Act
@@ -137,7 +138,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForValidProductCategory_ShouldNotReturnValidationError(string validProductCategory)
         {
             // Arrange
-            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", "TestProductDescription", 
+            var command = new UpdateProductCommand(Nanoid.Generate(size: 17), "TestProductName", "TestProductDescription", 
                 new List<string> { validProductCategory }, 99.99m, 5, "testImageFile");
 
             // Act
@@ -155,7 +156,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForInvalidProductPrice_ShouldReturnValidationError(decimal price)
         {
             // Arrange
-            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", "TestProductDescription", 
+            var command = new UpdateProductCommand(Nanoid.Generate(size: 17), "TestProductName", "TestProductDescription", 
                 new List<string> { "testCategory" }, price, 5, "testImageFile");
 
             // Act
@@ -174,7 +175,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForValidProductPrice_ShouldNotReturnValidationError(decimal price)
         {
             // Arrange
-            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", "TestProductDescription", 
+            var command = new UpdateProductCommand(Nanoid.Generate(size: 17), "TestProductName", "TestProductDescription", 
                 new List<string> { "testCategory" }, price, 5, "testImageFile");
 
             // Act
@@ -191,7 +192,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForInvalidProductTax_ShouldReturnValidationError(int tax)
         {
             // Arrange
-            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", "TestProductDescription", 
+            var command = new UpdateProductCommand(Nanoid.Generate(size: 17), "TestProductName", "TestProductDescription", 
                 new List<string> { "testCategory" }, 99.99m, tax, "testImageFile");
 
             // Act
@@ -208,7 +209,7 @@ namespace SalesService.Tests.UnitTests.Validation
         public void Validate_ForValidProductTax_ShouldNotReturnValidationError(int tax)
         {
             // Arrange
-            var command = new UpdateProductCommand(Guid.NewGuid(), "TestProductName", "TestProductDescription", 
+            var command = new UpdateProductCommand(Nanoid.Generate(size: 17), "TestProductName", "TestProductDescription", 
                 new List<string> { "testCategory" }, tax, 5, "testImageFile");
 
             // Act

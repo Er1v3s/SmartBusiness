@@ -35,12 +35,12 @@ namespace SalesService.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductRequest request)
+        public async Task<IActionResult> Update(string id, [FromBody] UpdateProductRequest request)
         {
             var command = new UpdateProductCommand(id, request.Name, request.Description, request.Category, request.Price, request.Tax, request.ImageFile);
             var result = await _mediator.Send(command);
 
-            return Ok($"\"{result.Name}\" - updated successfully..");
+            return Ok($"\"{request.Name}\" - updated successfully..");
         }
 
         [HttpDelete("{id}")]
