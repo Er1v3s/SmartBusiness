@@ -1,4 +1,4 @@
-﻿using AuthService.Domain.Entities;
+using AuthService.Domain.Entities;
 
 namespace AuthService.Contracts.DTOs
 {

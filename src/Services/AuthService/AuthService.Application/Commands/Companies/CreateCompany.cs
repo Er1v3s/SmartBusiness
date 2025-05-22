@@ -22,10 +22,10 @@ namespace AuthService.Application.Commands.Companies
         {
             _companyRepository = companyRepository;
             _userRepository = userRepository;
-    }
+        }
     
         public async Task<CompanyDto> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
-    {
+        {
             // Check if the user exists to avoid creating a company without a user
             // This is important because JWT might be still valid but the user might not exist anymore
             var query = _userRepository.GetQueryableIncludingProperties();
@@ -42,7 +42,7 @@ namespace AuthService.Application.Commands.Companies
             var company = new Company(request.Name);
             var role = new Role(RoleType.Owner);
             var ucr = new UserCompanyRole(user.Id, company.Id, role.Id)
-        {
+            {
                 User = user,
                 Company = company,
                 Role = role,
