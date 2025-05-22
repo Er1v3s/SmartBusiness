@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesService.Application.Abstracts;
-using SalesService.Contracts.Dtos;
+using SalesService.Contracts.DTOs;
 using SalesService.Domain.Entities;
 using Shared.Exceptions;
 
@@ -15,7 +15,7 @@ namespace SalesService.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Product> GetProductByIdAsync(Guid id)
+        public async Task<Product> GetProductByIdAsync(string id)
         {
             var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
             if(product == null)
@@ -73,13 +73,13 @@ namespace SalesService.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteProductAsync(Guid id)
+        public async Task DeleteProductAsync(ProductDto product)
         {
-            var product = await GetProductByIdAsync(id);
+            var productFromDb = await GetProductByIdAsync(product.Id);
             if (product == null)
                 throw new NotFoundException("Product not found");
             
-            _dbContext.Products.Remove(product);
+            _dbContext.Products.Remove(productFromDb);
             await _dbContext.SaveChangesAsync();
         }
 

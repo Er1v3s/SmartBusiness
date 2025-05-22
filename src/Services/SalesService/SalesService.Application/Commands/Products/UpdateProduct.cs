@@ -5,12 +5,12 @@ using SalesService.Contracts.DTOs;
 
 namespace SalesService.Application.Commands.Products
 {
-    public record UpdateProductCommand(Guid Id, string Name, string Description, List<string> Category, decimal Price, int Tax, string ImageFile) 
-        : ProductCommand(Name, Description, Category, Price, Tax, ImageFile), IRequest<Guid>;
+    public record UpdateProductCommand(string Id, string Name, string Description, List<string> Category, decimal Price, int Tax, string ImageFile) 
+        : ProductCommand(Name, Description, Category, Price, Tax, ImageFile), IRequest<string>;
 
     public class UpdateProductCommandValidator : ProductCommandValidator<UpdateProductCommand> {}
 
-    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Guid>
+    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, string>
     {
         private readonly IProductRepository _productRepository;
 
@@ -19,7 +19,7 @@ namespace SalesService.Application.Commands.Products
             _productRepository = productRepository;
         }
         
-        public async Task<Guid> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
             var product = new ProductDto
             {
