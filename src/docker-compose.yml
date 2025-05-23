@@ -37,18 +37,18 @@ services:
     networks:
       - smart-business-network
 
-  auth.smart-business:
+  account.smart-business:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=2100
       - ASPNETCORE_HTTPS_PORTS=2101
       - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
-    container_name: auth.smart-business
-    image: auth.smart-business
+    container_name: account.smart-business
+    image: account.smart-business
     build:
       context: .
-      dockerfile: Services/AuthService/AuthService.Api/Dockerfile
+      dockerfile: Services/AccountService/AccountService.Api/Dockerfile
     ports:
       - "2100:2100"
       - "2101:2101"
@@ -96,7 +96,7 @@ services:
       - /app/node_modules
     depends_on:
       - gateway.smart-business
-      - auth.smart-business
+      - account.smart-business
     networks:
       - smart-business-network
 
