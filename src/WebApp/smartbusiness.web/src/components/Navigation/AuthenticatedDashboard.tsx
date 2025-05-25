@@ -1,34 +1,35 @@
 import { useAuth } from "../../context/AuthContext";
-import type { Page } from "../../models";
 import logo_no_text from "../../assets/logo_no_text.svg";
 import logo_text from "../../assets/logo_text.svg";
+import { NavLink, useNavigate } from "react-router-dom";
 
-export const AuthenticatedDashboard: React.FC<{
-  onNavigate: (page: Page) => void;
-}> = ({ onNavigate }) => {
+export const AuthenticatedDashboard: React.FC = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    onNavigate("home");
+    navigate("home");
   };
 
   return (
     <nav className="border-b bg-white shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <img
-              src={logo_no_text}
-              alt="Logo"
-              className="h-8 w-auto scale-150"
-            />
-            <img
-              src={logo_text}
-              alt="Logo"
-              className="h-8 w-auto scale-150 pl-5"
-            />
-          </div>
+          <NavLink to="/dashboard">
+            <div className="flex items-center space-x-2">
+              <img
+                src={logo_no_text}
+                alt="Logo"
+                className="h-8 w-auto scale-150"
+              />
+              <img
+                src={logo_text}
+                alt="Logo"
+                className="h-8 w-auto scale-150 pl-5"
+              />
+            </div>
+          </NavLink>
 
           <div className="flex items-center space-x-4">
             <span className="text-gray-700">Witaj, {user?.username}!</span>

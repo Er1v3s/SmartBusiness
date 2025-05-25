@@ -2,13 +2,12 @@ import { Shield } from "lucide-react";
 import { ArrowRight, Zap, Users } from "lucide-react";
 import React from "react";
 import { useAuth } from "../context/AuthContext";
-import type { Page } from "../models";
+import { useNavigate } from "react-router-dom";
 
 // Home Page Component
-export const HomePage: React.FC<{ onNavigate: (page: Page) => void }> = ({
-  onNavigate,
-}) => {
+export const HomePage: React.FC = () => {
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
@@ -28,7 +27,7 @@ export const HomePage: React.FC<{ onNavigate: (page: Page) => void }> = ({
         </p>
 
         <button
-          onClick={() => onNavigate(isAuthenticated ? "dashboard" : "register")}
+          onClick={() => navigate(isAuthenticated ? "dashboard" : "login")}
           className="group inline-flex transform cursor-pointer items-center rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl transition-all duration-200 hover:scale-105 hover:from-cyan-600 hover:to-purple-700"
         >
           Get Started

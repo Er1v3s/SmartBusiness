@@ -1,14 +1,12 @@
 import React from "react";
 import { useState } from "react";
-import { Mail, Lock, Eye, EyeOff, Shield, User } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, User, UserPlus } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import type { Page } from "../models";
 import type { RegisterForm } from "../models";
+import { useNavigate } from "react-router-dom";
 
 // Register Page Component
-export const RegisterPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
-  onNavigate,
-}) => {
+export const RegisterPage: React.FC = () => {
   const [form, setForm] = useState<RegisterForm>({
     username: "",
     email: "",
@@ -18,6 +16,7 @@ export const RegisterPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
   const { register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,7 +26,7 @@ export const RegisterPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
 
     try {
       await register(form.username, form.email, form.password);
-      onNavigate("dashboard");
+      navigate("/dashboard");
     } catch (err) {
       setError("Błąd podczas rejestracji" + err);
     } finally {
@@ -48,7 +47,7 @@ export const RegisterPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-lg">
           <div className="mb-8 text-center">
-            <Shield className="mx-auto mb-4 h-12 w-12 text-white" />
+            <UserPlus className="mx-auto mb-4 h-12 w-12 text-white" />
             <h2 className="mb-2 text-3xl font-bold text-white">Utwórz konto</h2>
             <p className="text-gray-300">Dołącz do naszej platformy</p>
           </div>
@@ -128,7 +127,7 @@ export const RegisterPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
             <button
               onClick={handleSubmit}
               disabled={isLoading}
-              className="w-full cursor-pointer rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 px-4 py-3 font-semibold text-white transition-all duration-200 hover:from-cyan-600 hover:to-purple-700 focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-transparent"
+              className="w-full cursor-pointer rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 px-4 py-3 font-semibold text-white transition-all duration-200 hover:from-cyan-600 hover:to-purple-700 focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-transparent focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? "Rejestracja..." : "Zarejestruj się"}
             </button>
@@ -138,7 +137,7 @@ export const RegisterPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
             <p className="text-gray-300">
               Masz już konto?{" "}
               <button
-                onClick={() => onNavigate("login")}
+                onClick={() => navigate("/login")}
                 className="cursor-pointer font-medium text-cyan-400 transition-colors hover:text-cyan-300"
               >
                 Zaloguj się

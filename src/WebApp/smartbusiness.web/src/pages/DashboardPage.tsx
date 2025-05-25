@@ -1,12 +1,10 @@
 import React from "react";
 import { Shield, User, Zap } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import type { Page } from "../models";
+import { NavLink } from "react-router-dom";
 
 // Dashboard Page Component
-export const DashboardPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
-  onNavigate,
-}) => {
+export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
 
   return (
@@ -85,10 +83,10 @@ export const DashboardPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
         {/* Welcome Message */}
         <div className="mt-8 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white shadow">
           <h2 className="mb-2 text-2xl font-bold">Witaj w SecureApp!</h2>
-          <p className="text-indigo-100" onClick={() => onNavigate("login")}>
+          <NavLink to="/login" className="text-indigo-100">
             Twoje konto zostało pomyślnie uwierzytelnione przy użyciu JWT Token.
             Możesz teraz korzystać ze wszystkich funkcji aplikacji.
-          </p>
+          </NavLink>
         </div>
       </div>
     </div>

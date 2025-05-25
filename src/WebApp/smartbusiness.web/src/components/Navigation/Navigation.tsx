@@ -1,16 +1,14 @@
-import type { Page } from "../../models";
+import { useAuth } from "../../context/AuthContext";
 
 import { AuthenticatedDashboard } from "./AuthenticatedDashboard";
 import { NotAuthenticatedDashboard } from "./NotAuthenticatedDashboard";
 
 // Navigation Component
-export const Navigation: React.FC<{
-  currentPage: Page;
-  onNavigate: (page: Page) => void;
-}> = ({ currentPage, onNavigate }) => {
-  if (currentPage === "dashboard") {
-    return <AuthenticatedDashboard onNavigate={onNavigate} />;
+export const Navigation: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+  if (isAuthenticated) {
+    return <AuthenticatedDashboard />;
   }
 
-  return <NotAuthenticatedDashboard onNavigate={onNavigate} />;
+  return <NotAuthenticatedDashboard />;
 };

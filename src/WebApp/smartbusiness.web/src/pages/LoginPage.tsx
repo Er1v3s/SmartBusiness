@@ -2,12 +2,11 @@ import React from "react";
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, Shield } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import type { Page, LoginForm } from "../models";
+import type { LoginForm } from "../models";
+import { useNavigate } from "react-router-dom";
 
 // Login Page Component
-export const LoginPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
-  onNavigate,
-}) => {
+export const LoginPage: React.FC = () => {
   const [form, setForm] = useState<LoginForm>({
     email: "",
     password: "",
@@ -17,6 +16,7 @@ export const LoginPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,7 +26,7 @@ export const LoginPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
 
     try {
       await login(form.email, form.password, form.rememberMe);
-      onNavigate("dashboard");
+      navigate("/dashboard");
     } catch (err) {
       setError("Nieprawidłowe dane logowania" + err);
     } finally {
@@ -43,7 +43,6 @@ export const LoginPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
   };
 
   return (
-    // <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 p-4">
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 p-px">
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-lg">
@@ -126,7 +125,8 @@ export const LoginPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
               </label>
               <button
                 type="button"
-                className="text-sm text-cyan-400 transition-colors hover:text-cyan-300"
+                className="cursor-pointer text-sm text-cyan-400 transition-colors hover:text-cyan-300"
+                onClick={() => navigate("/forgot-password")}
               >
                 Zapomniałeś hasła?
               </button>
@@ -145,7 +145,7 @@ export const LoginPage: React.FC<{ onNavigate: (page: Page) => void }> = ({
             <p className="text-gray-300">
               Nie masz konta?{" "}
               <button
-                onClick={() => onNavigate("register")}
+                onClick={() => navigate("/register")}
                 className="font-medium text-cyan-400 transition-colors hover:text-cyan-300"
               >
                 Zarejestruj się
