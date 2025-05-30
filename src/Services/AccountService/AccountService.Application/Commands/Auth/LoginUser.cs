@@ -2,12 +2,13 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using AccountService.Application.Abstracts;
+using AccountService.Contracts.DTOs;
 using AccountService.Contracts.Exceptions.Users;
 using AccountService.Domain.Entities;
 
 namespace AccountService.Application.Commands.Auth
 {
-    public record LoginUserCommand(string Email, string Password) : IRequest;
+    public record LoginUserCommand(string Email, string Password) : IRequest<JwtDto>;
 
     public class LoginUserCommandValidator : AbstractValidator<User>
     {
@@ -26,7 +27,7 @@ namespace AccountService.Application.Commands.Auth
         }
     }
 
-    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand>
+    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, JwtDto>
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
@@ -42,7 +43,7 @@ namespace AccountService.Application.Commands.Auth
             _authTokenProcessor = authTokenProcessor;
         }
 
-        public async Task Handle(LoginUserCommand request, CancellationToken cancellationToken)
+        public async Task<JwtDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
             var query = _userRepository.GetQueryableIncludingProperties();
             query = query.Where(u => u.Email == request.Email);
@@ -65,9 +66,17 @@ namespace AccountService.Application.Commands.Auth
 
             await _userRepository.UpdateUserAsync(user);
 
-            _authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("ACCESS_TOKEN", jwtToken, expirationDateInUtc);
+            //_authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("ACCESS_TOKEN", jwtToken, expirationDateInUtc);
             _authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("REFRESH_TOKEN", user.RefreshToken,
                 refreshTokenExpirationDateInUtc);
+
+            var jwtDto = new JwtDto
+            {
+                JwtToken = jwtToken,
+                ExpirationDateInUtc = expirationDateInUtc,
+            };
+
+            return jwtDto;
         }
     }
 }

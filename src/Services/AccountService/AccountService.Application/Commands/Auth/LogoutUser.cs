@@ -23,7 +23,6 @@ namespace AccountService.Application.Commands.Auth
 
             var expirationTimeInUtc = DateTime.UtcNow.AddHours(-1);
 
-            _authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("ACCESS_TOKEN", "", expirationTimeInUtc);
             _authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("REFRESH_TOKEN", "", expirationTimeInUtc);
 
             user.RefreshToken = null;

@@ -31,7 +31,8 @@ namespace SmartBusiness.ApiGateway
                 opt.AddPolicy("CorsPolicy", policyBuilder =>
                 {
                     policyBuilder
-                        .AllowAnyOrigin()
+                        .WithOrigins("http://localhost:5000")
+                        .AllowCredentials()
                         .AllowAnyMethod()
                         .AllowAnyHeader();
                 });

@@ -34,7 +34,8 @@ namespace AccountService.Api
                 opt.AddPolicy("CorsPolicy", policyBuilder =>
                 {
                     policyBuilder
-                        .AllowAnyOrigin()
+                        .WithOrigins("http://localhost:5000")
+                        .AllowCredentials()
                         .AllowAnyMethod()
                         .AllowAnyHeader();
                 });
@@ -72,11 +73,19 @@ namespace AccountService.Api
                 {
                     OnMessageReceived = context =>
                     {
-                        context.Token = context.Request.Cookies["ACCESS_TOKEN"];
+                        var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+
+                        if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
+                        {
+                            context.Token = authHeader.Substring("Bearer ".Length);
+                        }
+
                         return Task.CompletedTask;
                     }
                 };
             });
+
+            builder.Services.AddAuthorization();
 
             #endregion
 
