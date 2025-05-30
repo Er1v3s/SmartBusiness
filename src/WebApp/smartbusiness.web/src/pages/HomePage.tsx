@@ -27,7 +27,7 @@ export const HomePage: React.FC = () => {
         </p>
 
         <button
-          onClick={() => navigate(isAuthenticated ? "dashboard" : "login")}
+          onClick={() => navigate(isAuthenticated ? "/dashboard" : "/login")}
           className="group inline-flex transform cursor-pointer items-center rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl transition-all duration-200 hover:scale-105 hover:from-cyan-600 hover:to-purple-700"
         >
           Get Started

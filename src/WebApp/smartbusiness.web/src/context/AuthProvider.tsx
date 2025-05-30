@@ -1,85 +1,90 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import type { AuthContextType, User } from "../models";
+import apiConnector from "../api/apiConnector.ts";
 
-// Auth Provider
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
 
   useEffect(() => {
-    // Check for stored token on app load
-    const mockToken = "stored-token";
-    const mockUser = {
-      id: "1",
-      username: "demo_user",
-      email: "user@example.com",
-    };
-    // Simulate stored auth state for demo
-    if (Math.random() > 0.7) {
-      setToken(mockToken);
-      setUser(mockUser);
-    }
-  }, []);
+    const initializeAuth = async () => {
+      const accessToken = localStorage.getItem("ACCESS_TOKEN");
+      const accessTokenExpiration = localStorage.getItem(
+        "ACCESS_TOKEN_EXPIRATION",
+      );
 
-  const login = async (
-    email: string,
-    password: string,
-    rememberMe: boolean,
-  ): Promise<void> => {
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      const currentTime = new Date(Date.now()).getTime();
 
-    // For demo purposes, simulate successful login
-    const mockToken = "mock-jwt-token-" + Date.now();
-    const mockUser = {
-      id: "1",
-      username: email.split("@")[0],
-      email: email,
-      password: password, // Not recommended to store passwords like this
-      rememberMe: rememberMe,
+      const isAccessTokenValid =
+        accessToken &&
+        accessTokenExpiration &&
+        new Date(accessTokenExpiration).getTime() > currentTime;
+
+      if (isAccessTokenValid) {
+        await fetchUserData();
+        return;
+      }
+
+      // Access token missing or expired. Attempting refresh...
+      try {
+        await loginUsingRefreshToken();
+        await fetchUserData();
+        setIsAuthenticating(false);
+      } catch {
+        setUser(null);
+      }
     };
 
-    setToken(mockToken);
-    setUser(mockUser);
+    initializeAuth();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticating]);
+
+  const fetchUserData = async () => {
+    const user = await apiConnector.me();
+    setUser(user);
   };
 
+  const loginUsingRefreshToken = async () => {
+    await apiConnector.loginUsingRefreshToken();
+    await fetchUserData();
+  };
+
+  // Login - we send the data, backend saves the token in cookies
+  const login = async (email: string, password: string): Promise<void> => {
+    await apiConnector.login(email, password);
+    await fetchUserData();
+  };
+
+  // Registration - we send the data, backend saves the token in cookies
   const register = async (
     username: string,
     email: string,
     password: string,
   ): Promise<void> => {
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await apiConnector.register(username, email, password);
 
-    // For demo purposes, simulate successful registration
-    const mockToken = "mock-jwt-token-" + Date.now();
-    const mockUser = {
-      id: "2",
-      username: username,
-      email: email,
-      password: password, // Not recommended to store passwords like this
-      rememberMe: false,
-    };
-
-    setToken(mockToken);
-    setUser(mockUser);
+    // After successful registration, automatically log in the user
+    await login(email, password);
   };
 
-  const logout = () => {
+  // Logout - we remove the session on the backend
+  const logout = async () => {
+    await apiConnector.logout();
     setUser(null);
-    setToken(null);
   };
 
+  // Context value
   const value: AuthContextType = {
     user,
-    token,
     login,
     register,
     logout,
-    isAuthenticated: !!token && !!user,
+    isAuthenticated: user !== null,
+    // token: null,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

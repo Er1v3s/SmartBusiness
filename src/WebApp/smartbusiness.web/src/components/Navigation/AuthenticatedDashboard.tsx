@@ -9,7 +9,7 @@ export const AuthenticatedDashboard: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("home");
+    navigate("/home");
   };
 
   return (

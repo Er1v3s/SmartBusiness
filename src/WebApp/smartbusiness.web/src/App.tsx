@@ -16,22 +16,33 @@ import { AuthProvider } from "./context/AuthProvider";
 import "./App.css";
 import { ForgotPassword } from "./pages/ForgotPassword";
 
-// Komponent zabezpieczający routing: jeśli użytkownik nie jest zalogowany przekierowuje do /login.
+// Private Route component checks if the user is authenticated
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
+// PublicRoute component checks if the user is not authenticated
+const PublicRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
+};
+
+// RedirectRoute component redirects based on authentication status
+const RedirectRoute: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+  return <Navigate to={isAuthenticated ? "/dashboard" : "/home"} replace />;
+};
+
 export const App: React.FC = () => {
   return (
     <Router>
-      {/* Nawigacja – warto zmodyfikować komponent Navigation, by korzystał z Link lub NavLink z react-router-dom */}
       <Navigation />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+        {/* Redairections route */}
+        <Route path="/" element={<RedirectRoute />} />
+
+        {/* Private paths*/}
         <Route
           path="/dashboard"
           element={
@@ -40,7 +51,42 @@ export const App: React.FC = () => {
             </PrivateRoute>
           }
         />
-        {/* Jeśli trafi się na nieznaną ścieżkę, przekierowuje do strony głównej */}
+
+        {/* Public paths */}
+        <Route
+          path="/home"
+          element={
+            <PublicRoute>
+              <HomePage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicRoute>
+              <ForgotPassword />
+            </PublicRoute>
+          }
+        />
+
+        {/* UNKNOWN PATH REDIRECT TO '/" */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

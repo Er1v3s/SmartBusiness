@@ -7,11 +7,11 @@ export interface User {
 
 export interface AuthContextType {
   user: User | null;
-  token: string | null;
   login: (email: string, password: string, rememberMe: boolean) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
+  // token: string | null;
 }
 
 export interface LoginForm {
@@ -25,5 +25,3 @@ export interface RegisterForm {
   email: string;
   password: string;
 }
-
-export type Page = 'home' | 'login' | 'register' | 'dashboard';
