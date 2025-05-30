@@ -4,6 +4,7 @@ import { Mail, Lock, Eye, EyeOff, User, UserPlus } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import type { RegisterForm } from "../models";
 import { useNavigate } from "react-router-dom";
+import type { ApiResponseError } from "../models/authErrors";
 
 // Register Page Component
 export const RegisterPage: React.FC = () => {
@@ -29,7 +30,28 @@ export const RegisterPage: React.FC = () => {
       sessionStorage.setItem("showRegisterAlert", "true");
       navigate("/dashboard");
     } catch (err) {
-      setError("Błąd podczas rejestracji" + err);
+      console.log(err);
+      const error = err as ApiResponseError;
+      switch (error.status.toString()) {
+        case "400":
+          if (error.errors) {
+            error.errors.reverse().forEach((err) => {
+              setError(`${err.property}: ${err.errorMessage}`);
+            });
+          }
+          break;
+        case "404":
+          setError(
+            "Użytkownik o podanym adresie e-mail nie został znaleziony.",
+          );
+          break;
+        case "500":
+          setError("Wystąpił błąd serwera. Spróbuj ponownie później.");
+          break;
+        default:
+          setError("Wystąpił nieznany błąd. Spróbuj ponownie.");
+          break;
+      }
     } finally {
       setIsLoading(false);
     }

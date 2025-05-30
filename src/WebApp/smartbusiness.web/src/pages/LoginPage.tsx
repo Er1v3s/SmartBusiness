@@ -4,6 +4,7 @@ import { Mail, Lock, Eye, EyeOff, Shield } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import type { LoginForm } from "../models";
 import { useNavigate } from "react-router-dom";
+import type { ApiResponseError } from "../models/authErrors";
 
 // Login Page Component
 export const LoginPage: React.FC = () => {
@@ -29,7 +30,24 @@ export const LoginPage: React.FC = () => {
       sessionStorage.setItem("showLoginAlert", "true");
       navigate("/dashboard");
     } catch (err) {
-      setError("Nieprawidłowe dane logowania " + err);
+      const error = err as ApiResponseError;
+      console.log(err);
+      switch (error.status.toString()) {
+        case "400":
+          setError("Błędny email lub hasło. Spróbuj ponownie.");
+          break;
+        case "404":
+          setError(
+            "Użytkownik o podanym adresie e-mail nie został znaleziony.",
+          );
+          break;
+        case "500":
+          setError("Wystąpił błąd serwera. Spróbuj ponownie później.");
+          break;
+        default:
+          setError("Wystąpił nieznany błąd. Spróbuj ponownie.");
+          break;
+      }
     } finally {
       setIsLoading(false);
     }

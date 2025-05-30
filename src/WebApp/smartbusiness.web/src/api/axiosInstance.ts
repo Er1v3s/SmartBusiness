@@ -1,12 +1,14 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { API_BASE_URL } from "../../config.ts";
 import { removeAccessTokens, setAccessTokens } from "../context/TokenManager.ts";
+import type { ApiResponseError, ApiResponseValidationError } from "../models/authErrors.ts";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true,
 });
 
-// Interceptor to handle token refresh logic
+
 let isInterceptorSetup = false;
 let isRefreshing = false;
 let refreshSubscribers: Array<(token: string) => void> = [];
@@ -14,6 +16,7 @@ let refreshSubscribers: Array<(token: string) => void> = [];
 const setupResponseInterceptor = () => {
   if (isInterceptorSetup) return;
 
+  // Interceptor to handle token refresh logic
   axiosInstance.interceptors.request.use(
     async (config) => {
       const token = localStorage.getItem("ACCESS_TOKEN");
@@ -77,6 +80,26 @@ const setupResponseInterceptor = () => {
   isInterceptorSetup = true;
 };
 
+// Interceptor to handle API response errors
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (err) => {
+    const error = err as AxiosError<ApiResponseError>;
+
+    const fallbackError: ApiResponseError = {
+      title: error.response?.data?.title || "UNKNOWN_ERROR",
+      status: error.response?.data?.status || "500",
+      detail: error.response?.data?.detail || "An unknown error occurred.",
+      errors: Array.isArray(error.response?.data.errors)
+        ? error.response?.data.errors.map((e: ApiResponseValidationError) => ({
+            property: e.property ?? "unknown",
+            errorMessage: e.errorMessage ?? "Validation error",
+          })) : null,
+    };
+
+    return Promise.reject(fallbackError);
+  },
+);
 
 
 setupResponseInterceptor();

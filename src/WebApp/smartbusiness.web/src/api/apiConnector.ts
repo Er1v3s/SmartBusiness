@@ -3,40 +3,31 @@ import axiosInstance from "./axiosInstance.ts";
 import type { User } from "../models/index.ts";
 import { removeAccessTokens, setAccessTokens } from "../context/TokenManager.ts";
 
+
+
 const apiConnector = {
 
     login : async (email: string, password: string): Promise<void> => {
-        try {
-            const response: AxiosResponse = await axiosInstance.post(
-                "/auth/login",
-                { email, password },
-                { withCredentials: true },
-            );
+        const response: AxiosResponse = await axiosInstance.post(
+            "/auth/login",
+            { email, password },
+        );
 
-            const { jwtToken, expirationDateInUtc } = response.data;
-            setAccessTokens(jwtToken, expirationDateInUtc);
-        } catch {
-            return Promise.reject();
-        }
+        const { jwtToken, expirationDateInUtc } = response.data;
+        setAccessTokens(jwtToken, expirationDateInUtc);
     },
 
     register : async (username: string, email: string, password: string): Promise<void> => {
-        try {
-            await axiosInstance.post(
-                "/auth/register",
-                { username, email, password },
-                { withCredentials: true }
-            );
-        } catch {
-            return Promise.reject();
-        }
+        await axiosInstance.post(
+            "/auth/register",
+            { username, email, password },
+        );
     },
 
     loginUsingRefreshToken : async (): Promise<void> => {
         try {
             const response: AxiosResponse = await axiosInstance.get(
                 "/auth/refresh",
-                { withCredentials: true },
             );
 
             const { jwtToken, expirationDateInUtc } = response.data;
@@ -52,9 +43,8 @@ const apiConnector = {
     logout : async (): Promise<void> => {
         try {
             await axiosInstance.post("/auth/logout",
-                {},
-                { withCredentials: true },
             );
+            
             removeAccessTokens();
         } catch {
             return Promise.reject();
