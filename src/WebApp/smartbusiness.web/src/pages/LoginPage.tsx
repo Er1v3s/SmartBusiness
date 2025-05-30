@@ -26,9 +26,10 @@ export const LoginPage: React.FC = () => {
 
     try {
       await login(form.email, form.password, form.rememberMe);
+      sessionStorage.setItem("showLoginAlert", "true");
       navigate("/dashboard");
     } catch (err) {
-      setError("Nieprawidłowe dane logowania" + err);
+      setError("Nieprawidłowe dane logowania " + err);
     } finally {
       setIsLoading(false);
     }

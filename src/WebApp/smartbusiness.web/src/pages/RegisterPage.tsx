@@ -26,6 +26,7 @@ export const RegisterPage: React.FC = () => {
 
     try {
       await register(form.username, form.email, form.password);
+      sessionStorage.setItem("showRegisterAlert", "true");
       navigate("/dashboard");
     } catch (err) {
       setError("Błąd podczas rejestracji" + err);
