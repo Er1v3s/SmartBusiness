@@ -23,9 +23,9 @@ namespace AccountService.Api.Controllers
         public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
         {
             var command = new LoginUserCommand(request.Email, request.Password);
-            await _mediator.Send(command);
+            var token = await _mediator.Send(command);
 
-            return Ok();
+            return Ok(token);
         }
 
         [HttpPost("logout")]
@@ -49,14 +49,14 @@ namespace AccountService.Api.Controllers
             return Created();
         }
 
-        [HttpPost("refresh")]
+        [HttpGet("refresh")]
         public async Task<IActionResult> RefreshToken()
         {
-            var refreshToken = Request.Cookies["REFRESH_TOKEN"];
+            Request.Cookies.TryGetValue("REFRESH_TOKEN", out var refreshToken);
             var command = new RefreshTokenCommand(refreshToken);
-            await _mediator.Send(command);
+            var token = await _mediator.Send(command);
 
-            return Ok();
+            return Ok(token);
         }
     }
 }

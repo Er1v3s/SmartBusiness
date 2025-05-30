@@ -18,6 +18,16 @@ namespace AccountService.Api.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet("me")]
+        public async Task<IActionResult> GetUser()
+        {
+            Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            var command = new GetUserCommand(userId);
+            var result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+
         [HttpPut("update")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
         {

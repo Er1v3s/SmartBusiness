@@ -1,12 +1,13 @@
-﻿using MediatR;
-using AccountService.Application.Abstracts;
+﻿using AccountService.Application.Abstracts;
+using AccountService.Contracts.DTOs;
 using AccountService.Contracts.Exceptions.Auth;
+using MediatR;
 
 namespace AccountService.Application.Commands.Auth
 {
-    public record RefreshTokenCommand(string? RefreshToken) : IRequest;
+    public record RefreshTokenCommand(string? RefreshToken) : IRequest<JwtDto>;
 
-    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand>
+    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, JwtDto>
     {
         private readonly IUserRepository _userRepository;
         private readonly IAuthTokenProcessor _authTokenProcessor;
@@ -19,7 +20,7 @@ namespace AccountService.Application.Commands.Auth
             _authTokenProcessor = authTokenProcessor;
         }
 
-        public async Task Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+        public async Task<JwtDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(request.RefreshToken))
                 throw new RefreshTokenException("Refresh token is missing.");
@@ -36,18 +37,26 @@ namespace AccountService.Application.Commands.Auth
                 throw new RefreshTokenException("Refresh token is expired.");
 
             var (jwtToken, expirationDateInUtc) = _authTokenProcessor.GenerateJwtToken(user);
-            var newRefreshTokenValue = _authTokenProcessor.GenerateRefreshToken();
+            //var newRefreshTokenValue = _authTokenProcessor.GenerateRefreshToken();
 
-            var refreshTokenExpirationDateInUtc =
-                DateTime.UtcNow.AddHours(12); // Set the expiration time for the refresh token
+            //var refreshTokenExpirationDateInUtc =
+                //DateTime.UtcNow.AddHours(12); // Set the expiration time for the refresh token
 
-            user.RefreshToken = newRefreshTokenValue;
-            user.RefreshTokenExpiresAtUtc = refreshTokenExpirationDateInUtc;
-            await _userRepository.UpdateUserAsync(user);
+            //user.RefreshToken = newRefreshTokenValue;
+            //user.RefreshTokenExpiresAtUtc = refreshTokenExpirationDateInUtc;
+            //await _userRepository.UpdateUserAsync(user);
 
-            _authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("ACCESS_TOKEN", jwtToken, expirationDateInUtc);
-            _authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("REFRESH_TOKEN", user.RefreshToken,
-                refreshTokenExpirationDateInUtc);
+            //_authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("ACCESS_TOKEN", jwtToken, expirationDateInUtc);
+            //_authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("REFRESH_TOKEN", user.RefreshToken,
+            //    refreshTokenExpirationDateInUtc);
+
+            var jwtDto = new JwtDto()
+            {
+                JwtToken = jwtToken,
+                ExpirationDateInUtc = expirationDateInUtc,
+            };
+
+            return jwtDto;
         }
     }
 }

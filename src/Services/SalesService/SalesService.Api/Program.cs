@@ -33,7 +33,8 @@ namespace SalesService.Api
                 opt.AddPolicy("CorsPolicy", policyBuilder =>
                 {
                     policyBuilder
-                        .AllowAnyOrigin()
+                        .WithOrigins("http://localhost:5000")
+                        .AllowCredentials()
                         .AllowAnyMethod()
                         .AllowAnyHeader();
                 });

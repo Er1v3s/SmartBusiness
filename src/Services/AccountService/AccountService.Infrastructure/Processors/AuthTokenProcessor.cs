@@ -69,8 +69,8 @@ namespace AccountService.Infrastructure.Processors
                 Expires = expiration,
                 IsEssential = true,
                 Secure = true,
-                // SameSite = SameSiteMode.None,
-                SameSite = SameSiteMode.Strict,
+                SameSite = SameSiteMode.None,
+                //SameSite = SameSiteMode.Strict,
             };
 
             _httpContextAccessor.HttpContext?.Response.Cookies.Append(cookieName, token, cookieOptions);

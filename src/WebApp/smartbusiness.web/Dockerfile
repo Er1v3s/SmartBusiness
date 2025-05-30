@@ -1,3 +1,26 @@
+FROM node:alpine AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+FROM nginx:stable-alpine
+
+RUN rm -rf /usr/share/nginx/html/*
+
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+
+
 #FROM node:alpine AS build
 #
 #WORKDIR /app
@@ -14,24 +37,24 @@
 #CMD ["npm", "run", "dev"]
 
 
-# Build Stage
-FROM node:alpine AS build
-
-WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm install
-
-COPY . .
-
-CMD ["npm", "run", "build"]
- 
-# Production Stage
-FROM nginx:stable-alpine AS production
-
-COPY --from=build /app/dist /usr/share/nginx/html
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+## Build Stage
+#FROM node:alpine AS build
+#
+#WORKDIR /app
+#
+#COPY package*.json ./
+#
+#RUN npm install
+#
+#COPY . .
+#
+#CMD ["npm", "run", "build"]
+#
+## Production Stage
+#FROM nginx:stable-alpine AS production
+#
+#COPY --from=build /app/dist/. /usr/share/nginx/html
+#
+#EXPOSE 80
+#
+#CMD ["nginx", "-g", "daemon off;"]
