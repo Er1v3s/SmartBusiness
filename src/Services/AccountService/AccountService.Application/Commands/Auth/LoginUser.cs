@@ -8,7 +8,7 @@ using AccountService.Domain.Entities;
 
 namespace AccountService.Application.Commands.Auth
 {
-    public record LoginUserCommand(string Email, string Password) : IRequest<JwtDto>;
+    public record LoginUserCommand(string Email, string Password, bool RememberMe) : IRequest<JwtDto>;
 
     public class LoginUserCommandValidator : AbstractValidator<User>
     {
@@ -56,19 +56,21 @@ namespace AccountService.Application.Commands.Auth
                 throw new InvalidPasswordException("Incorrect password");
 
             var (jwtToken, expirationDateInUtc) = _authTokenProcessor.GenerateJwtToken(user);
-            var refreshTokenValue = _authTokenProcessor.GenerateRefreshToken();
 
-            var refreshTokenExpirationDateInUtc =
-                DateTime.UtcNow.AddHours(12); // Set the expiration time for the refresh token
+            if (request.RememberMe)
+            {
+                var refreshTokenValue = _authTokenProcessor.GenerateRefreshToken();
 
-            user.RefreshToken = refreshTokenValue;
-            user.RefreshTokenExpiresAtUtc = refreshTokenExpirationDateInUtc;
+                // Set the expiration time for the refresh token
+                var refreshTokenExpirationDateInUtc = DateTime.UtcNow.AddHours(12);
 
-            await _userRepository.UpdateUserAsync(user);
+                user.RefreshToken = refreshTokenValue;
+                user.RefreshTokenExpiresAtUtc = refreshTokenExpirationDateInUtc;
 
-            //_authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("ACCESS_TOKEN", jwtToken, expirationDateInUtc);
-            _authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("REFRESH_TOKEN", user.RefreshToken,
-                refreshTokenExpirationDateInUtc);
+                await _userRepository.UpdateUserAsync(user);
+                _authTokenProcessor.WriteAuthTokenAsHttpOnlyCookie("REFRESH_TOKEN", user.RefreshToken,
+                    refreshTokenExpirationDateInUtc);
+            }
 
             var jwtDto = new JwtDto
             {

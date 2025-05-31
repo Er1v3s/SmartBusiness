@@ -5,38 +5,27 @@ import { removeAccessTokens, setAccessTokens } from "../context/TokenManager.ts"
 
 const apiConnector = {
 
-    login : async (email: string, password: string): Promise<void> => {
-        try {
-            const response: AxiosResponse = await axiosInstance.post(
-                "/auth/login",
-                { email, password },
-                { withCredentials: true },
-            );
+    login : async (email: string, password: string, rememberMe: boolean): Promise<void> => {
+        const response: AxiosResponse = await axiosInstance.post(
+            "/auth/login",
+            { email, password, rememberMe },
+        );
 
-            const { jwtToken, expirationDateInUtc } = response.data;
-            setAccessTokens(jwtToken, expirationDateInUtc);
-        } catch {
-            return Promise.reject();
-        }
+        const { jwtToken, expirationDateInUtc } = response.data;
+        setAccessTokens(jwtToken, expirationDateInUtc);
     },
 
     register : async (username: string, email: string, password: string): Promise<void> => {
-        try {
-            await axiosInstance.post(
-                "/auth/register",
-                { username, email, password },
-                { withCredentials: true }
-            );
-        } catch {
-            return Promise.reject();
-        }
+        await axiosInstance.post(
+            "/auth/register",
+            { username, email, password },
+        );
     },
 
     loginUsingRefreshToken : async (): Promise<void> => {
         try {
             const response: AxiosResponse = await axiosInstance.get(
                 "/auth/refresh",
-                { withCredentials: true },
             );
 
             const { jwtToken, expirationDateInUtc } = response.data;
@@ -47,14 +36,11 @@ const apiConnector = {
         }
     },
     
-
-
     logout : async (): Promise<void> => {
         try {
             await axiosInstance.post("/auth/logout",
-                {},
-                { withCredentials: true },
             );
+
             removeAccessTokens();
         } catch {
             return Promise.reject();
@@ -80,7 +66,26 @@ const apiConnector = {
         } catch {
             return null;
         }
-    }
+    },
+
+    sendResetLink : async (email: string): Promise<void> => {
+        try {
+            await axiosInstance.post("/auth/forgot-password", 
+                { email });
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
+    resetPassword : async (token: string, newPassword: string): Promise<void> => {
+        try {
+            await axiosInstance.post("/auth/reset-password", 
+                { token, newPassword }
+            );
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
 }
 
 export default apiConnector;

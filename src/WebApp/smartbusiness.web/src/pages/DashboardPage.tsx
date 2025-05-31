@@ -1,14 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Shield, User, Zap } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { NavLink } from "react-router-dom";
+import { Alert } from "../components/General/Alert";
+import type { AlertProps } from "../components/General/alertProps";
 
 // Dashboard Page Component
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertData, setAlertData] = useState<AlertProps>();
+
+  useEffect(() => {
+    const loginAlert = sessionStorage.getItem("showLoginAlert");
+    const registerAlert = sessionStorage.getItem("showRegisterAlert");
+
+    if (loginAlert === "true") {
+      setAlertData({
+        title: "Zalogowano!",
+        message: "Twoje konto zostało pomyślnie uwierzytelnione.",
+        type: "success",
+        duration: 5000,
+      });
+      setShowAlert(true);
+      sessionStorage.removeItem("showLoginAlert");
+    } else if (registerAlert === "true") {
+      setAlertData({
+        title: "Zarejestrowano!",
+        message: "Twoje konto zostało pomyślnie utworzone.",
+        type: "info",
+        duration: 5000,
+      });
+      setShowAlert(true);
+      sessionStorage.removeItem("showRegisterAlert");
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {showAlert && alertData != null && (
+        <Alert
+          title={alertData.title}
+          message={alertData.message}
+          type={alertData.type}
+          duration={alertData.duration}
+        />
+      )}
+      
       {/* Main Content */}
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">

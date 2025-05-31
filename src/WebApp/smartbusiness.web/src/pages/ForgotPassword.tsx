@@ -1,7 +1,10 @@
 import React from "react";
+import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
 import { Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import type { AlertProps } from "../components/General/alertProps";
+import { Alert } from "../components/General/Alert";
 
 // Login Page Component
 export const ForgotPassword: React.FC = () => {
@@ -12,11 +15,38 @@ export const ForgotPassword: React.FC = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const { sendResetLink } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
+
+    try {
+      await sendResetLink(form.email);
+      showAlertMessage();
+    } catch (err) {
+      console.error(err);
+      setError("Wystąpił błąd podczas wysyłania linku resetującego hasło.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertData, setAlertData] = useState<AlertProps>();
+
+  const showAlertMessage = () => {
+    setShowAlert(true);
+    setAlertData({
+      title: "Link resetujący hasło został wysłany!",
+      message: "Sprawdź swoją skrzynkę pocztową.",
+      type: "success",
+      duration: 3000,
+    });
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 3500);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +59,15 @@ export const ForgotPassword: React.FC = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 p-px">
+      {showAlert && alertData != null && (
+        <Alert
+          title={alertData.title}
+          message={alertData.message}
+          type={alertData.type}
+          duration={alertData.duration}
+        />
+      )}
+
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-lg">
           <div className="mb-8 flex-1 items-center text-center">

@@ -54,8 +54,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Login - we send the data, backend saves the token in cookies
-  const login = async (email: string, password: string): Promise<void> => {
-    await apiConnector.login(email, password);
+  const login = async (
+    email: string,
+    password: string,
+    rememberMe: boolean,
+  ): Promise<void> => {
+    await apiConnector.login(email, password, rememberMe);
     await fetchUserData();
   };
 
@@ -68,7 +72,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await apiConnector.register(username, email, password);
 
     // After successful registration, automatically log in the user
-    await login(email, password);
+    await login(email, password, true);
   };
 
   // Logout - we remove the session on the backend
@@ -77,12 +81,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setUser(null);
   };
 
+  const sendResetLink = async (email: string): Promise<void> => {
+    await apiConnector.sendResetLink(email);
+  };
+
+  const resetPassword = async (
+    token: string,
+    password: string,
+  ): Promise<void> => {
+    await apiConnector.resetPassword(token, password);
+  };
+
   // Context value
   const value: AuthContextType = {
     user,
     login,
     register,
     logout,
+    sendResetLink,
+    resetPassword,
     isAuthenticated: user !== null,
     // token: null,
   };

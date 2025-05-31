@@ -5,6 +5,7 @@ namespace AccountService.Application.Abstracts
     public interface IUserRepository
     {
         Task<User?> GetUserByEmailAsync(string email);
+        IQueryable<User> GetQueryable();
         IQueryable<User> GetQueryableIncludingProperties();
         Task<User?> GetFilteredUserAsync(IQueryable<User> query, CancellationToken cancellationToken);
         Task<User?> GetUserByIdAsync(Guid userId);
