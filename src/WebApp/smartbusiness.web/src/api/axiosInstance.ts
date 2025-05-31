@@ -8,7 +8,6 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-
 let isInterceptorSetup = false;
 let isRefreshing = false;
 let refreshSubscribers: Array<(token: string) => void> = [];
@@ -102,7 +101,6 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(fallbackError);
   },
 );
-
 
 setupResponseInterceptor();
 

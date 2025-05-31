@@ -54,6 +54,13 @@ export const ForgotPassword: React.FC = () => {
     setForm((prev) => ({
       ...prev,
       [name]: value,
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
