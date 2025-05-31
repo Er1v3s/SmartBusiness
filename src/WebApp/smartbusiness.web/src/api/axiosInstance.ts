@@ -86,6 +86,8 @@ axiosInstance.interceptors.response.use(
   async (err) => {
     const error = err as AxiosError<ApiResponseError>;
 
+    console.log("API Error:", error);
+
     const fallbackError: ApiResponseError = {
       title: error.response?.data?.title || "UNKNOWN_ERROR",
       status: error.response?.data?.status || "500",

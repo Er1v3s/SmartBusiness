@@ -19,6 +19,11 @@ namespace AccountService.Infrastructure.Repositories
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
+        public IQueryable<User> GetQueryable()
+        {
+            return _dbContext.Users.AsQueryable();
+        }
+
         public IQueryable<User> GetQueryableIncludingProperties()
         {
             return _dbContext.Users

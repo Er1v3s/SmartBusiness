@@ -65,6 +65,7 @@ namespace AccountService.Application.Commands.Auth
             };
 
             await _userRepository.AddUserAsync(user);
+            
         }
     }
 }

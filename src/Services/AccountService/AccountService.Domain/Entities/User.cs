@@ -11,6 +11,9 @@ namespace AccountService.Domain.Entities
         public string PasswordHash { get; set; } = string.Empty;
         public string? RefreshToken { get; set; } = null;
         public DateTime? RefreshTokenExpiresAtUtc { get; set; } = null;
+        public bool IsEmailConfirmed { get; set; } = false;
+        public string? ResetPasswordToken { get; set; } = null;
+        public DateTime? ResetPasswordTokenExpiresAtUtc { get; set; } = null;
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public ICollection<UserCompanyRole> UserCompanyRoles { get; set; } = new List<UserCompanyRole>();
 

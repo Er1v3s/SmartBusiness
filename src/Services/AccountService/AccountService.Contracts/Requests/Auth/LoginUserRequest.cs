@@ -1,4 +1,4 @@
 ﻿namespace AccountService.Contracts.Requests.Auth
 {
-    public record LoginUserRequest(string Email, string Password);
+    public record LoginUserRequest(string Email, string Password, bool RememberMe);
 }

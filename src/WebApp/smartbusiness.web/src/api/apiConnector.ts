@@ -3,14 +3,12 @@ import axiosInstance from "./axiosInstance.ts";
 import type { User } from "../models/index.ts";
 import { removeAccessTokens, setAccessTokens } from "../context/TokenManager.ts";
 
-
-
 const apiConnector = {
 
-    login : async (email: string, password: string): Promise<void> => {
+    login : async (email: string, password: string, rememberMe: boolean): Promise<void> => {
         const response: AxiosResponse = await axiosInstance.post(
             "/auth/login",
-            { email, password },
+            { email, password, rememberMe },
         );
 
         const { jwtToken, expirationDateInUtc } = response.data;
@@ -38,13 +36,11 @@ const apiConnector = {
         }
     },
     
-
-
     logout : async (): Promise<void> => {
         try {
             await axiosInstance.post("/auth/logout",
             );
-            
+
             removeAccessTokens();
         } catch {
             return Promise.reject();
@@ -70,7 +66,26 @@ const apiConnector = {
         } catch {
             return null;
         }
-    }
+    },
+
+    sendResetLink : async (email: string): Promise<void> => {
+        try {
+            await axiosInstance.post("/auth/forgot-password", 
+                { email });
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
+    resetPassword : async (token: string, newPassword: string): Promise<void> => {
+        try {
+            await axiosInstance.post("/auth/reset-password", 
+                { token, newPassword }
+            );
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
 }
 
 export default apiConnector;

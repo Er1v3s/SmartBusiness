@@ -10,6 +10,7 @@ namespace AccountService.Api.Handlers.CustomExceptionHandlers
             typeof(RefreshTokenException),
             typeof(AuthenticationException),
             typeof(ForbiddenException),
+            typeof(InvalidResetPasswordTokenException)
         };
 
         public override bool CanHandle(Exception ex) => HandledExceptions.Contains(ex.GetType());
@@ -21,6 +22,7 @@ namespace AccountService.Api.Handlers.CustomExceptionHandlers
                 RefreshTokenException => CreateProblemDetails(StatusCodes.Status401Unauthorized, "Unauthorized", exception.Message),
                 AuthenticationException => CreateProblemDetails(StatusCodes.Status401Unauthorized, "Unauthorized", exception.Message),
                 ForbiddenException => CreateProblemDetails(StatusCodes.Status403Forbidden, "Forbidden", exception.Message),
+                InvalidResetPasswordTokenException => CreateProblemDetails(StatusCodes.Status400BadRequest, "Bad Request", exception.Message),
                 _ => base.CreateProblemDetails(exception)
             };
         }

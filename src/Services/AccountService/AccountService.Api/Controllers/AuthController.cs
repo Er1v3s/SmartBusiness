@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AccountService.Application.Commands.Auth;
 using AccountService.Contracts.Requests.Auth;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace AccountService.Api.Controllers
 {
@@ -22,7 +23,7 @@ namespace AccountService.Api.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
         {
-            var command = new LoginUserCommand(request.Email, request.Password);
+            var command = new LoginUserCommand(request.Email, request.Password, request.RememberMe);
             var token = await _mediator.Send(command);
 
             return Ok(token);
@@ -57,6 +58,24 @@ namespace AccountService.Api.Controllers
             var token = await _mediator.Send(command);
 
             return Ok(token);
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var command = new ForgotPasswordCommand(request.Email);
+            await _mediator.Send(command);
+
+            return Ok();
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var command = new ResetPasswordCommand(request.Token, request.NewPassword);
+            await _mediator.Send(command);
+
+            return Ok();
         }
     }
 }
