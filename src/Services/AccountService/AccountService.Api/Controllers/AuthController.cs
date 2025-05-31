@@ -75,7 +75,7 @@ namespace AccountService.Api.Controllers
             var command = new ResetPasswordCommand(request.Token, request.NewPassword);
             await _mediator.Send(command);
 
-            return Ok(token);
+            return Ok();
         }
     }
 }
