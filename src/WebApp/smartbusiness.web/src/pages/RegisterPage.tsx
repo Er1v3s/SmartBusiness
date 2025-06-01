@@ -4,7 +4,7 @@ import { Mail, Lock, Eye, EyeOff, User, UserPlus } from "lucide-react";
 import type { RegisterForm } from "../models";
 import { useNavigate } from "react-router-dom";
 import type { ApiResponseError } from "../models/authErrors";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth/AuthContext";
 
 // Register Page Component
 export const RegisterPage: React.FC = () => {
@@ -16,14 +16,76 @@ export const RegisterPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [hasTyped, setHasTyped] = useState({
+    username: false,
+    email: false,
+    password: false,
+  });
+
+  // Dynamic validation
+  const validateUsername = (username: string) => {
+    if (username.length < 3)
+      return "Nazwa użytkownika musi mieć co najmniej 3 znaki.";
+    if (!/^[\w\- ]+$/.test(username))
+      return "Nazwa użytkownika może zawierać tylko litery, cyfry, spacje, myślniki i podkreślenia.";
+    return "";
+  };
+  const validateEmail = (email: string) => {
+    if (!/^[\w-.]+@[\w-]+\.[a-zA-Z]{2,}$/.test(email))
+      return "Podaj poprawny adres email.";
+    return "";
+  };
+  const validatePassword = (password: string) => {
+    if (password.length < 8) return "Hasło musi mieć co najmniej 8 znaków.";
+    if (!/[A-Z]/.test(password))
+      return "Hasło musi zawierać co najmniej jedną wielką literę.";
+    if (!/[a-z]/.test(password))
+      return "Hasło musi zawierać co najmniej jedną małą literę.";
+    if (!/[0-9]/.test(password))
+      return "Hasło musi zawierać co najmniej jedną cyfrę.";
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+      return "Hasło musi zawierać co najmniej jeden znak specjalny.";
+    if (password.length > 100)
+      return "Hasło nie może być dłuższe niż 100 znaków.";
+    return "";
+  };
+
+  // Dynamic error display
+  const usernameError = hasTyped.username
+    ? validateUsername(form.username)
+    : "";
+  const emailError = hasTyped.email ? validateEmail(form.email) : "";
+  const passwordError = hasTyped.password
+    ? validatePassword(form.password)
+    : "";
 
   const navigate = useNavigate();
   const { register } = useAuth();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    setHasTyped((prev) => ({ ...prev, [name]: value.trim() !== "" }));
+    setError("");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
+
+    // Final validation before submit
+    const uErr = validateUsername(form.username);
+    const eErr = validateEmail(form.email);
+    const pErr = validatePassword(form.password);
+    if (uErr || eErr || pErr) {
+      setError(uErr || eErr || pErr);
+      setIsLoading(false);
+      return;
+    }
 
     try {
       await register(form.username, form.email, form.password);
@@ -55,14 +117,6 @@ export const RegisterPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
   };
 
   return (
@@ -98,6 +152,9 @@ export const RegisterPage: React.FC = () => {
                   required
                 />
               </div>
+              {usernameError && (
+                <p className="mt-1 text-xs text-red-400">{usernameError}</p>
+              )}
             </div>
 
             <div>
@@ -116,6 +173,9 @@ export const RegisterPage: React.FC = () => {
                   required
                 />
               </div>
+              {emailError && (
+                <p className="mt-1 text-xs text-red-400">{emailError}</p>
+              )}
             </div>
 
             <div>
@@ -145,6 +205,9 @@ export const RegisterPage: React.FC = () => {
                   )}
                 </button>
               </div>
+              {passwordError && (
+                <p className="mt-1 text-xs text-red-400">{passwordError}</p>
+              )}
             </div>
 
             <button
