@@ -1,11 +1,9 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Alert } from "../components/General/Alert";
-import { Lock, Eye, EyeOff, ShieldAlert } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
+import { Lock, Eye, EyeOff, ShieldAlert, ShieldCheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { AlertProps } from "../components/General/alertProps";
+import { useAlert } from "../context/alert/useAlert";
 import type { ApiResponseError } from "../models/authErrors";
-import { ResetPasswordSuccess } from "../components/Auth/ResetPasswordSuccess";
+import { useAuth } from "../context/AuthContext";
 
 export const ResetPassword = () => {
   const [form, setForm] = useState({
@@ -16,9 +14,11 @@ export const ResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [hasTyped, setHasTyped] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const navigate = useNavigate();
   const { resetPassword } = useAuth();
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     if (!hasTyped) return;
@@ -83,7 +83,13 @@ export const ResetPassword = () => {
 
     try {
       await resetPassword(token, form.password);
-      showAlertMessage();
+      showAlert({
+        title: "Udało Ci się zmienić hasło!",
+        message: "Możesz się ponownie zalogować.",
+        type: "success",
+        duration: 3000,
+      });
+      setSuccess(true);
     } catch (err) {
       const error = err as ApiResponseError;
       console.error(error);
@@ -105,22 +111,6 @@ export const ResetPassword = () => {
     }
   };
 
-  const [showAlert, setShowAlert] = useState<boolean>(false);
-  const [alertData, setAlertData] = useState<AlertProps>();
-
-  const showAlertMessage = () => {
-    setShowAlert(true);
-    setAlertData({
-      title: "Udało Ci się zmienić hasło!",
-      message: "Możesz się ponownie zalogować.",
-      type: "success",
-      duration: 3000,
-    });
-    setTimeout(() => {
-      setShowAlert(false);
-    }, 3500);
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({
@@ -138,87 +128,99 @@ export const ResetPassword = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 p-px">
-      {showAlert && alertData != null && (
-        <Alert
-          title={alertData.title}
-          message={alertData.message}
-          type={alertData.type}
-          duration={alertData.duration}
-        />
-      )}
-
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-lg">
-          {!showAlert && alertData == null && (
-            <div className="mb-8 flex-1 items-center text-center">
-              <div className="mb-4 flex justify-center">
-                <ShieldAlert className="mx-auto mb-4 h-12 w-12 text-center" />
-              </div>
-              <h2 className="mb-2 text-3xl font-bold text-white">
-                Resetowania hasła
-              </h2>
-              <p className="text-gray-300">
-                Wprowadź nowe hasło, tym razem go nie zapomnij 😉
-              </p>
-            </div>
-          )}
-
-          {error && (
-            <div className="mb-6 rounded-lg border border-red-500/50 bg-red-500/20 p-3">
-              <p className="text-sm text-red-200">{error}</p>
-            </div>
-          )}
-
-          {!showAlert && alertData == null && (
-            <div className="space-y-6">
-              <label className="mb-2 block text-sm font-medium text-gray-200">
-                Hasło
-              </label>
-              <div className="relative">
-                <Lock className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border border-white/20 bg-white/5 py-3 pr-12 pl-10 text-white placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-cyan-500 focus:outline-none"
-                  placeholder="••••••••"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 transform text-gray-400 hover:text-white"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
+          {!success ? (
+            <>
+              <div className="mb-8 flex-1 items-center text-center">
+                <div className="mb-4 flex justify-center">
+                  <ShieldAlert className="mx-auto mb-4 h-12 w-12 text-center" />
+                </div>
+                <h2 className="mb-2 text-3xl font-bold text-white">
+                  Resetowania hasła
+                </h2>
+                <p className="text-gray-300">
+                  Wprowadź nowe hasło, tym razem go nie zapomnij 😉
+                </p>
               </div>
 
-              <div className="flex items-center justify-between">
+              {error && (
+                <div className="mb-6 rounded-lg border border-red-500/50 bg-red-500/20 p-3">
+                  <p className="text-sm text-red-200">{error}</p>
+                </div>
+              )}
+
+              <div className="space-y-6">
+                <label className="mb-2 block text-sm font-medium text-gray-200">
+                  Hasło
+                </label>
+                <div className="relative">
+                  <Lock className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
+                    className="w-full rounded-lg border border-white/20 bg-white/5 py-3 pr-12 pl-10 text-white placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute top-1/2 right-3 -translate-y-1/2 transform text-gray-400 hover:text-white"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="text-sm text-gray-300 hover:text-white"
+                  >
+                    Wróć do logowania
+                  </button>
+                  <button
+                    onClick={handleSubmit}
+                    disabled={isLoading}
+                    className={`inline-flex items-center rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-white shadow transition-colors duration-200 hover:bg-cyan-600 ${
+                      isLoading ? "cursor-not-allowed opacity-50" : ""
+                    }`}
+                  >
+                    {isLoading ? "Przetwarzanie..." : "Zmień hasło"}
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="mb-8 flex-1 items-center text-center">
+                <div className="mb-4 flex justify-center">
+                  <ShieldCheckIcon className="mx-auto mb-4 h-12 w-12 text-center" />
+                </div>
+                <h2 className="mb-2 text-3xl font-bold text-white">
+                  Hasło zostało zmienione!
+                </h2>
+                <p className="text-gray-300">
+                  Możesz się teraz zalogować przy użyciu nowego hasła.
+                </p>
+              </div>
+
+              <div className="flex justify-center">
                 <button
                   onClick={() => navigate("/login")}
-                  className="text-sm text-gray-300 hover:text-white"
+                  className={`} inline-flex items-center rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-white shadow transition-colors duration-200 hover:bg-cyan-600`}
                 >
                   Wróć do logowania
                 </button>
-                <button
-                  onClick={handleSubmit}
-                  disabled={isLoading}
-                  className={`inline-flex items-center rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-white shadow transition-colors duration-200 hover:bg-cyan-600 ${
-                    isLoading ? "cursor-not-allowed opacity-50" : ""
-                  }`}
-                >
-                  {isLoading ? "Przetwarzanie..." : "Zmień hasło"}
-                </button>
               </div>
-            </div>
+            </>
           )}
-
-          {showAlert && alertData != null && <ResetPasswordSuccess />}
         </div>
       </div>
     </div>

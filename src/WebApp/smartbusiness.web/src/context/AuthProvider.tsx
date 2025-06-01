@@ -53,7 +53,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await fetchUserData();
   };
 
-  // Login - we send the data, backend saves the token in cookies
   const login = async (
     email: string,
     password: string,
@@ -63,7 +62,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await fetchUserData();
   };
 
-  // Registration - we send the data, backend saves the token in cookies
   const register = async (
     username: string,
     email: string,
@@ -75,7 +73,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await login(email, password, true);
   };
 
-  // Logout - we remove the session on the backend
   const logout = async () => {
     await apiConnector.logout();
     setUser(null);
