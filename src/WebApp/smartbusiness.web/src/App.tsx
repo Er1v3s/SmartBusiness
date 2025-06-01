@@ -7,12 +7,12 @@ import {
   Navigate,
 } from "react-router-dom";
 import { Navigation } from "./components/Navigation/Navigation";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./context/auth/AuthContext";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
-import { AuthProvider } from "./context/AuthProvider";
+import { AuthProvider } from "./context/auth/AuthProvider";
 import { AlertProvider } from "./context/alert/AlertContext";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";

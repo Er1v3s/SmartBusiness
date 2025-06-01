@@ -1,4 +1,4 @@
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/auth/AuthContext";
 import logo_no_text from "../../assets/logo_no_text.svg";
 import logo_text from "../../assets/logo_text.svg";
 import { NavLink, useNavigate } from "react-router-dom";

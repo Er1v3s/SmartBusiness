@@ -1,4 +1,4 @@
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/auth/AuthContext";
 
 import { AuthenticatedDashboard } from "./AuthenticatedDashboard";
 import { NotAuthenticatedDashboard } from "./NotAuthenticatedDashboard";
