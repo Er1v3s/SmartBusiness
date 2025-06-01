@@ -13,9 +13,10 @@ import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { AuthProvider } from "./context/AuthProvider";
-import "./App.css";
+import { AlertProvider } from "./context/alert/AlertContext";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
+import "./App.css";
 
 // Private Route component checks if the user is authenticated
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -104,7 +105,9 @@ export const App: React.FC = () => {
 
 const AppWithProvider: React.FC = () => (
   <AuthProvider>
-    <App />
+    <AlertProvider>
+      <App />
+    </AlertProvider>
   </AuthProvider>
 );
 
