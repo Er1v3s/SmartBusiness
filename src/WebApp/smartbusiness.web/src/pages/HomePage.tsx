@@ -1,7 +1,7 @@
 import { Shield } from "lucide-react";
 import { ArrowRight, Zap, Users } from "lucide-react";
 import React from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 // Home Page Component

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Shield, User, Zap } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAlert } from "../context/alert/useAlert";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth/AuthContext";
 
 // Dashboard Page Component
 export const DashboardPage: React.FC = () => {

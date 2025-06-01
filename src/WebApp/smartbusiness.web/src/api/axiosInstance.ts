@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { API_BASE_URL } from "../../config.ts";
-import { removeAccessTokens, setAccessTokens } from "../context/TokenManager.ts";
+import { removeAccessTokens, setAccessTokens } from "../context/auth/TokenManager.ts";
 import type { ApiResponseError, ApiResponseValidationError } from "../models/authErrors.ts";
 
 const axiosInstance = axios.create({
@@ -85,7 +85,9 @@ axiosInstance.interceptors.response.use(
   async (err) => {
     const error = err as AxiosError<ApiResponseError>;
 
+    // TO DELETE AFTER DEVELOPMENT
     console.log("API Error:", error);
+    // TO DELETE AFTER DEVELOPMENT
 
     const fallbackError: ApiResponseError = {
       title: error.response?.data?.title || "UNKNOWN_ERROR",
