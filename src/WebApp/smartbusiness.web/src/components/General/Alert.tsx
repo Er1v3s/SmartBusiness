@@ -7,9 +7,13 @@ export const Alert: React.FC<AlertProps> = (props) => {
   const [shouldRender, setShouldRender] = useState(true);
 
   useEffect(() => {
+    setShouldRender(true); // Always render on mount
+    setVisible(false); // Start hidden
     const showTimeout = setTimeout(() => setVisible(true), 50);
-    const autoHideTimeout = setTimeout(() => setVisible(false), props.duration);
-
+    const autoHideTimeout = setTimeout(
+      () => setVisible(false),
+      props.duration ?? 3000,
+    );
     return () => {
       clearTimeout(showTimeout);
       clearTimeout(autoHideTimeout);
@@ -18,9 +22,12 @@ export const Alert: React.FC<AlertProps> = (props) => {
 
   useEffect(() => {
     if (!visible) {
+      // Fade out: wait for transition to finish before unmount
       const timeout = setTimeout(() => setShouldRender(false), 500);
       return () => clearTimeout(timeout);
     }
+    // Fade in: ensure shouldRender is true
+    setShouldRender(true);
   }, [visible]);
 
   if (!shouldRender) return null;

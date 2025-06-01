@@ -12,7 +12,7 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({
   const showAlert = useCallback((props: AlertProps) => {
     setAlertData(props);
     setShow(true);
-    setTimeout(() => setShow(false), (props.duration ?? 3000) + 500);
+    setTimeout(() => setShow(false), (props.duration ?? 3000) + 500); // 500ms for fade out
   }, []);
 
   return (
