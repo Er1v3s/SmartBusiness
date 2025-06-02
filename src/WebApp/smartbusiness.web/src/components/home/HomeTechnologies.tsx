@@ -75,7 +75,7 @@ export const HomeTechnologies: React.FC = () => {
   }, [width, controls]);
 
   return (
-    <section className="relative z-10 mx-auto mt-4 max-w-5xl overflow-hidden px-6 pb-16">
+    <section className="relative z-10 mx-auto mt-4 max-w-5xl overflow-hidden px-6 pb-15">
       <h2 className="mb-8 text-center text-2xl font-bold tracking-tight text-white/90">
         Technologie
       </h2>

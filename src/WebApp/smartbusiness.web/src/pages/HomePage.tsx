@@ -2,10 +2,10 @@ import { ArrowRight } from "lucide-react";
 import React from "react";
 import { useAuth } from "../context/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { HomeAboutSection } from "../components/home/HomeAboutSection";
-import { HomeFeatures } from "../components/home/HomeFeatures";
-import { HomeTechnologies } from "../components/home/HomeTechnologies";
-import { HomeTechDescriptionSection } from "../components/home/HomeTechDescriptionSection";
+import { HomeAboutSection } from "../components/Home/HomeAboutSection";
+import { HomeFeatures } from "../components/Home/HomeFeatures";
+import { HomeTechnologies } from "../components/Home/HomeTechnologies";
+import { HomeTechDescriptionSection } from "../components/Home/HomeTechDescriptionSection";
 
 // Home Page Component
 export const HomePage: React.FC = () => {
@@ -15,7 +15,7 @@ export const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
       {/* Hero Section */}
-      <div className="relative z-10 mx-auto max-w-4xl px-6 pt-30 pb-20 text-center">
+      <div className="relative z-10 mx-auto max-w-4xl px-6 pt-15 pb-15 text-center">
         <h1 className="mb-8 text-5xl leading-tight font-bold text-white lg:text-7xl">
           Bezpieczna platforma dla
           <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">

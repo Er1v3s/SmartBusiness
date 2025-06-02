@@ -126,7 +126,7 @@ export const ResetPassword = () => {
   const [success, setSuccess] = useState(false);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 p-px">
+    <div className="flex h-[calc(100vh-(var(--spacing)*22))] items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 p-px">
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-lg">
           {!success ? (

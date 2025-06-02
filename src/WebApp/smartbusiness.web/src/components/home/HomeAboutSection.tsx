@@ -1,11 +1,11 @@
 import React from "react";
 import logo_white from "../../assets/logo_white.svg";
-import { HomeBadge } from "./HomeBadge";
-import { HomeBenefitsGrid } from "./HomeBenefitsGrid";
+import { HomeBadge } from "../Home/HomeBadge";
+import { HomeBenefitsGrid } from "../Home/HomeBenefitsGrid";
 import { motion } from "framer-motion";
 
 export const HomeAboutSection: React.FC = () => (
-  <section className="relative z-10 mx-auto max-w-6xl px-4 pt-12 pb-20">
+  <section className="relative z-10 mx-auto max-w-6xl px-4 pb-15">
     <motion.div
       className="flex flex-col overflow-hidden rounded-3xl border border-white/15 bg-white/5 shadow-2xl backdrop-blur-lg md:flex-row"
       initial={{ opacity: 0, scale: 0.97 }}

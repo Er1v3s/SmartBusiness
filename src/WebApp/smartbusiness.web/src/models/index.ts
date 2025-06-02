@@ -3,6 +3,7 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  createdAt?: string; // Optional, can be used for user creation date
 }
 
 export interface AuthContextType {

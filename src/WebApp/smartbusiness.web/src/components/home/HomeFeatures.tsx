@@ -21,7 +21,7 @@ const features = [
 ];
 
 export const HomeFeatures: React.FC = () => (
-  <section className="relative z-10 mx-auto max-w-6xl px-6 pb-20">
+  <section className="relative z-10 mx-auto max-w-6xl px-6 pb-15">
     <div className="grid gap-8 md:grid-cols-3">
       {features.map((f, i) => (
         <motion.div
