@@ -67,7 +67,7 @@ export const ForgotPassword: React.FC = () => {
         <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-lg">
           <div className="mb-8 flex-1 items-center text-center">
             <div className="mb-4 flex justify-center">
-              <Mail className="mx-auto mb-4 h-12 w-12 text-center" />
+              <Mail className="mx-auto mb-4 h-12 w-12 text-center text-white" />
             </div>
             <h2 className="mb-2 text-3xl font-bold text-white">
               Zapomniałeś hasła?

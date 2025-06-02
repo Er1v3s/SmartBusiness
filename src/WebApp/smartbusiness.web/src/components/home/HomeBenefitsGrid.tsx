@@ -1,6 +1,6 @@
 import React from "react";
 import { Shield, Zap, Users, ArrowRight, Timer } from "lucide-react";
-import { HomeBenefitCard } from "./HomeBenefitCard";
+import { HomeBenefitCard } from "../Home/HomeBenefitCard";
 
 export const HomeBenefitsGrid: React.FC = () => (
   <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">

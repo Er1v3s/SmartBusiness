@@ -1,6 +1,8 @@
 import { useAuth } from "../../context/auth/AuthContext";
 import logo_no_text from "../../assets/logo_no_text.svg";
+import logo_no_text_white from "../../assets/logo_no_text_white.svg";
 import logo_text from "../../assets/logo_text.svg";
+import logo_text_white from "../../assets/logo_text_white.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
 import { ThemeToggleButton } from "../General/ThemeToggleButton";
@@ -15,8 +17,8 @@ export const AuthenticatedDashboard: React.FC = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 h-16 bg-white/80 shadow-md backdrop-blur dark:bg-gray-900/80">
-      <div className="border-b bg-white shadow-sm">
+    <nav className="sticky top-0 z-50 h-16 bg-white/80 shadow-md backdrop-blur dark:bg-gray-900">
+      <div className="shadow-sm dark:border-b">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <NavLink to="/dashboard">
@@ -24,12 +26,22 @@ export const AuthenticatedDashboard: React.FC = () => {
                 <img
                   src={logo_no_text}
                   alt="Logo"
-                  className="h-8 w-auto scale-150"
+                  className="block h-8 w-auto scale-125 dark:hidden"
+                />
+                <img
+                  src={logo_no_text_white}
+                  alt="Logo"
+                  className="hidden h-8 w-auto scale-125 dark:block"
                 />
                 <img
                   src={logo_text}
                   alt="Logo"
-                  className="h-8 w-auto scale-150 pl-5"
+                  className="block h-8 w-auto scale-125 pl-5 dark:hidden"
+                />
+                <img
+                  src={logo_text_white}
+                  alt="Logo"
+                  className="hidden h-8 w-auto scale-125 pl-5 dark:block"
                 />
               </div>
             </NavLink>
@@ -44,7 +56,7 @@ export const AuthenticatedDashboard: React.FC = () => {
               </span>
               <button
                 onClick={handleLogout}
-                className="cursor-pointer px-4 py-2 text-red-600 transition-colors hover:text-red-700"
+                className="cursor-pointer px-4 py-2 text-red-700 transition-colors hover:scale-110 hover:text-red-700"
               >
                 Wyloguj się
               </button>

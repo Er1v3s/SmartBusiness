@@ -6,7 +6,7 @@ export const NotAuthenticatedDashboard: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="sticky top-0 z-50 h-22 bg-white/80 shadow-md backdrop-blur dark:bg-gray-900/80">
+    <nav className="sticky top-0 z-50 h-22 bg-gray-900 shadow-md backdrop-blur">
       <div className="relative z-10 flex h-full items-center justify-between p-6 lg:px-8">
         <NavLink to="/home">
           <div className="flex items-center space-x-2">

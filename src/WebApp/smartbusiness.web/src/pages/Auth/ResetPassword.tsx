@@ -133,7 +133,7 @@ export const ResetPassword = () => {
             <>
               <div className="mb-8 flex-1 items-center text-center">
                 <div className="mb-4 flex justify-center">
-                  <ShieldAlert className="mx-auto mb-4 h-12 w-12 text-center" />
+                  <ShieldAlert className="mx-auto mb-4 h-12 w-12 text-center text-white" />
                 </div>
                 <h2 className="mb-2 text-3xl font-bold text-white">
                   Resetowania hasła

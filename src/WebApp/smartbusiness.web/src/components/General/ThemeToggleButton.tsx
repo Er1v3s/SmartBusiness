@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
 
-// Ustal motyw na podstawie preferencji systemu lub localStorage
+// Set the theme based on system preferences or localStorage
 function getInitialTheme(): "dark" | "light" {
   if (typeof window === "undefined") return "light";
   const saved = localStorage.getItem("theme");
@@ -13,7 +13,7 @@ function getInitialTheme(): "dark" | "light" {
 export const ThemeToggleButton: React.FC = () => {
   const [theme, setTheme] = useState<"dark" | "light">(() => getInitialTheme());
 
-  // Ustaw klasę na <html> natychmiast po zmianie theme
+  // Set the class on <html> immediately after theme change
   useEffect(() => {
     const root = window.document.documentElement;
     if (theme === "dark") {
@@ -25,7 +25,7 @@ export const ThemeToggleButton: React.FC = () => {
     }
   }, [theme]);
 
-  // Synchronizacja z systemem, jeśli użytkownik nie wybrał ręcznie
+  // Synchronize with system preferences if user hasn't manually set a theme
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = () => {
@@ -38,7 +38,7 @@ export const ThemeToggleButton: React.FC = () => {
     return () => mq.removeEventListener("change", handleChange);
   }, []);
 
-  // Po załadowaniu komponentu, sprawdź czy theme w localStorage jest zgodny z klasą na <html>
+  // After initial render, ensure the theme matches the saved preference
   useEffect(() => {
     const root = window.document.documentElement;
     const saved = localStorage.getItem("theme");
@@ -53,15 +53,15 @@ export const ThemeToggleButton: React.FC = () => {
   return (
     <button
       aria-label="Przełącz motyw"
-      className="rounded-full p-2 text-indigo-500 transition hover:bg-indigo-100 dark:text-yellow-300 dark:hover:bg-indigo-900"
+      className="text-gray-900 transition hover:scale-110 dark:text-yellow-200"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       title={theme === "dark" ? "Tryb jasny" : "Tryb ciemny"}
       type="button"
     >
       {theme === "dark" ? (
-        <Sun className="h-6 w-6" />
+        <Sun className="h-8 w-8" />
       ) : (
-        <Moon className="h-6 w-6" />
+        <Moon className="h-8 w-8" />
       )}
     </button>
   );
