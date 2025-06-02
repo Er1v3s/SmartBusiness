@@ -1,73 +1,68 @@
-import React from "react";
-import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { AlertProps } from "../components/General/alertProps";
-import { Alert } from "../components/General/Alert";
+import { useAlert } from "../../context/alert/useAlert";
+import { useAuth } from "../../context/auth/AuthContext";
 
 // Login Page Component
 export const ForgotPassword: React.FC = () => {
   const [form, setForm] = useState({
     email: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const { sendResetLink } = useAuth();
+  const { showAlert } = useAlert();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const [isLoading, setIsLoading] = useState(false);
+  // cooldown state
+  const [cooldown, setCooldown] = useState(0);
+  const cooldownRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (cooldown > 0) {
+      cooldownRef.current = setTimeout(() => setCooldown(cooldown - 1), 1000);
+    }
+    return () => {
+      if (cooldownRef.current) clearTimeout(cooldownRef.current);
+    };
+  }, [cooldown]);
+
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (cooldown > 0) return;
     setIsLoading(true);
-    setError("");
-
     try {
       await sendResetLink(form.email);
-      showAlertMessage();
-    } catch (err) {
-      console.error(err);
-      setError("Wystąpił błąd podczas wysyłania linku resetującego hasło.");
+      showAlert({
+        title: "Link resetujący hasło został wysłany!",
+        message: "Sprawdź swoją skrzynkę pocztową.",
+        type: "success",
+      });
+
+      // Block further submissions for 30 seconds
+      setCooldown(30);
+    } catch {
+      showAlert({
+        title: "Błąd",
+        message: "Wystąpił błąd podczas wysyłania linku resetującego hasło.",
+        type: "error",
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const [showAlert, setShowAlert] = useState<boolean>(false);
-  const [alertData, setAlertData] = useState<AlertProps>();
-
-  const showAlertMessage = () => {
-    setShowAlert(true);
-    setAlertData({
-      title: "Link resetujący hasło został wysłany!",
-      message: "Sprawdź swoją skrzynkę pocztową.",
-      type: "success",
-      duration: 3000,
-    });
-    setTimeout(() => {
-      setShowAlert(false);
-    }, 3500);
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 p-px">
-      {showAlert && alertData != null && (
-        <Alert
-          title={alertData.title}
-          message={alertData.message}
-          type={alertData.type}
-          duration={alertData.duration}
-        />
-      )}
-
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-lg">
           <div className="mb-8 flex-1 items-center text-center">
@@ -81,12 +76,6 @@ export const ForgotPassword: React.FC = () => {
               Nie martw się! Na twój adres email wyślimy Ci link do zmiany hasła
             </p>
           </div>
-
-          {error && (
-            <div className="mb-6 rounded-lg border border-red-500/50 bg-red-500/20 p-3">
-              <p className="text-sm text-red-200">{error}</p>
-            </div>
-          )}
 
           <div className="space-y-6">
             <div>
@@ -103,26 +92,43 @@ export const ForgotPassword: React.FC = () => {
                   className="w-full rounded-lg border border-white/20 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-cyan-500 focus:outline-none"
                   placeholder="twoj@email.com"
                   required
+                  disabled={isLoading || cooldown > 0}
                 />
               </div>
             </div>
+
+            {cooldown > 0 && (
+              <div className="text-center text-sm font-semibold text-cyan-300">
+                Możesz wysłać ponownie za {cooldown} sekund
+              </div>
+            )}
 
             <div className="flex items-center justify-between">
               <button
                 onClick={() => navigate("/login")}
                 className="text-sm text-gray-300 hover:text-white"
+                type="button"
               >
                 Wróć do logowania
               </button>
-              <button
-                onClick={handleSubmit}
-                disabled={isLoading}
-                className={`inline-flex items-center rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-white shadow transition-colors duration-200 hover:bg-cyan-600 ${
-                  isLoading ? "cursor-not-allowed opacity-50" : ""
-                }`}
-              >
-                {isLoading ? "Przetwarzanie..." : "Wyślij link resetujący"}
-              </button>
+              {cooldown > 0 ? (
+                <button
+                  disabled
+                  className="inline-flex cursor-not-allowed items-center rounded-lg bg-gray-400 px-4 py-2 text-sm font-semibold text-white opacity-50 shadow"
+                >
+                  Wyślij ponownie
+                </button>
+              ) : (
+                <button
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                  className={`inline-flex items-center rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-white shadow transition-colors duration-200 hover:bg-cyan-600 ${
+                    isLoading ? "cursor-not-allowed opacity-50" : ""
+                  }`}
+                >
+                  {isLoading ? "Przetwarzanie..." : "Wyślij link resetujący"}
+                </button>
+              )}
             </div>
           </div>
         </div>

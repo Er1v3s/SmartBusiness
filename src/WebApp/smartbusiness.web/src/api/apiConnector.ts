@@ -1,7 +1,7 @@
 import type { AxiosResponse } from "axios";
 import axiosInstance from "./axiosInstance.ts";
 import type { User } from "../models/index.ts";
-import { removeAccessTokens, setAccessTokens } from "../context/TokenManager.ts";
+import { removeAccessTokens, setAccessTokens } from "../context/auth/TokenManager.ts";
 
 const apiConnector = {
 

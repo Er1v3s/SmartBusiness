@@ -7,15 +7,16 @@ import {
   Navigate,
 } from "react-router-dom";
 import { Navigation } from "./components/Navigation/Navigation";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./context/auth/AuthContext";
 import { HomePage } from "./pages/HomePage";
-import { LoginPage } from "./pages/LoginPage";
-import { RegisterPage } from "./pages/RegisterPage";
+import { LoginPage } from "./pages/Auth/LoginPage";
+import { RegisterPage } from "./pages/Auth/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
-import { AuthProvider } from "./context/AuthProvider";
+import { AuthProvider } from "./context/auth/AuthProvider";
+import { AlertProvider } from "./context/alert/AlertContext";
+import { ForgotPassword } from "./pages/Auth/ForgotPassword";
+import { ResetPassword } from "./pages/Auth/ResetPassword";
 import "./App.css";
-import { ForgotPassword } from "./pages/ForgotPassword";
-import { ResetPassword } from "./pages/ResetPassword";
 
 // Private Route component checks if the user is authenticated
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -94,6 +95,14 @@ export const App: React.FC = () => {
             </PublicRoute>
           }
         />
+        <Route
+          path="/reset-password"
+          element={
+            <PublicRoute>
+              <ResetPassword />
+            </PublicRoute>
+          }
+        />
 
         {/* UNKNOWN PATH REDIRECT TO '/" */}
         <Route path="*" element={<Navigate to="/" replace />} />
@@ -104,7 +113,9 @@ export const App: React.FC = () => {
 
 const AppWithProvider: React.FC = () => (
   <AuthProvider>
-    <App />
+    <AlertProvider>
+      <App />
+    </AlertProvider>
   </AuthProvider>
 );
 

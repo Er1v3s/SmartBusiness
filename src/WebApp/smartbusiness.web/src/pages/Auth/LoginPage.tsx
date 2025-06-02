@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, Shield } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
-import type { LoginForm } from "../models";
+import { useAuth } from "../../context/auth/AuthContext";
+import type { LoginForm } from "../../models";
 import { useNavigate } from "react-router-dom";
-import type { ApiResponseError } from "../models/authErrors";
+import type { ApiResponseError } from "../../models/authErrors";
 
 // Login Page Component
 export const LoginPage: React.FC = () => {

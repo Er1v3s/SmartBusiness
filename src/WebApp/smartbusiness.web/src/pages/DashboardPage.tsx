@@ -1,54 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Shield, User, Zap } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
 import { NavLink } from "react-router-dom";
-import { Alert } from "../components/General/Alert";
-import type { AlertProps } from "../components/General/alertProps";
+import { useAlert } from "../context/alert/useAlert";
+import { useAuth } from "../context/auth/AuthContext";
 
 // Dashboard Page Component
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
-  const [showAlert, setShowAlert] = useState<boolean>(false);
-  const [alertData, setAlertData] = useState<AlertProps>();
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     const loginAlert = sessionStorage.getItem("showLoginAlert");
     const registerAlert = sessionStorage.getItem("showRegisterAlert");
 
     if (loginAlert === "true") {
-      setAlertData({
+      showAlert({
         title: "Zalogowano!",
         message: "Twoje konto zostało pomyślnie uwierzytelnione.",
         type: "success",
         duration: 5000,
       });
-      setShowAlert(true);
       sessionStorage.removeItem("showLoginAlert");
     } else if (registerAlert === "true") {
-      setAlertData({
+      showAlert({
         title: "Zarejestrowano!",
         message: "Twoje konto zostało pomyślnie utworzone.",
         type: "info",
         duration: 5000,
       });
-      setShowAlert(true);
       sessionStorage.removeItem("showRegisterAlert");
     }
-  }, []);
+  }, [showAlert]);
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {showAlert && alertData != null && (
-        <Alert
-          title={alertData.title}
-          message={alertData.message}
-          type={alertData.type}
-          duration={alertData.duration}
-        />
-      )}
-      
       {/* Main Content */}
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 pt-20 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="mb-2 text-3xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-600">Zarządzaj swoim kontem i aplikacją</p>
