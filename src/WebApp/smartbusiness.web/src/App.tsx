@@ -95,6 +95,14 @@ export const App: React.FC = () => {
             </PublicRoute>
           }
         />
+        <Route
+          path="/reset-password"
+          element={
+            <PublicRoute>
+              <ResetPassword />
+            </PublicRoute>
+          }
+        />
 
         {/* UNKNOWN PATH REDIRECT TO '/" */}
         <Route path="*" element={<Navigate to="/" replace />} />

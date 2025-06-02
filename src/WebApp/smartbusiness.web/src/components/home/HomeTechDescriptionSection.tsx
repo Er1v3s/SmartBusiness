@@ -69,8 +69,8 @@ export const HomeTechDescriptionSection: React.FC = () => (
     {techDescriptions.map((t, i) => (
       <motion.div
         key={i}
-        className={`flex flex-col md:flex-row${
-          t.reverse ? "-reverse" : ""
+        className={`flex flex-col ${
+          t.reverse ? "md:flex-row-reverse" : "md:flex-row"
         } w-full items-center gap-8 md:gap-10`}
         initial={{ opacity: 0, x: t.reverse ? 100 : -100 }}
         whileInView={{ opacity: 1, x: 0 }}
