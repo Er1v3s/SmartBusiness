@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAlert } from "../context/alert/useAlert";
-import { useAuth } from "../context/auth/AuthContext";
+import { useAlert } from "../../context/alert/useAlert";
+import { useAuth } from "../../context/auth/AuthContext";
 
 // Login Page Component
 export const ForgotPassword: React.FC = () => {
@@ -15,24 +15,39 @@ export const ForgotPassword: React.FC = () => {
   const { showAlert } = useAlert();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  // cooldown state
+  const [cooldown, setCooldown] = useState(0);
+  const cooldownRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (cooldown > 0) {
+      cooldownRef.current = setTimeout(() => setCooldown(cooldown - 1), 1000);
+    }
+    return () => {
+      if (cooldownRef.current) clearTimeout(cooldownRef.current);
+    };
+  }, [cooldown]);
+
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (cooldown > 0) return;
     setIsLoading(true);
-    setError("");
-
     try {
       await sendResetLink(form.email);
       showAlert({
         title: "Link resetujący hasło został wysłany!",
         message: "Sprawdź swoją skrzynkę pocztową.",
         type: "success",
-        duration: 3000,
       });
-    } catch (err) {
-      console.error(err);
-      setError("Wystąpił błąd podczas wysyłania linku resetującego hasło.");
+
+      // Block further submissions for 30 seconds
+      setCooldown(30);
+    } catch {
+      showAlert({
+        title: "Błąd",
+        message: "Wystąpił błąd podczas wysyłania linku resetującego hasło.",
+        type: "error",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -62,12 +77,6 @@ export const ForgotPassword: React.FC = () => {
             </p>
           </div>
 
-          {error && (
-            <div className="mb-6 rounded-lg border border-red-500/50 bg-red-500/20 p-3">
-              <p className="text-sm text-red-200">{error}</p>
-            </div>
-          )}
-
           <div className="space-y-6">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-200">
@@ -83,26 +92,43 @@ export const ForgotPassword: React.FC = () => {
                   className="w-full rounded-lg border border-white/20 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-cyan-500 focus:outline-none"
                   placeholder="twoj@email.com"
                   required
+                  disabled={isLoading || cooldown > 0}
                 />
               </div>
             </div>
+
+            {cooldown > 0 && (
+              <div className="text-center text-sm font-semibold text-cyan-300">
+                Możesz wysłać ponownie za {cooldown} sekund
+              </div>
+            )}
 
             <div className="flex items-center justify-between">
               <button
                 onClick={() => navigate("/login")}
                 className="text-sm text-gray-300 hover:text-white"
+                type="button"
               >
                 Wróć do logowania
               </button>
-              <button
-                onClick={handleSubmit}
-                disabled={isLoading}
-                className={`inline-flex items-center rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-white shadow transition-colors duration-200 hover:bg-cyan-600 ${
-                  isLoading ? "cursor-not-allowed opacity-50" : ""
-                }`}
-              >
-                {isLoading ? "Przetwarzanie..." : "Wyślij link resetujący"}
-              </button>
+              {cooldown > 0 ? (
+                <button
+                  disabled
+                  className="inline-flex cursor-not-allowed items-center rounded-lg bg-gray-400 px-4 py-2 text-sm font-semibold text-white opacity-50 shadow"
+                >
+                  Wyślij ponownie
+                </button>
+              ) : (
+                <button
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                  className={`inline-flex items-center rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-white shadow transition-colors duration-200 hover:bg-cyan-600 ${
+                    isLoading ? "cursor-not-allowed opacity-50" : ""
+                  }`}
+                >
+                  {isLoading ? "Przetwarzanie..." : "Wyślij link resetujący"}
+                </button>
+              )}
             </div>
           </div>
         </div>

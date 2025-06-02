@@ -1,9 +1,9 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Lock, Eye, EyeOff, ShieldAlert, ShieldCheckIcon } from "lucide-react";
 import { useState } from "react";
-import { useAlert } from "../context/alert/useAlert";
-import type { ApiResponseError } from "../models/authErrors";
-import { useAuth } from "../context/auth/AuthContext";
+import { useAlert } from "../../context/alert/useAlert";
+import type { ApiResponseError } from "../../models/authErrors";
+import { useAuth } from "../../context/auth/AuthContext";
 
 export const ResetPassword = () => {
   const [form, setForm] = useState({

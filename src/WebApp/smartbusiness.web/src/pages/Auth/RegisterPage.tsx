@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, User, UserPlus } from "lucide-react";
-import type { RegisterForm } from "../models";
+import type { RegisterForm } from "../../models";
 import { useNavigate } from "react-router-dom";
-import type { ApiResponseError } from "../models/authErrors";
-import { useAuth } from "../context/auth/AuthContext";
+import type { ApiResponseError } from "../../models/authErrors";
+import { useAuth } from "../../context/auth/AuthContext";
 
 // Register Page Component
 export const RegisterPage: React.FC = () => {
