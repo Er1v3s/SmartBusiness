@@ -51,18 +51,25 @@ export const ThemeToggleButton: React.FC = () => {
   }, []);
 
   return (
-    <button
-      aria-label="Przełącz motyw"
-      className="text-gray-900 transition hover:scale-110 dark:text-yellow-200"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      title={theme === "dark" ? "Tryb jasny" : "Tryb ciemny"}
-      type="button"
+    <label
+      htmlFor="AcceptConditions"
+      className="relative block h-8 w-14 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:_transparent] has-checked:bg-gray-800 dark:bg-gray-600 dark:has-checked:bg-gray-800"
     >
-      {theme === "dark" ? (
-        <Sun className="h-8 w-8" />
-      ) : (
-        <Moon className="h-8 w-8" />
-      )}
-    </button>
+      <input
+        type="checkbox"
+        id="AcceptConditions"
+        className="peer sr-only"
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        checked={theme === "dark" ? true : false}
+      />
+
+      <span className="absolute inset-y-0 start-0 m-1 size-6 cursor-pointer rounded-full transition-[inset-inline-start] peer-checked:start-6">
+        {theme === "dark" ? (
+          <Moon className="h-6 w-6 text-gray-200" />
+        ) : (
+          <Sun className="h-6 w-6 text-yellow-200" />
+        )}
+      </span>
+    </label>
   );
 };
