@@ -3,7 +3,8 @@ export const ChangePasswordComponent: React.FC = () => (
     <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
       Zmień hasło
     </h2>
-    <form className="max-w-md space-y-6 rounded-xl border border-gray-200 bg-gray-100 p-6 shadow-xl dark:border-gray-900 dark:bg-gray-800">
+    {/* <form className="max-w-md space-y-6 rounded-xl border border-gray-200 bg-gray-100 p-6 shadow-xl dark:border-gray-900 dark:bg-gray-800"> */}
+    <form className="space-y-6 rounded-xl border border-gray-200 bg-gray-50 p-6 shadow-xl dark:border-gray-800 dark:bg-gray-900">
       <div>
         <label htmlFor="Password">
           <span className="text-sm font-medium text-gray-800 dark:text-gray-100">
