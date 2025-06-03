@@ -23,7 +23,6 @@ export const StatsComponent: React.FC<{ user: User }> = ({ user }) => (
           {/* {user?.lastActive ? new Date(user.lastActive).toLocaleString() : "-"} */}
         </span>
       </div>
-      {/* Możesz dodać więcej statystyk */}
     </div>
   </div>
 );

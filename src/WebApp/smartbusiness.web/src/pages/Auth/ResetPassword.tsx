@@ -12,7 +12,6 @@ export const ResetPassword = () => {
   const [searchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState("");
   const validatePassword = (password: string) => {
     if (password.length < 8) return "Hasło musi mieć co najmniej 8 znaków.";
     if (!/[A-Z]/.test(password))
@@ -44,17 +43,13 @@ export const ResetPassword = () => {
     if (name === "password") {
       setHasTyped(value.trim() !== "");
     }
-    // setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // setError("");
-
     const pErr = validatePassword(form.password);
     if (pErr) {
-      // setError(pErr);
       showAlert({
         title: "Wystąpił błąd podczas resetowania hasła",
         message: pErr,
@@ -68,7 +63,6 @@ export const ResetPassword = () => {
     const token = searchParams.get("token") || "";
 
     if (!token) {
-      // setError("Brak tokenu resetującego hasło.");
       showAlert({
         title: "Brak tokenu resetującego hasło.",
         message: pErr,
@@ -91,9 +85,6 @@ export const ResetPassword = () => {
       console.error(error);
       switch (error.status.toString()) {
         case "400":
-          // setError(
-          //   "Próba zmiany hasła nie przebiegła pomyślnie. Spróbuj ponownie",
-          // );
           showAlert({
             title: "Błąd podczas resetowania hasła",
             message:
@@ -102,7 +93,6 @@ export const ResetPassword = () => {
           });
           break;
         case "500":
-          // setError("Wystąpił błąd serwera. Spróbuj ponownie później.");
           showAlert({
             title: "Błąd podczas resetowania hasła",
             message: "Wystąpił błąd serwera. Spróbuj ponownie później.",
@@ -110,7 +100,6 @@ export const ResetPassword = () => {
           });
           break;
         default:
-          // setError("Wystąpił nieznany błąd. Spróbuj ponownie.");
           showAlert({
             title: "Błąd podczas resetowania hasła",
             message: "Wystąpił nieznany błąd. Spróbuj ponownie.",
@@ -142,12 +131,6 @@ export const ResetPassword = () => {
                   Wprowadź nowe hasło, tym razem go nie zapomnij 😉
                 </p>
               </div>
-
-              {/* {error && (
-                <div className="mb-6 rounded-lg border border-red-500/50 bg-red-500/20 p-3">
-                  <p className="text-sm text-red-200">{error}</p>
-                </div>
-              )} */}
 
               <div className="space-y-6">
                 <div>

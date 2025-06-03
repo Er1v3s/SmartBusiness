@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "../../context/alert/useAlert";
 import { useAuth } from "../../context/auth/AuthContext";
 
-// Login Page Component
 export const ForgotPassword: React.FC = () => {
   const [form, setForm] = useState({
     email: "",

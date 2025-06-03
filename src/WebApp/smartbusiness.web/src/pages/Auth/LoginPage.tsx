@@ -6,7 +6,6 @@ import type { LoginForm } from "../../models";
 import { useNavigate } from "react-router-dom";
 import type { ApiResponseError } from "../../models/authErrors";
 
-// Login Page Component
 export const LoginPage: React.FC = () => {
   const [form, setForm] = useState<LoginForm>({
     email: "",
@@ -137,10 +136,10 @@ export const LoginPage: React.FC = () => {
                     name="rememberMe"
                     checked={form.rememberMe}
                     onChange={handleChange}
-                    className="h-4 w-4 rounded border-white/20 bg-white/5 text-cyan-500 focus:ring-cyan-500"
+                    className="size-5 rounded border-gray-400 text-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-900 dark:ring-offset-gray-900 dark:checked:bg-indigo-600"
                   />
                   <span className="ml-2 text-sm text-gray-300">
-                    Zapamiętaj mnie
+                    Nie wylogowuj mnie
                   </span>
                 </label>
                 <button
