@@ -13,6 +13,7 @@ import { LoginPage } from "./pages/Auth/LoginPage";
 import { RegisterPage } from "./pages/Auth/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { AuthProvider } from "./context/auth/AuthProvider";
+import { AccountProvider } from "./context/account/AccountProvider";
 import { AlertProvider } from "./context/alert/AlertContext";
 import { ForgotPassword } from "./pages/Auth/ForgotPassword";
 import { ResetPassword } from "./pages/Auth/ResetPassword";
@@ -124,9 +125,11 @@ export const App: React.FC = () => {
 
 const AppWithProvider: React.FC = () => (
   <AuthProvider>
-    <AlertProvider>
-      <App />
-    </AlertProvider>
+    <AccountProvider>
+      <AlertProvider>
+        <App />
+      </AlertProvider>
+    </AccountProvider>
   </AuthProvider>
 );
 

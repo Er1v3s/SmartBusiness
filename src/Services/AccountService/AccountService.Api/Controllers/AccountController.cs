@@ -49,10 +49,10 @@ namespace AccountService.Api.Controllers
         }
 
         [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteUser()
+        public async Task<IActionResult> DeleteUser([FromBody] DeleteUserRequest request)
         {
             Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new DeleteUserCommand(userId);
+            var command = new DeleteUserCommand(userId, request.Password);
             await _mediator.Send(command);
 
             return NoContent();

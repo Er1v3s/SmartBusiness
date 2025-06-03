@@ -43,6 +43,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticating]);
 
+  useEffect(() => {
+    const handleStorage = () => {
+      const accessToken = localStorage.getItem("ACCESS_TOKEN");
+      if (!accessToken) setUser(null);
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
+
   const fetchUserData = async () => {
     const user = await apiConnector.me();
     setUser(user);
@@ -98,6 +107,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     sendResetLink,
     resetPassword,
     isAuthenticated: user !== null,
+    fetchUserData,
     // token: null,
   };
 

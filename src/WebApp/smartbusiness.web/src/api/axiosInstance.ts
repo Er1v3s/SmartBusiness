@@ -91,9 +91,9 @@ axiosInstance.interceptors.response.use(
     // TO DELETE AFTER DEVELOPMENT
 
     const fallbackError: ApiResponseError = {
-      title: error.response?.data?.title || "UNKNOWN_ERROR",
+      title: error.response?.data?.title || "Błąd serwera",
       status: error.response?.data?.status || "500",
-      detail: error.response?.data?.detail || "An unknown error occurred.",
+      detail: error.response?.data?.detail || "Wystąpił błąd podczas przetwarzania żądania. Spróbuj ponownie później.",
       errors: Array.isArray(error.response?.data.errors)
         ? error.response?.data.errors.map((e: ApiResponseValidationError) => ({
             property: e.property ?? "unknown",
