@@ -6,7 +6,6 @@ import type { LoginForm } from "../../models";
 import { useNavigate } from "react-router-dom";
 import type { ApiResponseError } from "../../models/authErrors";
 
-// Login Page Component
 export const LoginPage: React.FC = () => {
   const [form, setForm] = useState<LoginForm>({
     email: "",
@@ -62,12 +61,12 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 p-px">
+    <div className="flex h-[calc(100vh-(var(--spacing)*22))] items-center justify-center overflow-auto bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 p-px">
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-lg">
           <div className="mb-8 flex-1 items-center text-center">
             <div className="mb-4 flex justify-center">
-              <Shield className="mx-auto mb-4 h-12 w-12 text-center" />
+              <Shield className="mx-auto mb-4 h-12 w-12 text-center text-white" />
             </div>
             <h2 className="mb-2 text-3xl font-bold text-white">
               Witaj ponownie
@@ -137,10 +136,10 @@ export const LoginPage: React.FC = () => {
                     name="rememberMe"
                     checked={form.rememberMe}
                     onChange={handleChange}
-                    className="h-4 w-4 rounded border-white/20 bg-white/5 text-cyan-500 focus:ring-cyan-500"
+                    className="size-5 rounded border-gray-400 text-gray-300 shadow-sm dark:border-gray-600 dark:bg-gray-900 dark:ring-offset-gray-900 dark:checked:bg-indigo-600"
                   />
                   <span className="ml-2 text-sm text-gray-300">
-                    Zapamiętaj mnie
+                    Nie wylogowuj mnie
                   </span>
                 </label>
                 <button

@@ -5,6 +5,7 @@ import { removeAccessTokens, setAccessTokens } from "../context/auth/TokenManage
 
 const apiConnector = {
 
+    // AUTHENTICATION
     login : async (email: string, password: string, rememberMe: boolean): Promise<void> => {
         const response: AxiosResponse = await axiosInstance.post(
             "/auth/login",
@@ -82,6 +83,39 @@ const apiConnector = {
             await axiosInstance.post("/auth/reset-password", 
                 { token, newPassword }
             );
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
+    // ACCOUNT
+    updateProfile : async (username: string, email: string): Promise<void> => {
+        try {
+            await axiosInstance.put("/account/update", 
+                { username, email }
+            );
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
+    changePassword : async (currentPassword: string, newPassword: string): Promise<void> => {
+        try {
+            await axiosInstance.put("/account/change-password", 
+                { currentPassword, newPassword }
+            );
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
+    deleteAccount : async (password: string): Promise<void> => {
+        try {
+            await axiosInstance.request({
+                url: "/account/delete",
+                method: "DELETE",
+                data: { password }
+            })
         } catch (error) {
             return Promise.reject(error);
         }

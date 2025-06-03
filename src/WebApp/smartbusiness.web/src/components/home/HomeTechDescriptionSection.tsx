@@ -65,7 +65,7 @@ const techDescriptions = [
 ];
 
 export const HomeTechDescriptionSection: React.FC = () => (
-  <section className="relative z-10 mx-auto flex max-w-6xl flex-col gap-16 px-2 pb-20 sm:px-4 md:px-6">
+  <section className="relative z-10 mx-auto flex max-w-6xl flex-col gap-16 px-2 pb-15 sm:px-4 md:px-6">
     {techDescriptions.map((t, i) => (
       <motion.div
         key={i}

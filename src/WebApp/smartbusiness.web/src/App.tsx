@@ -13,10 +13,12 @@ import { LoginPage } from "./pages/Auth/LoginPage";
 import { RegisterPage } from "./pages/Auth/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { AuthProvider } from "./context/auth/AuthProvider";
+import { AccountProvider } from "./context/account/AccountProvider";
 import { AlertProvider } from "./context/alert/AlertContext";
 import { ForgotPassword } from "./pages/Auth/ForgotPassword";
 import { ResetPassword } from "./pages/Auth/ResetPassword";
 import "./App.css";
+import { UserPage } from "./pages/User/UserPage";
 
 // Private Route component checks if the user is authenticated
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -39,83 +41,95 @@ const RedirectRoute: React.FC = () => {
 export const App: React.FC = () => {
   return (
     <Router>
-      <Navigation />
-      <Routes>
-        {/* Redairections route */}
-        <Route path="/" element={<RedirectRoute />} />
+      <div className="flex min-h-screen flex-col">
+        <Navigation />
+        <Routes>
+          {/* Redairections route */}
+          <Route path="/" element={<RedirectRoute />} />
 
-        {/* Private paths*/}
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <DashboardPage />
-            </PrivateRoute>
-          }
-        />
+          {/* Private paths*/}
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <DashboardPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/dashboard/user"
+            element={
+              <PrivateRoute>
+                <UserPage />
+              </PrivateRoute>
+            }
+          />
 
-        {/* Public paths */}
-        <Route
-          path="/home"
-          element={
-            <PublicRoute>
-              <HomePage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <LoginPage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <PublicRoute>
-              <RegisterPage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/forgot-password"
-          element={
-            <PublicRoute>
-              <ForgotPassword />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/reset-password"
-          element={
-            <PublicRoute>
-              <ResetPassword />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/reset-password"
-          element={
-            <PublicRoute>
-              <ResetPassword />
-            </PublicRoute>
-          }
-        />
+          {/* Public paths */}
+          <Route
+            path="/home"
+            element={
+              <PublicRoute>
+                <HomePage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <LoginPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <RegisterPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicRoute>
+                <ForgotPassword />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <ResetPassword />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <ResetPassword />
+              </PublicRoute>
+            }
+          />
 
-        {/* UNKNOWN PATH REDIRECT TO '/" */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* UNKNOWN PATH REDIRECT TO '/" */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
     </Router>
   );
 };
 
 const AppWithProvider: React.FC = () => (
   <AuthProvider>
-    <AlertProvider>
-      <App />
-    </AlertProvider>
+    <AccountProvider>
+      <AlertProvider>
+        <App />
+      </AlertProvider>
+    </AccountProvider>
   </AuthProvider>
 );
 
