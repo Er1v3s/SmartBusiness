@@ -1,7 +1,7 @@
 import React from "react";
 import { useCompany } from "../../../context/company/CompanyContext";
 
-const DashboardHomeSection: React.FC = () => {
+export const DashboardHomeSection: React.FC = () => {
   const { company } = useCompany();
   return (
     <>
@@ -60,5 +60,3 @@ const DashboardHomeSection: React.FC = () => {
     </>
   );
 };
-
-export default DashboardHomeSection;

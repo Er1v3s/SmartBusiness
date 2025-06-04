@@ -34,7 +34,7 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
 
   return (
     <aside
-      className={`fixed top-0 left-0 z-40 flex h-full flex-col border-r border-gray-200 bg-white/90 px-4 py-8 shadow-lg transition-all duration-200 dark:border-gray-900 dark:bg-gray-900/90 ${
+      className={`fixed left-0 z-40 flex h-[calc(100vh-var(--spacing)*16))] flex-col border-r border-gray-200 bg-white/90 px-4 py-8 shadow-lg transition-all duration-200 dark:border-gray-900 dark:bg-gray-900/90 ${
         isCollapsed ? "w-16 px-2" : "w-64 px-4"
       }`}
     >

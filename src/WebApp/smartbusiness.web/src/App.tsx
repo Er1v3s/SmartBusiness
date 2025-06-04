@@ -26,7 +26,8 @@ import { ChangePasswordComponent } from "./components/Dashboard/User/ChangePassw
 import { StatsComponent } from "./components/Dashboard/User/Stats";
 import { DeleteAccountComponent } from "./components/Dashboard/User/DeleteAccount";
 import { EditProfileComponent } from "./components/Dashboard/User/EditProfile";
-import DashboardHomeSection from "./components/Dashboard/Company/DashboardHomeSection";
+import { DashboardHomeSection } from "./components/Dashboard/Company/DashboardHomeSection";
+import { CalendarSection } from "./components/Dashboard/Company/CalendarSection";
 
 // Private Route component checks if the user is authenticated
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -65,10 +66,7 @@ export const App: React.FC = () => {
           >
             <Route path="dashboard" element={<DashboardPage />}>
               <Route index element={<DashboardHomeSection />} />
-              <Route
-                path="company/calendar"
-                element={<div>Kalendarz firmy (TODO: komponent)</div>}
-              />
+              <Route path="company/calendar" element={<CalendarSection />} />
               <Route
                 path="company/sale"
                 element={<div>Rejestracja sprzedaży (TODO: komponent)</div>}
