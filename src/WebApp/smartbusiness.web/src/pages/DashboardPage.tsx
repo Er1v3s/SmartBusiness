@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import { Shield, User, Zap } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAlert } from "../context/alert/useAlert";
-import { useAuth } from "../context/auth/AuthContext";
+import { useCompany } from "../context/company/CompanyContext";
 
 // Dashboard Page Component
 export const DashboardPage: React.FC = () => {
-  const { user } = useAuth();
   const { showAlert } = useAlert();
+  const { company } = useCompany();
 
   useEffect(() => {
     const loginAlert = sessionStorage.getItem("showLoginAlert");
@@ -96,35 +96,36 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        {/* User Info Card */}
+        {/* Company Info Card */}
         <div className="rounded-xl border border-gray-200 bg-gray-100 p-6 shadow-xl dark:border-gray-900 dark:bg-gray-800">
           <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-100">
-            Informacje o koncie
+            Informacje o firmie
           </h2>
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-300">
-                Nazwa użytkownika:
-              </span>
-              <span className="font-medium text-gray-900 dark:text-gray-100">
-                {user?.username}
-              </span>
+          {company ? (
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-300">
+                  Nazwa firmy:
+                </span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">
+                  {company.name}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-300">
+                  ID firmy:
+                </span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">
+                  {company.id}
+                </span>
+              </div>
+              {/* Możesz dodać więcej pól, np. NIP, REGON, adres, itp. */}
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-300">Email:</span>
-              <span className="font-medium text-gray-900 dark:text-gray-100">
-                {user?.email}
-              </span>
+          ) : (
+            <div className="text-gray-500 dark:text-gray-400">
+              Brak wybranej firmy.
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-300">
-                ID użytkownika:
-              </span>
-              <span className="font-medium text-gray-900 dark:text-gray-100">
-                {user?.id}
-              </span>
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Welcome Message */}

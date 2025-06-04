@@ -122,10 +122,10 @@ const apiConnector = {
     },
 
     // COMPANY 
-    createCompany : async (name: string, description: string): Promise<void> => {
+    createCompany : async (name: string): Promise<void> => {
         try {
             await axiosInstance.post("/company", 
-                { name, description }
+                { name }
             );
         } catch (error) {
             return Promise.reject(error);
@@ -143,7 +143,7 @@ const apiConnector = {
         }
     },
 
-    getCompanies : async (): Promise<Company> => {
+    getCompanies : async (): Promise<Company[]> => {
         try {
             const response: AxiosResponse = await axiosInstance.get(
                 `/company`,
@@ -154,10 +154,10 @@ const apiConnector = {
         }
     },
 
-    updateCompany : async (companyId: string, name: string, description: string): Promise<void> => {
+    updateCompany : async (companyId: string, name: string): Promise<void> => {
         try {
             await axiosInstance.put(`/company/${companyId}`, 
-                { name, description }
+                { name }
             );
         } catch (error) {
             return Promise.reject(error);

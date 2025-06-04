@@ -19,6 +19,7 @@ import { ForgotPassword } from "./pages/Auth/ForgotPassword";
 import { ResetPassword } from "./pages/Auth/ResetPassword";
 import "./App.css";
 import { UserPage } from "./pages/User/UserPage";
+import { CompanyProvider } from "./context/company/CompanyProvider";
 
 // Private Route component checks if the user is authenticated
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -126,9 +127,11 @@ export const App: React.FC = () => {
 const AppWithProvider: React.FC = () => (
   <AuthProvider>
     <AccountProvider>
-      <AlertProvider>
-        <App />
-      </AlertProvider>
+      <CompanyProvider>
+        <AlertProvider>
+          <App />
+        </AlertProvider>
+      </CompanyProvider>
     </AccountProvider>
   </AuthProvider>
 );
