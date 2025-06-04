@@ -7,13 +7,21 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
 import { ThemeToggleButton } from "../General/ThemeToggleButton";
 import { CompanySelectionComponent } from "../Dashboard/Company/CompanySelectionComponent";
+import { useAlert } from "../../context/alert/useAlert";
 
 export const AuthenticatedDashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { showAlert } = useAlert();
 
   const handleLogout = () => {
     logout();
+    showAlert({
+      title: "Wylogowano!",
+      message: "Użytkownik został wylogowany. Do zobaczenia następnym razem!",
+      type: "success",
+      duration: 5000,
+    });
     navigate("/home");
   };
 
