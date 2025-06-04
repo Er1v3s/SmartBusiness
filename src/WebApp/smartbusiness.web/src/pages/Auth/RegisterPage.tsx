@@ -5,6 +5,7 @@ import type { RegisterForm } from "../../models";
 import { useNavigate } from "react-router-dom";
 import type { ApiResponseError } from "../../models/authErrors";
 import { useAuth } from "../../context/auth/AuthContext";
+import { useAlert } from "../../context/alert/useAlert";
 
 export const RegisterPage: React.FC = () => {
   const [form, setForm] = useState<RegisterForm>({
@@ -60,6 +61,7 @@ export const RegisterPage: React.FC = () => {
 
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { showAlert } = useAlert();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -88,7 +90,12 @@ export const RegisterPage: React.FC = () => {
 
     try {
       await register(form.username, form.email, form.password);
-      sessionStorage.setItem("showRegisterAlert", "true");
+      showAlert({
+        title: "Zarejestrowano!",
+        message: "Twoje konto zostało pomyślnie utworzone.",
+        type: "info",
+        duration: 5000,
+      });
       navigate("/dashboard");
     } catch (err) {
       console.log(err);

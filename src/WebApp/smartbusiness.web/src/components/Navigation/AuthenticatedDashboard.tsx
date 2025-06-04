@@ -6,13 +6,22 @@ import logo_text_white from "../../assets/logo_text_white.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
 import { ThemeToggleButton } from "../General/ThemeToggleButton";
+import { CompanySelectionComponent } from "../Dashboard/Company/CompanySelectionComponent";
+import { useAlert } from "../../context/alert/useAlert";
 
 export const AuthenticatedDashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { showAlert } = useAlert();
 
   const handleLogout = () => {
     logout();
+    showAlert({
+      title: "Wylogowano!",
+      message: "Użytkownik został wylogowany. Do zobaczenia następnym razem!",
+      type: "success",
+      duration: 5000,
+    });
     navigate("/home");
   };
 
@@ -47,6 +56,8 @@ export const AuthenticatedDashboard: React.FC = () => {
             </NavLink>
 
             <div className="flex items-center space-x-4">
+              <CompanySelectionComponent />
+
               <ThemeToggleButton />
               <NavLink to="/dashboard/user">
                 <User className="hover:purple-600 h-8 w-8 cursor-pointer text-indigo-500 hover:scale-110" />

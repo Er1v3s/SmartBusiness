@@ -1,23 +1,23 @@
 import React, { useState } from "react";
-import type { User } from "../../../models";
 import { useAlert } from "../../../context/alert/useAlert";
 import type { ApiResponseError } from "../../../models/authErrors";
 import { Mail, UserIcon } from "lucide-react";
 import { useAccount } from "../../../context/account/AccountContext";
 import { useAuth } from "../../../context/auth/AuthContext";
 
-export const EditProfileComponent: React.FC<{ user: User }> = ({ user }) => {
+export const EditProfileComponent: React.FC = () => {
+  const { user, fetchUserData } = useAuth();
+  const { showAlert } = useAlert();
+  const { updateAccount } = useAccount();
+
   const [username, setUsername] = useState(user?.username || "");
   const [email, setEmail] = useState(user?.email || "");
   const [loading, setLoading] = useState(false);
-  const { showAlert } = useAlert();
-  const { updateAccount } = useAccount();
-  const { fetchUserData } = useAuth();
 
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
 
-  // Walidacja
+  // Validation
   const validateUsername = (value: string): string | null => {
     if (value && value.length < 3)
       return "Nazwa użytkownika musi mieć min. 3 znaki.";

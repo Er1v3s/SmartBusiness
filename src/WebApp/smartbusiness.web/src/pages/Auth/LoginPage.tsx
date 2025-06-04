@@ -5,6 +5,7 @@ import { useAuth } from "../../context/auth/AuthContext";
 import type { LoginForm } from "../../models";
 import { useNavigate } from "react-router-dom";
 import type { ApiResponseError } from "../../models/authErrors";
+import { useAlert } from "../../context/alert/useAlert";
 
 export const LoginPage: React.FC = () => {
   const [form, setForm] = useState<LoginForm>({
@@ -18,6 +19,7 @@ export const LoginPage: React.FC = () => {
 
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { showAlert } = useAlert();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +28,12 @@ export const LoginPage: React.FC = () => {
 
     try {
       await login(form.email, form.password, form.rememberMe);
-      sessionStorage.setItem("showLoginAlert", "true");
+      showAlert({
+        title: "Zalogowano!",
+        message: "Twoje konto zostało pomyślnie uwierzytelnione.",
+        type: "success",
+        duration: 5000,
+      });
       navigate("/dashboard");
     } catch (err) {
       const error = err as ApiResponseError;

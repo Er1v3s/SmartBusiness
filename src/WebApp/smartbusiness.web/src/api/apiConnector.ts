@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios";
 import axiosInstance from "./axiosInstance.ts";
-import type { User } from "../models/index.ts";
+import type { Company, User } from "../models/index.ts";
 import { removeAccessTokens, setAccessTokens } from "../context/auth/TokenManager.ts";
 
 const apiConnector = {
@@ -120,6 +120,58 @@ const apiConnector = {
             return Promise.reject(error);
         }
     },
+
+    // COMPANY 
+    createCompany : async (name: string): Promise<void> => {
+        try {
+            await axiosInstance.post("/company", 
+                { name }
+            );
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
+    getCompany : async (companyId: string): Promise<Company> => {
+        try {
+            const response: AxiosResponse = await axiosInstance.get(
+                `/company/${companyId}`,
+            );
+            return response.data;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
+    getCompanies : async (): Promise<Company[]> => {
+        try {
+            const response: AxiosResponse = await axiosInstance.get(
+                `/company`,
+            );
+            return response.data;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
+    updateCompany : async (companyId: string, name: string): Promise<void> => {
+        try {
+            await axiosInstance.put(`/company/${companyId}`, 
+                { name }
+            );
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
+    deleteCompany : async (companyId: string): Promise<void> => {
+        try {
+            await axiosInstance.delete(`/company/${companyId}`);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+
 }
 
 export default apiConnector;

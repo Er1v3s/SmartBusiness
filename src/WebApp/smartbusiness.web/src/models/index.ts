@@ -6,6 +6,24 @@ export interface User {
   createdAt?: string; // Optional, can be used for user creation date
 }
 
+export interface Company {
+  id: string;
+  name: string;
+  createdAt?: string; // Optional, can be used for company creation date
+}
+
+export interface CompanyContextType {
+  company: Company | null;
+  companies: Company[];
+  fetchCompanies: () => Promise<void>;
+  setActiveCompany: (companyId: string) => Promise<void> | void;
+  fetchCompanyData: (companyId: string) => Promise<Company>;
+  createCompany: (name: string) => Promise<void>;
+  updateCompany: (name: string) => Promise<void>;
+  deleteCompany: () => Promise<void>;
+  isCompanySet: boolean;
+}
+
 export interface AuthContextType {
   user: User | null;
   login: (email: string, password: string, rememberMe: boolean) => Promise<void>;
