@@ -59,8 +59,8 @@ export const ThemeToggleButton: React.FC = () => {
         type="checkbox"
         id="AcceptConditions"
         className="peer sr-only"
-        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        checked={theme === "dark" ? true : false}
+        onChange={() => setTheme(theme === "dark" ? "light" : "dark")}
+        checked={theme === "dark"}
       />
 
       <span className="absolute inset-y-0 start-0 m-1 size-6 cursor-pointer rounded-full transition-[inset-inline-start] peer-checked:start-6">
