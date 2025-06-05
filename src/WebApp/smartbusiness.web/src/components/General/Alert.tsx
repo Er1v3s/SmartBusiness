@@ -1,6 +1,27 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { alertIcons, alertTypes, type AlertProps } from "./alertProps";
+import { Check, Info, TriangleAlert, X } from "lucide-react";
+
+type AlertProps = {
+  title: string;
+  message: string;
+  type: "success" | "error" | "warning" | "info";
+  duration?: number;
+};
+
+const alertTypes: Record<string, string> = {
+  success: "text-green-600",
+  error: "text-red-600",
+  warning: "text-yellow-600",
+  info: "text-blue-600",
+};
+
+const alertIcons: Record<string, React.ReactNode> = {
+  success: <Check />,
+  error: <X />,
+  warning: <TriangleAlert />,
+  info: <Info />,
+};
 
 export const Alert: React.FC<AlertProps> = (props) => {
   const [visible, setVisible] = useState(false);
@@ -57,19 +78,7 @@ export const Alert: React.FC<AlertProps> = (props) => {
             className="-m-2 rounded-full p-2 text-gray-500 transition hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
           >
             <span className="sr-only">Dismiss</span>
-            <svg
-              className="h-5 w-5"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              fill="none"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X className="h-5 w-5" />
           </button>
         </div>
       </div>
