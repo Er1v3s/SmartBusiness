@@ -138,6 +138,22 @@ export const ProductsSection = () => {
               />
             </label>
 
+            <label htmlFor="edit-category">
+              <span className="mb-0.5 text-sm font-medium text-gray-700 dark:text-gray-200">
+                Kategoria
+              </span>
+              <select
+                id="edit-category"
+                className="w-full rounded border-2 border-gray-300 px-4 py-2 shadow-sm sm:text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white"
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
+              >
+                {CATEGORIES.slice(1).map((c) => (
+                  <option key={c}>{c}</option>
+                ))}
+              </select>
+            </label>
+
             <label htmlFor="edit-price">
               <span className="mb-0.5 text-sm font-medium text-gray-700 dark:text-gray-200">
                 Cena
@@ -169,26 +185,8 @@ export const ProductsSection = () => {
                 ))}
               </select>
             </label>
-
-            <label htmlFor="edit-category">
-              <span className="mb-0.5 text-sm font-medium text-gray-700 dark:text-gray-200">
-                Kategoria
-              </span>
-              <select
-                id="edit-category"
-                className="w-full rounded border-2 border-gray-300 px-4 py-2 shadow-sm sm:text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white"
-                value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
-              >
-                {CATEGORIES.slice(1).map((c) => (
-                  <option key={c}>{c}</option>
-                ))}
-              </select>
-            </label>
-
             <div className="mt-6 flex justify-between gap-2">
               <ButtonError text="Usuń" type="button" onClick={onDelete} />
-
               <div className="flex gap-2">
                 <ButtonNeutral text="Anuluj" type="button" onClick={onClose} />
                 <ButtonSuccess text="Zapisz" type="submit" onClick={onSave} />
@@ -219,6 +217,15 @@ export const ProductsSection = () => {
           placeholder="Opis"
           className="input w-1/5 rounded-lg border-2 border-gray-200 px-3 text-gray-800 dark:border-gray-700 dark:text-gray-100"
         />
+        <select
+          name="category"
+          required
+          className="input rounded-lg border-2 border-gray-200 bg-white px-1 text-gray-800 shadow dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+        >
+          {CATEGORIES.slice(1).map((c) => (
+            <option key={c}>{c}</option>
+          ))}
+        </select>
         <input
           name="price"
           required
@@ -235,15 +242,6 @@ export const ProductsSection = () => {
         >
           {VAT_OPTIONS.map((v) => (
             <option key={v}>{v}</option>
-          ))}
-        </select>
-        <select
-          name="category"
-          required
-          className="input rounded-lg border-2 border-gray-200 bg-white px-1 text-gray-800 shadow dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-        >
-          {CATEGORIES.slice(1).map((c) => (
-            <option key={c}>{c}</option>
           ))}
         </select>
         <div className="">
@@ -303,9 +301,9 @@ export const ProductsSection = () => {
             <tr className="bg-gray-100 dark:bg-gray-700">
               <th className="px-4 py-2 text-left">Nazwa</th>
               <th className="px-4 py-2 text-left">Opis</th>
+              <th className="px-4 py-2 text-left">Kategoria</th>
               <th className="px-4 py-2 text-right">Cena</th>
               <th className="px-4 py-2 text-right">VAT</th>
-              <th className="px-4 py-2 text-left">Kategoria</th>
             </tr>
           </thead>
           <tbody>
@@ -328,11 +326,11 @@ export const ProductsSection = () => {
                 >
                   <td className="px-4 py-2 font-medium">{p.name}</td>
                   <td className="px-4 py-2">{p.description}</td>
+                  <td className="px-4 py-2">{p.category}</td>
                   <td className="px-4 py-2 text-right">
                     {p.price.toFixed(2)} zł
                   </td>
                   <td className="px-4 py-2 text-right">{p.vat}</td>
-                  <td className="px-4 py-2">{p.category}</td>
                 </tr>
               ))
             )}
