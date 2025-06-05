@@ -28,6 +28,11 @@ import { DeleteAccountComponent } from "./components/Dashboard/User/DeleteAccoun
 import { EditProfileComponent } from "./components/Dashboard/User/EditProfile";
 import { DashboardHomeSection } from "./components/Dashboard/Company/DashboardHomeSection";
 import { CalendarSection } from "./components/Dashboard/Company/CalendarSection";
+import { StatisticsSection } from "./components/Dashboard/Company/StatisticsSection";
+import { SettingsSection } from "./components/Dashboard/Company/SettingsSection";
+import { RegisterSaleSection } from "./components/Dashboard/Company/RegisterSaleSection";
+import { ServicesSection } from "./components/Dashboard/Company/ServicesSection";
+import { ProductsSection } from "./components/Dashboard/Company/ProductsSection";
 
 // Private Route component checks if the user is authenticated
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -67,18 +72,11 @@ export const App: React.FC = () => {
             <Route path="dashboard" element={<DashboardPage />}>
               <Route index element={<DashboardHomeSection />} />
               <Route path="company/calendar" element={<CalendarSection />} />
-              <Route
-                path="company/sale"
-                element={<div>Rejestracja sprzedaży (TODO: komponent)</div>}
-              />
-              <Route
-                path="company/stats"
-                element={<div>Statystyki firmy (TODO: komponent)</div>}
-              />
-              <Route
-                path="company/settings"
-                element={<div>Ustawienia firmy (TODO: komponent)</div>}
-              />
+              <Route path="company/sale" element={<RegisterSaleSection />} />
+              <Route path="company/stats" element={<StatisticsSection />} />
+              <Route path="company/services" element={<ServicesSection />} />
+              <Route path="company/products" element={<ProductsSection />} />
+              <Route path="company/settings" element={<SettingsSection />} />
             </Route>
 
             <Route path="dashboard/user" element={<UserPage />}>
