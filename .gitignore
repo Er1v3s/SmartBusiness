@@ -366,3 +366,8 @@ FodyWeavers.xsd
 .DS_Store
 .idea
 obj
+
+# MongoDB data files
+**/.mongodb
+**/readmongodb/data
+**/writemongodb/data

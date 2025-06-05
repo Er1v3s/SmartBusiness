@@ -8,11 +8,14 @@ volumes:
     driver: local
   grafana-data:
     driver: local
+  mongo-data:
+    driver: local
 
     # MONITORING SERVICE TURN OFF WHILE DEVELOPMENT
 
 services:
 
+  # API GATEWAY
   gateway.smart-business:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -37,6 +40,7 @@ services:
     networks:
       - smart-business-network
 
+  # ACCOUNT SERVICES
   account.smart-business:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -59,7 +63,8 @@ services:
         condition: service_healthy
     networks:
       - smart-business-network
-
+  
+  # SALES SERVICES
   sales.smart-business:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -83,6 +88,63 @@ services:
     networks:
       - smart-business-network
 
+  # WRITE SERVICE
+  write.smart-business:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=2300
+      - ASPNETCORE_HTTPS_PORTS=2301
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
+    container_name: write.smart-business
+    image: write.smart-business
+    build:
+      context: .
+      dockerfile: Services/WriteService/WriteService.Api/Dockerfile
+    ports:
+      - "2300:2300"
+      - "2301:2301"
+    volumes:
+      - ./https:/https:ro
+    depends_on:
+      database.server:
+        condition: service_healthy
+      read.mongodb.server:
+        condition: service_healthy
+      write.mongodb.server:
+        condition: service_healthy
+    networks:
+      - smart-business-network
+
+  # READ SERVICE 
+  read.smart-business:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=2400
+      - ASPNETCORE_HTTPS_PORTS=2401
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
+    container_name: read.smart-business
+    image: read.smart-business
+    build:
+      context: .
+      dockerfile: Services/WriteService/WriteService.Api/Dockerfile
+    ports:
+      - "2400:2400"
+      - "2401:2401"
+    volumes:
+      - ./https:/https:ro
+    depends_on:
+      database.server:
+        condition: service_healthy
+      read.mongodb.server:
+        condition: service_healthy
+      write.mongodb.server:
+        condition: service_healthy
+    networks:
+      - smart-business-network 
+
+  # FRONTEND APP
   frontend.smart-business:
     container_name: frontend.smart-business
     image: frontend.smart-business
@@ -99,7 +161,8 @@ services:
       - account.smart-business
     networks:
       - smart-business-network
-
+  
+  # SQL SERVER (FOR ACCOUNT SERVICE)
   database.server:
     image: "mcr.microsoft.com/mssql/server"
     platform: linux/amd64
@@ -120,6 +183,47 @@ services:
       start_period: 30s
     networks:
       - smart-business-network
+
+  # MONGODB SERVER (FOR WRITE SERVICES)
+  write.mongodb.server:
+    image: mongo:latest
+    container_name: write.mongodb.server
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./writemongodb/data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=SA
+      - MONGO_INITDB_ROOT_PASSWORD=SuperPassword123
+      - MONGO_INITDB_DATABASE=SmartBusinessWriteDb
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks:
+      - smart-business-network
+
+  # MONGODB SERVER (FOR READ SERVICES)
+  read.mongodb.server:
+    image: mongo:latest
+    container_name: read.mongodb.server
+    ports:
+      - "27018:27018"
+    volumes:
+      - ./readmongodb/data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=SA
+      - MONGO_INITDB_ROOT_PASSWORD=SuperPassword123
+      - MONGO_INITDB_DATABASE=SmartBusinessReadDb
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks:
+      - smart-business-network
+
 
   # MONITORING SERVICES 
 

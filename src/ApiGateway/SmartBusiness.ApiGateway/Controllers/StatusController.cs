@@ -27,6 +27,8 @@ namespace SmartBusiness.ApiGateway.Controllers
             {
                 ["AccountService"] = "http://account.smart-business:2100/status",
                 ["SalesService"] = "http://sales.smart-business:2200/Status",
+                ["WriteService"] = "http://write.smart-business:2300/Status",
+                ["ReadService"] = "http://read.smart-business:2400/Status",
                 ["Frontend Web App"] = "http://frontend.smart-business:80/index.html",
                 // Add another services
             };

@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.ApiGateway", "ApiGateway\SmartBusiness.ApiGateway\SmartBusiness.ApiGateway.csproj", "{19276835-9846-4BFF-AB7E-C4BB2A7AF819}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountService.Api", "Services\AccountService\AccountService.Api\AccountService.Api.csproj", "{2BA74F84-5D58-BE3A-DED4-C49282D6D8CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountService.Application", "Services\AccountService\AccountService.Application\AccountService.Application.csproj", "{87CFDB75-9B4D-4154-BB44-DB7BC4F7C758}"
@@ -13,9 +15,37 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountService.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountService.Contracts", "Services\AccountService\AccountService.Contracts\AccountService.Contracts.csproj", "{E7285402-F23F-4EB6-8160-693161A66774}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Tests", "tests\AccountService.Tests\AccountService.Tests.csproj", "{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountService.Tests", "tests\AccountService.Tests\AccountService.Tests.csproj", "{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBusiness.ApiGateway", "ApiGateway\SmartBusiness.ApiGateway\SmartBusiness.ApiGateway.csproj", "{19276835-9846-4BFF-AB7E-C4BB2A7AF819}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Api", "Services\SalesService\SalesService.Api\SalesService.Api.csproj", "{53BC741C-517C-4859-93C8-768AD447AB0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Application", "Services\SalesService\SalesService.Application\SalesService.Application.csproj", "{B2BD9714-B6AD-41C9-99FD-6122F4716F51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Contracts", "Services\SalesService\SalesService.Contracts\SalesService.Contracts.csproj", "{712A2848-7766-48EE-929A-4CF6509033F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Domain", "Services\SalesService\SalesService.Domain\SalesService.Domain.csproj", "{86F42417-7978-4462-98C6-286F552F8013}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Infrastructure", "Services\SalesService\SalesService.Infrastructure\SalesService.Infrastructure.csproj", "{8B36C6C2-0149-4BB6-A130-B2C8EC55215E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WriteService.Api", "Services\WriteService\WriteService.Api\WriteService.Api.csproj", "{714867EB-0B36-45D5-BE98-0F8C67D3FB94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WriteService.Application", "Services\WriteService\WriteService.Application\WriteService.Application.csproj", "{7E59FB29-CBEC-4FF8-B19E-093920C2C456}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WriteService.Domain", "Services\WriteService\WriteService.Domain\WriteService.Domain.csproj", "{C4A5713D-AA46-468E-88F7-9E364ECAD37A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WriteService.Infrastructure", "Services\WriteService\WriteService.Infrastructure\WriteService.Infrastructure.csproj", "{20D26618-9071-405A-83E7-BE4230FF5DC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadService.Api", "Services\ReadService\ReadService.Api\ReadService.Api.csproj", "{6A1F8243-6874-46BD-A0D4-B4D45B6B18AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadService.Application", "Services\ReadService\ReadService.Application\ReadService.Application.csproj", "{ED773B5B-B406-4C4E-9F90-0A43194756BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadService.Domain", "Services\ReadService\ReadService.Domain\ReadService.Domain.csproj", "{0A218804-A657-490A-B3AE-90F7AD451439}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadService.Infrastructure", "Services\ReadService\ReadService.Infrastructure\ReadService.Infrastructure.csproj", "{3E4B72DF-5DC7-425C-8E21-E3CD98F6D7F0}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "smartbusiness.web", "WebApp\smartbusiness.web\smartbusiness.web.esproj", "{FAD1B2DD-C2DE-1A89-FE10-3B793B5AFBA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Services\Shared\Shared.csproj", "{E465D422-669E-49C0-8B44-F9464F8DD532}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateway", "ApiGateway", "{32A4AE2C-472A-4AAA-9BFC-FA9CA1EEE414}"
 EndProject
@@ -24,6 +54,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AccountService", "AccountService", "{5CA453FB-AC70-482E-878E-12DFF1269BD8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SalesService", "SalesService", "{AC7563BF-F5E8-4128-8EED-6DC0FAA93501}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WriteService", "WriteService", "{76709CB4-3956-4177-B690-32C660F937F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReadService", "ReadService", "{B8E931D0-90F6-44BE-9E49-3BA9F1C68966}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{629913E8-592F-423D-A3F1-2AC1CCA5482E}"
 EndProject
@@ -34,20 +68,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4940A929-D68
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Api", "Services\SalesService\SalesService.Api\SalesService.Api.csproj", "{53BC741C-517C-4859-93C8-768AD447AB0D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Application", "Services\SalesService\SalesService.Application\SalesService.Application.csproj", "{B2BD9714-B6AD-41C9-99FD-6122F4716F51}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Infrastructure", "Services\SalesService\SalesService.Infrastructure\SalesService.Infrastructure.csproj", "{8B36C6C2-0149-4BB6-A130-B2C8EC55215E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Domain", "Services\SalesService\SalesService.Domain\SalesService.Domain.csproj", "{86F42417-7978-4462-98C6-286F552F8013}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Contracts", "Services\SalesService\SalesService.Contracts\SalesService.Contracts.csproj", "{712A2848-7766-48EE-929A-4CF6509033F6}"
-EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "smartbusiness.web", "WebApp\smartbusiness.web\smartbusiness.web.esproj", "{FAD1B2DD-C2DE-1A89-FE10-3B793B5AFBA3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Services\Shared\Shared.csproj", "{E465D422-669E-49C0-8B44-F9464F8DD532}"
-EndProject
+
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Tests", "tests\SalesService.Tests\SalesService.Tests.csproj", "{02BADD57-9F60-42E3-9CB9-591C62A41DB8}"
 EndProject
 Global
@@ -118,6 +139,38 @@ Global
 		{02BADD57-9F60-42E3-9CB9-591C62A41DB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02BADD57-9F60-42E3-9CB9-591C62A41DB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02BADD57-9F60-42E3-9CB9-591C62A41DB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{714867EB-0B36-45D5-BE98-0F8C67D3FB94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{714867EB-0B36-45D5-BE98-0F8C67D3FB94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{714867EB-0B36-45D5-BE98-0F8C67D3FB94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{714867EB-0B36-45D5-BE98-0F8C67D3FB94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E59FB29-CBEC-4FF8-B19E-093920C2C456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E59FB29-CBEC-4FF8-B19E-093920C2C456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E59FB29-CBEC-4FF8-B19E-093920C2C456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E59FB29-CBEC-4FF8-B19E-093920C2C456}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A1F8243-6874-46BD-A0D4-B4D45B6B18AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A1F8243-6874-46BD-A0D4-B4D45B6B18AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A1F8243-6874-46BD-A0D4-B4D45B6B18AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A1F8243-6874-46BD-A0D4-B4D45B6B18AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4A5713D-AA46-468E-88F7-9E364ECAD37A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4A5713D-AA46-468E-88F7-9E364ECAD37A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4A5713D-AA46-468E-88F7-9E364ECAD37A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4A5713D-AA46-468E-88F7-9E364ECAD37A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20D26618-9071-405A-83E7-BE4230FF5DC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20D26618-9071-405A-83E7-BE4230FF5DC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20D26618-9071-405A-83E7-BE4230FF5DC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20D26618-9071-405A-83E7-BE4230FF5DC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED773B5B-B406-4C4E-9F90-0A43194756BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED773B5B-B406-4C4E-9F90-0A43194756BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED773B5B-B406-4C4E-9F90-0A43194756BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED773B5B-B406-4C4E-9F90-0A43194756BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A218804-A657-490A-B3AE-90F7AD451439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A218804-A657-490A-B3AE-90F7AD451439}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A218804-A657-490A-B3AE-90F7AD451439}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A218804-A657-490A-B3AE-90F7AD451439}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E4B72DF-5DC7-425C-8E21-E3CD98F6D7F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E4B72DF-5DC7-425C-8E21-E3CD98F6D7F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E4B72DF-5DC7-425C-8E21-E3CD98F6D7F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E4B72DF-5DC7-425C-8E21-E3CD98F6D7F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,6 +197,16 @@ Global
 		{FAD1B2DD-C2DE-1A89-FE10-3B793B5AFBA3} = {4940A929-D68A-4A4B-A647-D2F63568B0E4}
 		{E465D422-669E-49C0-8B44-F9464F8DD532} = {629913E8-592F-423D-A3F1-2AC1CCA5482E}
 		{02BADD57-9F60-42E3-9CB9-591C62A41DB8} = {508166D5-EC71-489D-A175-A33ACA6483DA}
+		{714867EB-0B36-45D5-BE98-0F8C67D3FB94} = {76709CB4-3956-4177-B690-32C660F937F4}
+		{7E59FB29-CBEC-4FF8-B19E-093920C2C456} = {76709CB4-3956-4177-B690-32C660F937F4}
+		{6A1F8243-6874-46BD-A0D4-B4D45B6B18AB} = {B8E931D0-90F6-44BE-9E49-3BA9F1C68966}
+		{76709CB4-3956-4177-B690-32C660F937F4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{B8E931D0-90F6-44BE-9E49-3BA9F1C68966} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{C4A5713D-AA46-468E-88F7-9E364ECAD37A} = {76709CB4-3956-4177-B690-32C660F937F4}
+		{20D26618-9071-405A-83E7-BE4230FF5DC1} = {76709CB4-3956-4177-B690-32C660F937F4}
+		{ED773B5B-B406-4C4E-9F90-0A43194756BF} = {B8E931D0-90F6-44BE-9E49-3BA9F1C68966}
+		{0A218804-A657-490A-B3AE-90F7AD451439} = {B8E931D0-90F6-44BE-9E49-3BA9F1C68966}
+		{3E4B72DF-5DC7-425C-8E21-E3CD98F6D7F0} = {B8E931D0-90F6-44BE-9E49-3BA9F1C68966}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {33B935BB-76C2-4284-B33B-A385930A9C02}
