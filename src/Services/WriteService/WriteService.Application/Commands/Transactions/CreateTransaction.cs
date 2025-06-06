@@ -32,25 +32,39 @@ namespace WriteService.Application.Commands.Transactions
     public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand, string>
     {
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IRabbitMqPublisher _rabbitMqPublisher;
 
-        public CreateTransactionCommandHandler(ITransactionRepository transactionRepository)
+        public CreateTransactionCommandHandler(ITransactionRepository transactionRepository, IRabbitMqPublisher rabbitMqPublisher)
         {
             _transactionRepository = transactionRepository;
+            _rabbitMqPublisher = rabbitMqPublisher;
         }
 
         public async Task<string> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
         {
+            //var transaction = new Transaction
+            //{
+            //    CompanyId = request.CompanyId,
+            //    UserId = request.UserId,
+            //    ProductId = request.ProductId,
+            //    Quantity = request.Quantity,
+            //    TotalAmount = request.TotalAmount,
+            //    CreatedAt = DateTime.UtcNow
+            //};
+
+            // TEST 
             var transaction = new Transaction
             {
-                CompanyId = request.CompanyId,
-                UserId = request.UserId,
-                ProductId = request.ProductId,
-                Quantity = request.Quantity,
-                TotalAmount = request.TotalAmount,
+                CompanyId = Guid.NewGuid().ToString(),
+                UserId = Guid.NewGuid().ToString(),
+                ProductId = Guid.NewGuid().ToString(),
+                Quantity = 1,
+                TotalAmount = 100,
                 CreatedAt = DateTime.UtcNow
             };
 
             await _transactionRepository.AddAsync(transaction);
+            await _rabbitMqPublisher.PublishTransactionEvent(transaction);
 
             return transaction.Id;
         }

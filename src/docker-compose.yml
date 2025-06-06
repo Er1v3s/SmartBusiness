@@ -128,7 +128,7 @@ services:
     image: read.smart-business
     build:
       context: .
-      dockerfile: Services/WriteService/WriteService.Api/Dockerfile
+      dockerfile: Services/ReadService/ReadService.Api/Dockerfile
     ports:
       - "2400:2400"
       - "2401:2401"
@@ -140,6 +140,8 @@ services:
       read.mongodb.server:
         condition: service_healthy
       write.mongodb.server:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     networks:
       - smart-business-network 
@@ -190,6 +192,7 @@ services:
     container_name: write.mongodb.server
     ports:
       - "27017:27017"
+      # - "27022:20017" When use localhost 
     volumes:
       - ./writemongodb/data:/data/db
     environment:
@@ -209,7 +212,8 @@ services:
     image: mongo:latest
     container_name: read.mongodb.server
     ports:
-      - "27018:27018"
+      - "27018:27017"
+      # - "27021:20017" When use localhost 
     volumes:
       - ./readmongodb/data:/data/db
     environment:
@@ -224,59 +228,78 @@ services:
     networks:
       - smart-business-network
 
+  # RABBITMQ (FOR EVENT BUS)
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: "rabbitmq"
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - smart-business-network
 
   # MONITORING SERVICES 
 
-  # otel-collector:
-  #   image: otel/opentelemetry-collector:0.95.0
-  #   container_name: otel-collector
-  #   command: ["--config=/etc/otel-collector-config.yml"]
-  #   volumes:
-  #     - ./ApiGateway/SmartBusiness.ApiGateway/config/otel-collector-config.yml:/etc/otel-collector-config.yml
-  #   ports:
-  #     - "8888:8888" 
-  #     - "8889:8889" 
-  #     - "13133:13133"
-  #     - "4317:4317"
-  #   networks:
-  #     - smart-business-network
+  otel-collector:
+    image: otel/opentelemetry-collector:0.95.0
+    container_name: otel-collector
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./ApiGateway/SmartBusiness.ApiGateway/config/otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+      - "8888:8888" 
+      - "8889:8889" 
+      - "13133:13133"
+      - "4317:4317"
+    networks:
+      - smart-business-network
 
-  # prometheus:
-  #   image: prom/prometheus:latest
-  #   container_name: prometheus
-  #   ports:
-  #     - "9090:9090"
-  #   command:
-  #     - '--config.file=/etc/prometheus/prometheus.yml'
-  #   volumes:
-  #     - ./ApiGateway/SmartBusiness.ApiGateway/config/prometheus.yml:/etc/prometheus/prometheus.yml
-  #     - prometheus-data:/prometheus
-  #   restart: unless-stopped
-  #   networks:
-  #     - smart-business-network
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    volumes:
+      - ./ApiGateway/SmartBusiness.ApiGateway/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+    networks:
+      - smart-business-network
 
-  # grafana:
-  #   image: grafana/grafana-oss:latest
-  #   container_name: grafana
-  #   ports:
-  #     - '3000:3000'
-  #   volumes:
-  #     - grafana-data:/var/lib/grafana
-  #   environment:
-  #     - GF_SECURITY_ADMIN_PASSWORD=SuperPassword123
-  #   restart: unless-stopped
-  #   networks:
-  #     - smart-business-network
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=SuperPassword123
+    restart: unless-stopped
+    networks:
+      - smart-business-network
 
-  # node_exporter:
-  #   image: quay.io/prometheus/node-exporter:v1.5.0
-  #   container_name: node_exporter
-  #   command: '--path.rootfs=/host'
-  #   pid: host
-  #   restart: unless-stopped
-  #   volumes:
-  #     - /proc:/host/proc:ro
-  #     - /sys:/host/sys:ro
-  #     - /:/rootfs:ro
-  #   networks:
-  #     - smart-business-network
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:v1.5.0
+    container_name: node_exporter
+    command: '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - smart-business-network

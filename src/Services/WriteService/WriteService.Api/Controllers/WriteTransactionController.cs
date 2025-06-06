@@ -16,7 +16,7 @@ namespace WriteService.Api.Controllers
             _mediator = mediator;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionCommand command)
         {

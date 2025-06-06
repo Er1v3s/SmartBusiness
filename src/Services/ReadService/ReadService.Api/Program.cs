@@ -1,9 +1,10 @@
-
 using Microsoft.OpenApi.Models;
 using ReadService.Api.Handlers;
 using ReadService.Api.Handlers.CustomExceptionHandlers;
 using ReadService.Application;
 using ReadService.Infrastructure;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 namespace ReadService.Api
 {
@@ -19,6 +20,13 @@ namespace ReadService.Api
 
             builder.Services.Configure<MongoDbSettings>(
                 builder.Configuration.GetSection("ReadMongoDbSettings"));
+
+            builder.Services.AddSingleton<IMongoDatabase>(sp =>
+            {
+                var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+                var client = new MongoClient(settings.ConnectionString);
+                return client.GetDatabase(settings.DatabaseName);
+            });
 
             #endregion
 

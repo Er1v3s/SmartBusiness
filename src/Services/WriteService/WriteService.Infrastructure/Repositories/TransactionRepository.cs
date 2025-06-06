@@ -16,26 +16,6 @@ namespace WriteService.Infrastructure.Repositories
             _transactions = database.GetCollection<Transaction>("transactions");
         }
 
-        public async Task<List<Transaction>> GetAllAsync()
-        {
-            return await _transactions.Find(_ => true).ToListAsync();
-        }
-
-        public async Task<Transaction?> GetByIdAsync(string id)
-        {
-            return await _transactions.Find(t => t.Id == id).FirstOrDefaultAsync();
-        }
-
-        public async Task<List<Transaction>> GetByCompanyIdAsync(string companyId)
-        {
-            return await _transactions.Find(t => t.CompanyId == companyId).ToListAsync();
-        }
-
-        public async Task<List<Transaction>> GetByUserIdAsync(string userId)
-        {
-            return await _transactions.Find(t => t.UserId == userId).ToListAsync();
-        }
-
         public async Task AddAsync(Transaction transaction)
         {
             await _transactions.InsertOneAsync(transaction);
