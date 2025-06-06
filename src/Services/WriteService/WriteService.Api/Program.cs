@@ -1,5 +1,9 @@
-
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using WriteService.Api.Handlers;
 using WriteService.Api.Handlers.CustomExceptionHandlers;
 using WriteService.Application;
@@ -20,6 +24,13 @@ namespace WriteService.Api
             builder.Services.Configure<MongoDbSettings>(
                 builder.Configuration.GetSection("WriteMongoDbSettings"));
 
+            builder.Services.AddSingleton<IMongoDatabase>(sp =>
+            {
+                var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+                var client = new MongoClient(settings.ConnectionString);
+                return client.GetDatabase(settings.DatabaseName);
+            });
+
             #endregion
 
             #region http policy
@@ -35,6 +46,25 @@ namespace WriteService.Api
                         .AllowAnyHeader();
                 });
             });
+
+            #endregion
+
+            #region metrics
+
+            builder.Services.AddOpenTelemetry()
+                .ConfigureResource(resource => resource.AddService(serviceName: builder.Environment.ApplicationName))
+                .WithTracing(tracking => tracking
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddOtlpExporter()
+                )
+                .WithMetrics(metrics => metrics
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddProcessInstrumentation()
+                    .AddPrometheusExporter()
+                );
 
             #endregion
 
@@ -118,6 +148,8 @@ namespace WriteService.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapPrometheusScrapingEndpoint();
 
             app.MapControllers();
 

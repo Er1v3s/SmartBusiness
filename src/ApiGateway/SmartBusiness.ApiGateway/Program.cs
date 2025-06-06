@@ -1,6 +1,7 @@
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace SmartBusiness.ApiGateway
 {
@@ -40,22 +41,24 @@ namespace SmartBusiness.ApiGateway
 
             #endregion
 
-            //#region metrics
+            #region metrics
 
-            //builder.Services.AddOpenTelemetry()
-            //    .ConfigureResource(resource => resource
-            //        .AddService("smart-business.api-gateway")) // Name of service
-            //    .WithMetrics(metrics => metrics
-            //        .AddAspNetCoreInstrumentation()
-            //        .AddHttpClientInstrumentation()
-            //        .AddRuntimeInstrumentation()
-            //        .AddProcessInstrumentation()
-            //        .AddOtlpExporter(opt =>
-            //        {
-            //            opt.Endpoint = new Uri(builder.Configuration["Otel:Endpoint"]!);
-            //        }));
+            builder.Services.AddOpenTelemetry()
+                .ConfigureResource(resource => resource.AddService("gateway.smart-business"))
+                .WithTracing(tracking => tracking
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddOtlpExporter()
+                )
+                .WithMetrics(metrics => metrics
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddProcessInstrumentation()
+                    .AddPrometheusExporter()
+                );
 
-            //#endregion
+            #endregion
 
             #region api documentation
 
@@ -97,11 +100,26 @@ namespace SmartBusiness.ApiGateway
             // DO NOT CHANGE ORDER !!!
             app.UseCors("CorsPolicy");
 
-            app.UseHttpsRedirection();
+            app.Use(async (context, next) =>
+            {
+                // Enable Prometheus metrics endpoint
+                if (context.Request.Path.StartsWithSegments("/metrics"))
+                {
+                    await next();
+                }
+                else
+                {
+                    context.Request.Scheme = "https";
+                    await next.Invoke();
+                }
+            });
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapPrometheusScrapingEndpoint();
 
             app.MapReverseProxy();
             app.MapControllers();

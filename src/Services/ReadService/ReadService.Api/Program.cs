@@ -1,10 +1,13 @@
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using ReadService.Api.Handlers;
 using ReadService.Api.Handlers.CustomExceptionHandlers;
 using ReadService.Application;
 using ReadService.Infrastructure;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace ReadService.Api
 {
@@ -43,6 +46,25 @@ namespace ReadService.Api
                         .AllowAnyHeader();
                 });
             });
+
+            #endregion
+
+            #region metrics
+
+            builder.Services.AddOpenTelemetry()
+                .ConfigureResource(resource => resource.AddService("read.smart-business"))
+                .WithTracing(tracking => tracking
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddOtlpExporter()
+                )
+                .WithMetrics(metrics => metrics
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddProcessInstrumentation()
+                    .AddPrometheusExporter()
+                );
 
             #endregion
 
@@ -126,6 +148,8 @@ namespace ReadService.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapPrometheusScrapingEndpoint();
 
             app.MapControllers();
 

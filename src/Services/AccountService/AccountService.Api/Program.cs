@@ -7,6 +7,9 @@ using AccountService.Api.Handlers;
 using AccountService.Application;
 using AccountService.Infrastructure;
 using AccountService.Infrastructure.Options;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace AccountService.Api
 {
@@ -40,6 +43,25 @@ namespace AccountService.Api
                         .AllowAnyHeader();
                 });
             });
+
+            #endregion
+
+            #region metrics
+
+            builder.Services.AddOpenTelemetry()
+                .ConfigureResource(resource => resource.AddService("account.smart-business"))
+                .WithTracing(tracking => tracking
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddOtlpExporter()
+                )
+                .WithMetrics(metrics => metrics
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddProcessInstrumentation()
+                    .AddPrometheusExporter()
+                );
 
             #endregion
 
@@ -179,6 +201,8 @@ namespace AccountService.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapPrometheusScrapingEndpoint();
 
             app.MapControllers();
 
