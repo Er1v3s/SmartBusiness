@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Behaviors;
 using Shared.Mappings;
@@ -19,7 +18,6 @@ namespace WriteService.Application
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(typeof(TransactionMappingProfile));
-
 
             return services;
         }

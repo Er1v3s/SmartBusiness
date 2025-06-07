@@ -5,7 +5,6 @@ using Shared.Contracts;
 using Shared.DTOs;
 using Shared.Entities;
 using WriteService.Application.Abstracts;
-using WriteService.Domain.Entities;
 
 namespace WriteService.Application.Commands.Transactions
 {

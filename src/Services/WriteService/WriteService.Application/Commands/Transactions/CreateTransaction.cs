@@ -6,7 +6,6 @@ using Shared.Contracts;
 using Shared.DTOs;
 using Shared.Entities;
 using WriteService.Application.Abstracts;
-using WriteService.Domain.Entities;
 
 namespace WriteService.Application.Commands.Transactions
 {
@@ -49,17 +48,6 @@ namespace WriteService.Application.Commands.Transactions
 
         public async Task<string> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
         {
-            //var transaction = new Transaction
-            //{
-            //    CompanyId = request.CompanyId,
-            //    UserId = request.UserId,
-            //    ProductId = request.ProductId,
-            //    Quantity = request.Quantity,
-            //    TotalAmount = request.TotalAmount,
-            //    CreatedAt = DateTime.UtcNow
-            //};
-
-            // TEST 
             var transaction = new Transaction
             {
                 CompanyId = request.CompanyId,

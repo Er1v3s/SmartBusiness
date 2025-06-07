@@ -12,12 +12,6 @@ namespace WriteService.Infrastructure
         {
             services.AddTransient<IEventBus, EventBus>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
-            services.AddSingleton<IConnection>(sp =>
-            {
-                var factory = new ConnectionFactory { HostName = "rabbitmq", Port = 5672, UserName = "admin", Password = "admin" };
-                return factory.CreateConnectionAsync().GetAwaiter().GetResult();
-            });
-            services.AddSingleton<IRabbitMqPublisher, RabbitMqPublisher>();
 
             return services;
         }
