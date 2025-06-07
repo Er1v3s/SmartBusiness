@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
-using Shared.Abstracts;
 using Shared.Contracts;
 using Shared.DTOs;
 using Shared.Entities;
 using WriteService.Application.Abstracts;
+using Shared.Abstracts;
+using ITransactionRepository = Shared.Abstracts.ITransactionRepository;
 
 namespace WriteService.Application.Commands.Transactions
 {

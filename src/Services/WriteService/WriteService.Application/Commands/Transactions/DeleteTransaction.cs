@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using Shared.Abstracts;
 using Shared.Contracts;
 using Shared.Exceptions;
 using WriteService.Application.Abstracts;
+using Shared.Abstracts;
 
 namespace WriteService.Application.Commands.Transactions
 {
