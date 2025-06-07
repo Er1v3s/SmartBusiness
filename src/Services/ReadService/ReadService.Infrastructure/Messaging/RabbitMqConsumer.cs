@@ -11,11 +11,6 @@ namespace ReadService.Infrastructure.Messaging
 {
     public class RabbitMqConsumer :IAsyncDisposable
     {
-        private static readonly ActivitySource ActivitySource = new("read.smart-business");
-        private static readonly Counter FailedDbOperations =
-            Metrics.CreateCounter("readservice_db_errors", "Liczba błędów operacji na bazie danych");
-
-
         private readonly IMongoCollection<Transaction> _transactionsCollection;
         private readonly IConnection _connection;
         private IChannel? _channel;
@@ -41,8 +36,6 @@ namespace ReadService.Infrastructure.Messaging
 
             consumer.ReceivedAsync += async (sender, eventArgs) =>
             {
-                using var activity = ActivitySource.StartActivity("ProcessingTransaction");
-
                 var body = eventArgs.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
                 var transaction = JsonSerializer.Deserialize<Transaction>(message);
@@ -58,19 +51,10 @@ namespace ReadService.Infrastructure.Messaging
                             cancellationToken
                         );
 
-                        activity?.SetTag("transaction.id", transaction.Id);
-                        activity?.SetTag("transaction.status", "Processed");
-
                         await _channel.BasicAckAsync(eventArgs.DeliveryTag, multiple: false, cancellationToken: cancellationToken);
                     }
                     catch (Exception ex)
                     {
-                        activity?.SetTag("transaction.id", transaction.Id);
-                        activity?.SetTag("status", "failure");
-                        activity?.SetTag("error.message", ex.Message);
-                        activity?.SetTag("error.type", ex.GetType().Name);
-                        FailedDbOperations.Inc();
-
                         Console.WriteLine($"Failed to process transaction {transaction.Id}: {ex.Message}");
                     }
                 }

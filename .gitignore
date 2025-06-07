@@ -369,5 +369,4 @@ obj
 
 # MongoDB data files
 **/.mongodb
-**/readmongodb/data
-**/writemongodb/data
+**/MongoDb/data

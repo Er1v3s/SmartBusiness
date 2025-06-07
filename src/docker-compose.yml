@@ -115,11 +115,9 @@ services:
     volumes:
       - ./https:/https:ro
     depends_on:
-      database.server:
+      mongodb.server:
         condition: service_healthy
-      read.mongodb.server:
-        condition: service_healthy
-      write.mongodb.server:
+      rabbitmq:
         condition: service_healthy
     networks:
       - app-network
@@ -145,11 +143,7 @@ services:
     volumes:
       - ./https:/https:ro
     depends_on:
-      database.server:
-        condition: service_healthy
-      read.mongodb.server:
-        condition: service_healthy
-      write.mongodb.server:
+      mongodb.server:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
@@ -197,38 +191,18 @@ services:
     networks:
       - app-network
 
-  # MONGODB SERVER (FOR WRITE SERVICES)
-  write.mongodb.server:
+  # MONGODB SERVER (FOR WRITE SERVICES and READ SERVICE SEPARATE DB INSTANCES)
+  mongodb.server:
     image: mongo:latest
-    container_name: write.mongodb.server
+    container_name: mongodb.server
     ports:
       - "27017:27017"
     volumes:
-      - ./writemongodb/data:/data/db
+      - ./mongoDb/data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=SA
       - MONGO_INITDB_ROOT_PASSWORD=SuperPassword123
       - MONGO_INITDB_DATABASE=SmartBusinessWriteDb
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })"]
-      interval: 10s
-      timeout: 3s
-      retries: 10
-    networks:
-      - app-network
-
-  # MONGODB SERVER (FOR READ SERVICES)
-  read.mongodb.server:
-    image: mongo:latest
-    container_name: read.mongodb.server
-    ports:
-      - "27018:27017"
-    volumes:
-      - ./readmongodb/data:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=SA
-      - MONGO_INITDB_ROOT_PASSWORD=SuperPassword123
-      - MONGO_INITDB_DATABASE=SmartBusinessReadDb
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })"]
       interval: 10s
@@ -280,18 +254,18 @@ services:
       - monitoring-network
 
   grafana:
-    image: grafana/grafana:10.2.0
+    image: grafana/grafana:latest
     container_name: grafana
     ports:
       - '3000:3000'
     volumes:
       - grafana-data:/var/lib/grafana
-      - ./observability/grafana/provisioning:/etc/grafana/provisioning
+      - ./observability/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./observability/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./observability/grafana/dashboards:/var/lib/grafana/dashboards
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=SuperPassword123
-      - GF_USERS_ALLOW_SIGN_UP=false
     restart: unless-stopped
     networks:
       - monitoring-network
