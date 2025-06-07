@@ -26,7 +26,9 @@ namespace SmartBusiness.ApiGateway.Controllers
             var services = new Dictionary<string, string>
             {
                 ["AccountService"] = "http://account.smart-business:2100/status",
-                ["SalesService"] = "http://sales.smart-business:2200/Status",
+                ["SalesService"] = "http://sales.smart-business:2200/status",
+                ["WriteService"] = "http://write.smart-business:2300/status",
+                ["ReadService"] = "http://read.smart-business:2400/status",
                 ["Frontend Web App"] = "http://frontend.smart-business:80/index.html",
                 // Add another services
             };

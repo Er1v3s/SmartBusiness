@@ -1,18 +1,22 @@
 ﻿
 networks:
-  smart-business-network:
+  app-network:
+    driver: bridge
+  monitoring-network:
     driver: bridge
 
 volumes:
+  mssql-data:
+  mongodb-data:
   prometheus-data:
-    driver: local
   grafana-data:
-    driver: local
+  loki-data:
 
     # MONITORING SERVICE TURN OFF WHILE DEVELOPMENT
 
 services:
 
+  # API GATEWAY
   gateway.smart-business:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -21,6 +25,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
       # - Otel__Endpoint=http://otel-collector:4317 
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
     container_name: gateway.smart-business
     image: gateway.smart-business
     build:
@@ -35,8 +40,10 @@ services:
       # otel-collector:
         # condition: service_started
     networks:
-      - smart-business-network
+      - app-network
+      - monitoring-network
 
+  # ACCOUNT SERVICES
   account.smart-business:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -44,6 +51,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=2101
       - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
     container_name: account.smart-business
     image: account.smart-business
     build:
@@ -58,8 +66,10 @@ services:
       database.server:
         condition: service_healthy
     networks:
-      - smart-business-network
-
+      - app-network
+      - monitoring-network
+  
+  # SALES SERVICES
   sales.smart-business:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -67,6 +77,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=2201
       - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
+      # - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
     container_name: sales.smart-business
     image: sales.smart-business
     build:
@@ -81,8 +92,66 @@ services:
       database.server:
         condition: service_healthy
     networks:
-      - smart-business-network
+      - app-network
+      - monitoring-network
 
+  # WRITE SERVICE
+  write.smart-business:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=2300
+      - ASPNETCORE_HTTPS_PORTS=2301
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+    container_name: write.smart-business
+    image: write.smart-business
+    build:
+      context: .
+      dockerfile: Services/WriteService/WriteService.Api/Dockerfile
+    ports:
+      - "2300:2300"
+      - "2301:2301"
+    volumes:
+      - ./https:/https:ro
+    depends_on:
+      mongodb.server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - app-network
+      - monitoring-network
+
+  # READ SERVICE 
+  read.smart-business:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=2400
+      - ASPNETCORE_HTTPS_PORTS=2401
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+    container_name: read.smart-business
+    image: read.smart-business
+    build:
+      context: .
+      dockerfile: Services/ReadService/ReadService.Api/Dockerfile
+    ports:
+      - "2400:2400"
+      - "2401:2401"
+    volumes:
+      - ./https:/https:ro
+    depends_on:
+      mongodb.server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - app-network
+      - monitoring-network
+
+  # FRONTEND APP
   frontend.smart-business:
     container_name: frontend.smart-business
     image: frontend.smart-business
@@ -98,8 +167,9 @@ services:
       - gateway.smart-business
       - account.smart-business
     networks:
-      - smart-business-network
-
+      - app-network
+  
+  # SQL SERVER (FOR ACCOUNT SERVICE)
   database.server:
     image: "mcr.microsoft.com/mssql/server"
     platform: linux/amd64
@@ -119,60 +189,109 @@ services:
       retries: 10
       start_period: 30s
     networks:
-      - smart-business-network
+      - app-network
+
+  # MONGODB SERVER (FOR WRITE SERVICES and READ SERVICE SEPARATE DB INSTANCES)
+  mongodb.server:
+    image: mongo:latest
+    container_name: mongodb.server
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongoDb/data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=SA
+      - MONGO_INITDB_ROOT_PASSWORD=SuperPassword123
+      - MONGO_INITDB_DATABASE=SmartBusinessWriteDb
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks:
+      - app-network
+
+  # RABBITMQ (FOR EVENT BUS)
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: "rabbitmq"
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbitmq_prometheus true"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+      - monitoring-network
 
   # MONITORING SERVICES 
 
-  # otel-collector:
-  #   image: otel/opentelemetry-collector:0.95.0
-  #   container_name: otel-collector
-  #   command: ["--config=/etc/otel-collector-config.yml"]
-  #   volumes:
-  #     - ./ApiGateway/SmartBusiness.ApiGateway/config/otel-collector-config.yml:/etc/otel-collector-config.yml
-  #   ports:
-  #     - "8888:8888" 
-  #     - "8889:8889" 
-  #     - "13133:13133"
-  #     - "4317:4317"
-  #   networks:
-  #     - smart-business-network
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./ApiGateway/SmartBusiness.ApiGateway/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+    networks:
+      - monitoring-network
 
-  # prometheus:
-  #   image: prom/prometheus:latest
-  #   container_name: prometheus
-  #   ports:
-  #     - "9090:9090"
-  #   command:
-  #     - '--config.file=/etc/prometheus/prometheus.yml'
-  #   volumes:
-  #     - ./ApiGateway/SmartBusiness.ApiGateway/config/prometheus.yml:/etc/prometheus/prometheus.yml
-  #     - prometheus-data:/prometheus
-  #   restart: unless-stopped
-  #   networks:
-  #     - smart-business-network
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./observability/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./observability/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=SuperPassword123
+    restart: unless-stopped
+    networks:
+      - monitoring-network
 
-  # grafana:
-  #   image: grafana/grafana-oss:latest
-  #   container_name: grafana
-  #   ports:
-  #     - '3000:3000'
-  #   volumes:
-  #     - grafana-data:/var/lib/grafana
-  #   environment:
-  #     - GF_SECURITY_ADMIN_PASSWORD=SuperPassword123
-  #   restart: unless-stopped
-  #   networks:
-  #     - smart-business-network
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:v1.5.0
+    container_name: node_exporter
+    command: '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - monitoring-network
 
-  # node_exporter:
-  #   image: quay.io/prometheus/node-exporter:v1.5.0
-  #   container_name: node_exporter
-  #   command: '--path.rootfs=/host'
-  #   pid: host
-  #   restart: unless-stopped
-  #   volumes:
-  #     - /proc:/host/proc:ro
-  #     - /sys:/host/sys:ro
-  #     - /:/rootfs:ro
-  #   networks:
-  #     - smart-business-network
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686"   # Jaeger UI
+      - "14250:14250"   # gRPC
+      - "4317:4317"     # OTLP gRPC receiver
+      - "4318:4318"     # OTLP HTTP receiver
+    networks:
+      - monitoring-network

@@ -1,15 +1,61 @@
 ﻿global:
   scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
 
 scrape_configs:
+  # Prometheus itself
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['localhost:9090']
-  - job_name: 'node-exporter'
+      - targets: ['prometheus:9090']
+
+  # Node Exporter 
+  - job_name: 'node_exporter'
     static_configs:
       - targets: ['node_exporter:9100']
-  - job_name: 'otel-collector'
-    scrape_interval: 5s
+
+  # API Gateway metrics
+  - job_name: 'api-gateway'
+    scheme: http
+    tls_config:
+        insecure_skip_verify: true
     static_configs:
-      - targets: ['otel-collector:8889']
-      - targets: ['otel-collector:8888']
+      - targets: ['gateway.smart-business:2000']
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    scrape_timeout: 5s
+
+  # Account Service metrics
+  - job_name: 'auth-service'
+    static_configs:
+      - targets: ['account.smart-business:2100']
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    scrape_timeout: 5s
+
+  # Write Service metrics
+  - job_name: 'write-service'
+    static_configs:
+      - targets: ['write.smart-business:2300']
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    scrape_timeout: 5s
+
+  # Read Service metrics
+  - job_name: 'read-service'
+    static_configs:
+      - targets: ['read.smart-business:2400']
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    scrape_timeout: 5s
+
+    # RabbitMQ metrics
+  - job_name: 'rabbitmq'
+    static_configs:
+      - targets: ['rabbitmq:15692']
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    scrape_timeout: 5s
