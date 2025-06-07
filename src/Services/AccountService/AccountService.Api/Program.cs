@@ -1,15 +1,17 @@
-using System.Text;
-using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AccountService.Api.Handlers;
 using AccountService.Application;
 using AccountService.Infrastructure;
 using AccountService.Infrastructure.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using System.Text;
+using HealthChecks.UI.Client;
 
 namespace AccountService.Api
 {
@@ -122,6 +124,9 @@ namespace AccountService.Api
 
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.AddHealthChecks()
+                .AddSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")!);
+
             builder.Services.AddControllers();
 
             #region api documentation
@@ -203,7 +208,11 @@ namespace AccountService.Api
             app.UseAuthorization();
 
             app.MapPrometheusScrapingEndpoint();
-
+            app.MapHealthChecks("/health", new HealthCheckOptions
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
             app.MapControllers();
 
             app.Run();
