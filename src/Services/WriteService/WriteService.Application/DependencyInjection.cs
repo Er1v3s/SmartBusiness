@@ -19,7 +19,6 @@ namespace WriteService.Application
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(typeof(TransactionMappingProfile));
 
-
             return services;
         }
     }

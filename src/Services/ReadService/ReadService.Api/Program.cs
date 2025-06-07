@@ -30,7 +30,7 @@ namespace ReadService.Api
             builder.Services.AddSingleton<IMongoDatabase>(sp =>
             {
                 var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-
+                
                 var client = new MongoClient(settings.ConnectionString);
                 return client.GetDatabase(settings.DatabaseName);
             });
