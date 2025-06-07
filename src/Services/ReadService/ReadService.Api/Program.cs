@@ -1,13 +1,16 @@
+using MassTransit;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using ReadService.Api.Handlers;
 using ReadService.Api.Handlers.CustomExceptionHandlers;
 using ReadService.Application;
 using ReadService.Infrastructure;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
+using ReadService.Infrastructure.Messaging;
+using Shared.Settings;
 
 namespace ReadService.Api
 {
@@ -27,8 +30,54 @@ namespace ReadService.Api
             builder.Services.AddSingleton<IMongoDatabase>(sp =>
             {
                 var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+                
                 var client = new MongoClient(settings.ConnectionString);
                 return client.GetDatabase(settings.DatabaseName);
+            });
+
+            #endregion
+
+            #region Message Broker Consumer (RabbitMQ)
+
+            builder.Services.Configure<MessageBrokerSettings>(
+                builder.Configuration.GetSection("MessageBroker"));
+
+            builder.Services.AddSingleton(sp =>
+                sp.GetRequiredService<IOptions<MessageBrokerSettings>>().Value);
+
+            builder.Services.AddMassTransit(busConfiguration =>
+            {
+                busConfiguration.SetKebabCaseEndpointNameFormatter();
+
+                busConfiguration.AddConsumer<TransactionCreatedEventConsumer>();
+                busConfiguration.AddConsumer<TransactionUpdatedEventConsumer>();
+                busConfiguration.AddConsumer<TransactionDeletedEventConsumer>();
+
+                busConfiguration.UsingRabbitMq((context, configurator) =>
+                {
+                    MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();
+
+                    configurator.Host(new Uri(settings.HostName), h =>
+                    {
+                        h.Username(settings.UserName);
+                        h.Password(settings.Password);
+                    });
+
+                    configurator.ReceiveEndpoint("transaction-created", e =>
+                    {
+                        e.ConfigureConsumer<TransactionCreatedEventConsumer>(context);
+                    });
+
+                    configurator.ReceiveEndpoint("transaction-updated", e =>
+                    {
+                        e.ConfigureConsumer<TransactionUpdatedEventConsumer>(context);
+                    });
+
+                    configurator.ReceiveEndpoint("transaction-deleted", e =>
+                    {
+                        e.ConfigureConsumer<TransactionDeletedEventConsumer>(context);
+                    });
+                });
             });
 
             #endregion

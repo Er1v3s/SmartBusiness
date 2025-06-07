@@ -1,6 +1,6 @@
-﻿using ReadService.Domain.Entities;
+﻿using Shared.Entities;
 
-namespace ReadService.Application.Abstracts
+namespace Shared.Abstracts
 {
     public interface ITransactionRepository
     {
@@ -8,5 +8,8 @@ namespace ReadService.Application.Abstracts
         Task<Transaction?> GetByIdAsync(string id);
         Task<List<Transaction>> GetByCompanyIdAsync(string companyId);
         Task<List<Transaction>> GetByUserIdAsync(string userId);
+        Task AddAsync(Transaction transaction);
+        Task UpdateAsync(string id, Transaction transaction);
+        Task DeleteAsync(string id);
     }
 }

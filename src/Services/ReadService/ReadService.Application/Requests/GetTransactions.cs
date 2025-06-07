@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using ReadService.Application.Abstracts;
-using ReadService.Domain.Entities;
+using Shared.Abstracts;
+using Shared.Entities;
 
 namespace ReadService.Application.Requests
 {

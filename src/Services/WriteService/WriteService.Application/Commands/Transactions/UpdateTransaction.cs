@@ -1,6 +1,10 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
+using Shared.Abstracts;
+using Shared.Contracts;
+using Shared.DTOs;
+using Shared.Entities;
 using WriteService.Application.Abstracts;
-using WriteService.Domain.Entities;
 
 namespace WriteService.Application.Commands.Transactions
 {
@@ -16,10 +20,14 @@ namespace WriteService.Application.Commands.Transactions
     public class UpdateTransactionCommandHandler : IRequestHandler<UpdateTransactionCommand, bool>
     {
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IEventBus _eventBus;
+        private readonly IMapper _mapper;
 
-        public UpdateTransactionCommandHandler(ITransactionRepository transactionRepository)
+        public UpdateTransactionCommandHandler(ITransactionRepository transactionRepository, IEventBus eventBus, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
+            _eventBus = eventBus;
+            _mapper = mapper;
         }
 
         public async Task<bool> Handle(UpdateTransactionCommand request, CancellationToken cancellationToken)
@@ -36,6 +44,9 @@ namespace WriteService.Application.Commands.Transactions
             };
 
             await _transactionRepository.UpdateAsync(request.Id, transaction);
+
+            var transactionDto = _mapper.Map<TransactionDto>(transaction);
+            await _eventBus.PublishAsync(new TransactionUpdatedEvent(transactionDto), cancellationToken);
 
             return true;
         }
