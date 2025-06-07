@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RabbitMQ.Client;
-using ReadService.Application.Abstracts;
-using ReadService.Infrastructure.Messaging;
-using ReadService.Infrastructure.Repositories;
+using Shared.Abstracts;
+using Shared.Repositories;
 
 namespace ReadService.Infrastructure
 {
@@ -11,14 +9,6 @@ namespace ReadService.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddScoped<ITransactionRepository, TransactionRepository>();
-            services.AddSingleton<IConnection>(sp =>
-            {
-                var factory = new ConnectionFactory { HostName = "rabbitmq", Port = 5672, UserName = "admin", Password = "admin" };
-                return factory.CreateConnectionAsync().GetAwaiter().GetResult();
-            });
-            services.AddSingleton<RabbitMqConsumer>();
-
-            services.AddHostedService<RabbitMqConsumerHostedService>();
 
             return services;
         }
