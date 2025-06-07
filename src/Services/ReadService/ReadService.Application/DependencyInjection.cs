@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Behaviors;
+using Shared.Mappings;
 
 namespace ReadService.Application
 {
@@ -16,6 +17,7 @@ namespace ReadService.Application
             });
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(typeof(TransactionMappingProfile));
 
             return services;
         }

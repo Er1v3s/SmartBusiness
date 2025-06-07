@@ -215,6 +215,7 @@ services:
   rabbitmq:
     image: "rabbitmq:3-management"
     container_name: "rabbitmq"
+    hostname: "smartbusiness-queue"
     restart: always
     ports:
       - "5672:5672"

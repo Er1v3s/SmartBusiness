@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RabbitMQ.Client;
-using ReadService.Application.Abstracts;
-using ReadService.Infrastructure.Messaging;
-using ReadService.Infrastructure.Repositories;
+using Shared.Abstracts;
+using Shared.Repositories;
 
 namespace ReadService.Infrastructure
 {

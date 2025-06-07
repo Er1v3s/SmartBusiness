@@ -1,9 +1,11 @@
+using MassTransit;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Shared.Settings;
 using WriteService.Api.Handlers;
 using WriteService.Api.Handlers.CustomExceptionHandlers;
 using WriteService.Application;
@@ -27,8 +29,35 @@ namespace WriteService.Api
             builder.Services.AddSingleton<IMongoDatabase>(sp =>
             {
                 var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+
                 var client = new MongoClient(settings.ConnectionString);
                 return client.GetDatabase(settings.DatabaseName);
+            });
+
+            #endregion
+
+            #region Message Broker Publisher (RabbitMQ)
+
+            builder.Services.Configure<MessageBrokerSettings>(
+                builder.Configuration.GetSection("MessageBroker"));
+
+            builder.Services.AddSingleton(sp =>
+                sp.GetRequiredService<IOptions<MessageBrokerSettings>>().Value);
+
+            builder.Services.AddMassTransit(busConfiguration =>
+            {
+                busConfiguration.SetKebabCaseEndpointNameFormatter();
+
+                busConfiguration.UsingRabbitMq((context, configurator) =>
+                {
+                    MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();
+
+                    configurator.Host(new Uri(settings.HostName), h =>
+                    {
+                        h.Username(settings.UserName);
+                        h.Password(settings.Password);
+                    });
+                });
             });
 
             #endregion

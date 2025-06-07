@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RabbitMQ.Client;
+using Shared.Abstracts;
+using Shared.Repositories;
 using WriteService.Application.Abstracts;
-using WriteService.Infrastructure.Messaging;
-using WriteService.Infrastructure.Repositories;
+using WriteService.Infrastructure.MessageBroker;
 
 namespace WriteService.Infrastructure
 {
@@ -10,6 +10,7 @@ namespace WriteService.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
+            services.AddTransient<IEventBus, EventBus>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddSingleton<IConnection>(sp =>
             {

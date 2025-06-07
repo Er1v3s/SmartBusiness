@@ -1,5 +1,10 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
+using Shared.Abstracts;
+using Shared.Contracts;
+using Shared.DTOs;
+using Shared.Entities;
 using WriteService.Application.Abstracts;
 using WriteService.Domain.Entities;
 
@@ -32,12 +37,14 @@ namespace WriteService.Application.Commands.Transactions
     public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand, string>
     {
         private readonly ITransactionRepository _transactionRepository;
-        private readonly IRabbitMqPublisher _rabbitMqPublisher;
+        private readonly IEventBus _eventBus;
+        private readonly IMapper _mapper;
 
-        public CreateTransactionCommandHandler(ITransactionRepository transactionRepository, IRabbitMqPublisher rabbitMqPublisher)
+        public CreateTransactionCommandHandler(ITransactionRepository transactionRepository, IEventBus eventBus, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
-            _rabbitMqPublisher = rabbitMqPublisher;
+            _eventBus = eventBus;
+            _mapper = mapper;
         }
 
         public async Task<string> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
@@ -55,16 +62,18 @@ namespace WriteService.Application.Commands.Transactions
             // TEST 
             var transaction = new Transaction
             {
-                CompanyId = Guid.NewGuid().ToString(),
-                UserId = Guid.NewGuid().ToString(),
-                ProductId = Guid.NewGuid().ToString(),
-                Quantity = 1,
-                TotalAmount = 100,
+                CompanyId = request.CompanyId,
+                UserId = request.UserId,
+                ProductId = request.ProductId,
+                Quantity = request.Quantity,
+                TotalAmount = request.TotalAmount,
                 CreatedAt = DateTime.UtcNow
             };
 
+            var transactionDto = _mapper.Map<TransactionDto>(transaction);
+
             await _transactionRepository.AddAsync(transaction);
-            await _rabbitMqPublisher.PublishTransactionEvent(transaction);
+            await _eventBus.PublishAsync(new TransactionCreatedEvent(transactionDto), cancellationToken);
 
             return transaction.Id;
         }
