@@ -13,7 +13,6 @@ namespace ReadService.Infrastructure.Messaging
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Console.WriteLine("Consumer działa jako BackgroundService!");
             await _consumer.StartListeningAsync(stoppingToken);
         }
     }

@@ -2,10 +2,8 @@
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using ReadService.Domain.Entities;
-using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
-using Prometheus;
 
 namespace ReadService.Infrastructure.Messaging
 {
