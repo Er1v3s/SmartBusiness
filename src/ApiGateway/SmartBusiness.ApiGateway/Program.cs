@@ -1,7 +1,13 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using HealthChecks.UI.Core;
+using HealthChecks.UI.Configuration; // Add this namespace
+using HealthChecks.UI;
 
 namespace SmartBusiness.ApiGateway
 {
@@ -76,6 +82,8 @@ namespace SmartBusiness.ApiGateway
 
             #endregion
 
+            builder.Services.AddHealthChecks();
+
             builder.Services.AddHttpClient();
             builder.Services.AddControllers();
 
@@ -120,8 +128,12 @@ namespace SmartBusiness.ApiGateway
             app.UseAuthorization();
 
             app.MapPrometheusScrapingEndpoint();
-
             app.MapReverseProxy();
+            app.MapHealthChecks("/health", new HealthCheckOptions
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
             app.MapControllers();
 
             app.Run();

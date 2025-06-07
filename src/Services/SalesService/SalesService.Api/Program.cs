@@ -1,3 +1,5 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using SalesService.Api.Handlers;
@@ -55,6 +57,7 @@ namespace SalesService.Api
 
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.AddHealthChecks();
             builder.Services.AddControllers();
 
             #region api documentation
@@ -135,6 +138,11 @@ namespace SalesService.Api
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapHealthChecks("/health", new HealthCheckOptions
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
             app.MapControllers();
 
             app.Run();

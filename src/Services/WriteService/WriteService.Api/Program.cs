@@ -1,10 +1,14 @@
+using HealthChecks.UI.Client;
 using MassTransit;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using RabbitMQ.Client;
 using Shared.Settings;
 using WriteService.Api.Handlers;
 using WriteService.Api.Handlers.CustomExceptionHandlers;
@@ -34,6 +38,12 @@ namespace WriteService.Api
                 return client.GetDatabase(settings.DatabaseName);
             });
 
+            builder.Services.AddSingleton<IMongoClient>(sp =>
+            {
+                var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+                return new MongoClient(settings.ConnectionString);
+            });
+
             #endregion
 
             #region Message Broker Publisher (RabbitMQ)
@@ -57,6 +67,13 @@ namespace WriteService.Api
                         h.Username(settings.UserName);
                         h.Password(settings.Password);
                     });
+                });
+
+                busConfiguration.ConfigureHealthCheckOptions(options =>
+                {
+                    options.Name = "masstransit";
+                    options.MinimalFailureStatus = HealthStatus.Unhealthy;
+                    options.Tags.Add("health");
                 });
             });
 
@@ -108,6 +125,20 @@ namespace WriteService.Api
             builder.Services.AddInfrastructure();
 
             builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddHealthChecks()
+                .AddMongoDb(
+                    clientFactory: sp => sp.GetRequiredService<IMongoClient>(),
+                    databaseNameFactory: sp =>
+                    {
+                        var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+                        return settings.DatabaseName;
+                    },
+                    name: "mongodb",
+                    failureStatus: HealthStatus.Unhealthy,
+                    tags: new[] { "db", "mongo" },
+                    timeout: TimeSpan.FromSeconds(5));
+
 
             builder.Services.AddControllers();
 
@@ -179,7 +210,11 @@ namespace WriteService.Api
             app.UseAuthorization();
 
             app.MapPrometheusScrapingEndpoint();
-
+            app.MapHealthChecks("/health", new HealthCheckOptions
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
             app.MapControllers();
 
             app.Run();

@@ -1,4 +1,6 @@
+using HealthChecks.UI.Client;
 using MassTransit;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
@@ -129,6 +131,7 @@ namespace ReadService.Api
 
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.AddHealthChecks();
             builder.Services.AddControllers();
 
             #region api documentation
@@ -199,7 +202,11 @@ namespace ReadService.Api
             app.UseAuthorization();
 
             app.MapPrometheusScrapingEndpoint();
-
+            app.MapHealthChecks("/health", new HealthCheckOptions
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
             app.MapControllers();
 
             app.Run();
