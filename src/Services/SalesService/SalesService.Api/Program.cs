@@ -19,7 +19,7 @@ namespace SalesService.Api
 
             #region database connection
 
-            builder.Services.AddDbContext<SalesDbContext>(options =>
+            builder.Services.AddDbContext<SalesServiceDbContext>(options =>
             {
                 if (builder.Environment.EnvironmentName != "Testing")
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString"));
@@ -57,7 +57,9 @@ namespace SalesService.Api
 
             builder.Services.AddHttpContextAccessor();
 
-            builder.Services.AddHealthChecks();
+            builder.Services.AddHealthChecks()
+                .AddSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")!);
+
             builder.Services.AddControllers();
 
             #region api documentation
@@ -114,16 +116,16 @@ namespace SalesService.Api
                     c.RoutePrefix = "swagger";
                 });
 
-                //try
-                //{
-                //    using var serviceScope = app.Services.CreateScope();
-                //    var dbContext = serviceScope.ServiceProvider.GetRequiredService<SalesDbContext>();
-                //    dbContext.Database.Migrate();
-                //}
-                //catch (Exception)
-                //{
-                //    Console.WriteLine("info: Cannot execute migrations. Database is already up to date");
-                //}
+                try
+                {
+                    using var serviceScope = app.Services.CreateScope();
+                    var dbContext = serviceScope.ServiceProvider.GetRequiredService<SalesServiceDbContext>();
+                    dbContext.Database.Migrate();
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("info: Cannot execute migrations. Database is already up to date");
+                }
             }
 
             #endregion

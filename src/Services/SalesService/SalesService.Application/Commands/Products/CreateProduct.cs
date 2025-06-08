@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
 using SalesService.Application.Abstracts;
-using SalesService.Application.Commands.Products.Abstracts;
+using SalesService.Application.Commands.Abstracts;
 using SalesService.Domain.Entities;
 
 namespace SalesService.Application.Commands.Products
 {
-    public record CreateProductCommand(string Name, string Description, List<string> Category, decimal Price, int Tax, string ImageFile) 
-        : ProductCommand(Name, Description, Category, Price, Tax, ImageFile), IRequest<Product> { }
+    public record CreateProductCommand(string Name, string Description, string Category, decimal Price, int Tax) 
+        : ProductCommand(Name, Description, Category, Price, Tax), IRequest<Product> { }
 
     public class CreateProductCommandValidator : ProductCommandValidator<CreateProductCommand> { }
 
@@ -25,7 +25,7 @@ namespace SalesService.Application.Commands.Products
         public async Task<Product> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
             var product = _mapper.Map<Product>(request);
-            //await _productRepository.AddProductAsync(product);
+            await _productRepository.AddProductAsync(product);
 
             return product;
         }

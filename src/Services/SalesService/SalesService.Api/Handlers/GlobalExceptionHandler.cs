@@ -31,6 +31,4 @@ namespace SalesService.Api.Handlers
             return fallback != null && await fallback.TryHandleAsync(context, exception, cancellationToken);
         }
     }
-
-
 }
