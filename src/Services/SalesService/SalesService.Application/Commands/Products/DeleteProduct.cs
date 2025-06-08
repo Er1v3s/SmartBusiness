@@ -1,28 +1,29 @@
 ﻿using MediatR;
 using SalesService.Application.Abstracts;
-using SalesService.Domain.Entities;
 using Shared.Exceptions;
 
 namespace SalesService.Application.Commands.Products
 {
-    public record DeleteProductCommand(Guid Id) : IRequest<Product>;
+    public record DeleteProductCommand(string ProductId) : IRequest<Unit>;
 
-    public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Product>
+    public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Unit>
     {
         private readonly IProductRepository _productRepository;
+
         public DeleteProductCommandHandler(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
-        public async Task<Product> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
+
+        public async Task<Unit> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
-            //var product = await _productRepository.GetProductByIdAsync(request.Id);
-            //if (product == null)
-                //throw new NotFoundException($"Product with ID {request.Id} not found.");
+            var existingProduct = await _productRepository.GetProductByIdAsync(request.ProductId);
+            if (existingProduct == null)
+                throw new NotFoundException($"Product with id {request.ProductId} not found");
 
-            //await _productRepository.DeleteProductAsync(product);
+            await _productRepository.DeleteProductAsync(existingProduct);
 
-            return new Product();
+            return Unit.Value;
         }
     }
 }

@@ -1,18 +1,18 @@
 ﻿using AutoMapper;
-using SalesService.Application.Commands.Products;
+using SalesService.Application.Commands.Services;
 using SalesService.Domain.Entities;
 
 namespace SalesService.Application.Mappings
 {
-    public class ProductMappingProfile : Profile
+    public class ServiceMappingProfile : Profile
     {
-        public ProductMappingProfile()
+        public ServiceMappingProfile()
         {
-            CreateMap<CreateProductCommand, Product>()
+            CreateMap<CreateServiceCommand, Service>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
 
-            CreateMap<UpdateProductCommand, Product>()
+            CreateMap<UpdateServiceCommand, Service>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
         }
     }

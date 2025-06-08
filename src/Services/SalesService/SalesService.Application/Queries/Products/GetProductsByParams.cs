@@ -1,53 +1,57 @@
 ﻿using FluentValidation;
 using MediatR;
 using SalesService.Application.Abstracts;
-using SalesService.Application.Commands.Products.Abstracts;
+using SalesService.Application.Commands.Abstracts;
 using SalesService.Domain.Entities;
 using Shared.Exceptions;
 
-namespace SalesService.Application.Commands.Products
+namespace SalesService.Application.Queries.Products
 {
-    public record GetProductsCommand(string? Id, string? Name, string? Category, decimal? MinPrice, decimal? MaxPrice) 
-        : IRequest<List<Product>>;
+    public record GetProductsByParamsQuery(string? Id, string? Name, string? Category, decimal? MinPrice, decimal? MaxPrice) 
+        : IRequest<IEnumerable<Product>>;
 
-    public class GetFilteredProductsCommandValidator : AbstractValidator<GetProductsCommand>
+    public class GetProductsByParamsQueryValidator : AbstractValidator<GetProductsByParamsQuery>
     {
-        public GetFilteredProductsCommandValidator()
+        public GetProductsByParamsQueryValidator()
         {
             RuleFor(x => x.Name)
                 .Must(Validator.BeValidString)
-                .WithMessage($"{nameof(Product.Name)} can only contain letters and numbers");
+                .WithMessage($"{nameof(Product.Name)} can only contain letters and numbers")
+                .When(x => !string.IsNullOrEmpty(x.Name));
 
             RuleFor(x => x.Category)
                 .Must(Validator.BeValidString)
-                .WithMessage($"{nameof(Product.Category)} can only contain letters and numbers");
+                .WithMessage($"{nameof(Product.Category)} can only contain letters and numbers")
+                .When(x => !string.IsNullOrEmpty(x.Category));
 
             RuleFor(x => x.MinPrice)
                 .GreaterThanOrEqualTo(0)
-                .WithMessage("Min price must be greater or equal to 0.");
+                .WithMessage("Min price must be greater or equal to 0.")
+                .When(x => x.MinPrice != null);
 
             RuleFor(x => x.MaxPrice)
                 .GreaterThan(0)
                 .WithMessage("Max price must be greater than 0.")
                 .Must((command, maxPrice) => maxPrice >= command.MinPrice)
-                .WithMessage("Max price must be greater than or equal to Min price.");
+                .WithMessage("Max price must be greater than or equal to Min price.")
+                .When(x => x.MaxPrice != null);
         }
     }
 
-    public class GetProductsCommandHandler : IRequestHandler<GetProductsCommand, List<Product>>
+    public class GetProductsByParamsQueryHandler : IRequestHandler<GetProductsByParamsQuery, IEnumerable<Product>>
     {
         private readonly IProductRepository _productRepository;
 
-        public GetProductsCommandHandler(IProductRepository productRepository)
+        public GetProductsByParamsQueryHandler(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
 
-        public async Task<List<Product>> Handle(GetProductsCommand request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Product>> Handle(GetProductsByParamsQuery request, CancellationToken cancellationToken)
         {
             var query = _productRepository.GetQueryable();
 
-            if(string.IsNullOrEmpty(request.Id))
+            if (!string.IsNullOrEmpty(request.Id))
                 query = query.Where(p => p.Id == request.Id);
 
             if (!string.IsNullOrEmpty(request.Name))
@@ -63,8 +67,6 @@ namespace SalesService.Application.Commands.Products
                 query = query.Where(p => p.Price <= request.MaxPrice.Value);
 
             var products = await _productRepository.GetFilteredProductsAsync(query, cancellationToken);
-            if(products == null || products.Count == 0)
-                throw new NotFoundException($"Products with the specified filters not found.");
 
             return products;
         }

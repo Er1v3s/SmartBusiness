@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace SalesService.Application.Commands.Products.Abstracts
+namespace SalesService.Application.Commands.Abstracts
 {
     public abstract class Validator
     {

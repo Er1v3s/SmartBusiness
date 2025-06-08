@@ -9,6 +9,7 @@ namespace SalesService.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IServiceRepository, ServiceRepository>();
 
             return services;
         }

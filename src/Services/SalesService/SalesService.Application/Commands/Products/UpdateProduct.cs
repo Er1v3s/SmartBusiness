@@ -1,41 +1,46 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using SalesService.Application.Abstracts;
-using SalesService.Application.Commands.Products.Abstracts;
-using SalesService.Contracts.DTOs;
+using SalesService.Application.Commands.Abstracts;
+using SalesService.Domain.Entities;
+using Shared.Exceptions;
 
 namespace SalesService.Application.Commands.Products
 {
-    public record UpdateProductCommand(string Id, string Name, string Description, List<string> Category, decimal Price, int Tax, string ImageFile) 
-        : ProductCommand(Name, Description, Category, Price, Tax, ImageFile), IRequest<string>;
+    public record UpdateProductCommand(
+        string Name,
+        string Description,
+        string Category,
+        decimal Price,
+        int Tax)
+        : ProductCommand(Name, Description, Category, Price, Tax), IRequest<Product>
+    {
+        public string Id { get; set; } = string.Empty;
+    }
 
     public class UpdateProductCommandValidator : ProductCommandValidator<UpdateProductCommand> {}
 
-    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, string>
+    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Product>
     {
         private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
 
-        public UpdateProductCommandHandler(IProductRepository productRepository)
+        public UpdateProductCommandHandler(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
+            _mapper = mapper;
         }
         
-        public async Task<string> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+        public async Task<Product> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var product = new ProductDto
-            {
-                Id = request.Id,
-                Name = request.Name,
-                Description = request.Description,
-                Category = request.Category,
-                Price = request.Price,
-                Tax = request.Tax,
-                ImageFile = request.ImageFile,
-                UpdatedAt = DateTime.Now.ToUniversalTime(),
-            };
-            
-            // await _productRepository.UpdateProductAsync(product);
+            var productToUpdate = await _productRepository.GetProductByIdAsync(request.Id);
+            if (productToUpdate == null)
+                throw new NotFoundException($"Product with id {request.Id} not found");
 
-            return product.Id;
+            var updatedProduct = _mapper.Map<Product>(request);
+            await _productRepository.UpdateProductAsync(productToUpdate, updatedProduct);
+
+            return updatedProduct;
         }
     }
 }

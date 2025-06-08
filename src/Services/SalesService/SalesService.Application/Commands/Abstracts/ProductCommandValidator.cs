@@ -1,7 +1,7 @@
 using FluentValidation;
 using SalesService.Domain.Entities;
 
-namespace SalesService.Application.Commands.Products.Abstracts
+namespace SalesService.Application.Commands.Abstracts
 {
     public abstract class ProductCommandValidator<T> : AbstractValidator<T> where T : ProductCommand
     {
@@ -27,16 +27,10 @@ namespace SalesService.Application.Commands.Products.Abstracts
                 .NotNull()
                 .NotEmpty()
                 .WithMessage($"{nameof(Product.Category)} is required.")
-                .Must(c => c.Count > 0)
-                .WithMessage($"{nameof(Product.Category)} must have at least 1 value.")
-                .ForEach(c => c
-                    .NotNull()
-                    .NotEmpty()
-                    .WithMessage($"{nameof(Product.Category)} cannot be null or empty.")
-                    .MinimumLength(3)
-                    .WithMessage($"{nameof(Product.Category)} must be at least 3 characters long.")
-                    .MaximumLength(50)
-                    .WithMessage($"{nameof(Product.Category)} cannot be longer than 50 characters."));
+                .MinimumLength(3)
+                .WithMessage($"{nameof(Product.Category)} must be at least 3 characters long.")
+                .MaximumLength(100)
+                .WithMessage($"{nameof(Product.Category)} cannot be longer than 50 characters.");
             RuleFor(x => x.Price)
                 .NotNull()
                 .NotEmpty()

@@ -1,30 +1,30 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SalesService.Application.Commands.Products;
-using SalesService.Application.Queries.Products;
+using SalesService.Application.Commands.Services;
+using SalesService.Application.Queries.Services;
 
 namespace SalesService.Api.Controllers
 {
     [ApiController]
-    [Route("api/products")]
-    public class ProductController : ControllerBase
+    [Route("api/services")]
+    public class ServiceController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public ProductController(IMediator mediator)
+        public ServiceController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateProductCommand request)
+        public async Task<IActionResult> Create([FromBody] CreateServiceCommand request)
         {
             var result = await _mediator.Send(request);
             return Created($"/api/products/{result.Id}", result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] UpdateProductCommand request)
+        public async Task<IActionResult> Update(string id, [FromBody] UpdateServiceCommand request)
         {
             request.Id = id;
             await _mediator.Send(request);
@@ -34,22 +34,22 @@ namespace SalesService.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var request = new DeleteProductCommand(id);
+            var request = new DeleteServiceCommand(id);
             await _mediator.Send(request);
             return NoContent();
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetOne(string id)
+        public async Task<IActionResult> Get(string id)
         {
-            var query = new GetProductsByIdQuery(id);
+            var query = new GetServicesByIdQuery(id);
             var result = await _mediator.Send(query);
 
             return Ok(result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMany([FromQuery] GetProductsByParamsQuery request)
+        public async Task<IActionResult> Get([FromQuery] GetServicesByParamsQuery request)
         {
             var result = await _mediator.Send(request);
 
