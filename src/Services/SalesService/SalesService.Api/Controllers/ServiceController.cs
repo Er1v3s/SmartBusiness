@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalesService.Application.Commands.Services;
 using SalesService.Application.Queries.Services;
@@ -7,6 +8,7 @@ namespace SalesService.Api.Controllers
 {
     [ApiController]
     [Route("api/services")]
+    [Authorize]
     public class ServiceController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -20,6 +22,7 @@ namespace SalesService.Api.Controllers
         public async Task<IActionResult> Create([FromBody] CreateServiceCommand request)
         {
             var result = await _mediator.Send(request);
+
             return Created($"/api/products/{result.Id}", result);
         }
 
@@ -28,6 +31,7 @@ namespace SalesService.Api.Controllers
         {
             request.Id = id;
             await _mediator.Send(request);
+
             return Ok($"\"{request.Name}\" - updated successfully..");
         }
 
@@ -36,6 +40,7 @@ namespace SalesService.Api.Controllers
         {
             var request = new DeleteServiceCommand(id);
             await _mediator.Send(request);
+
             return NoContent();
         }
 

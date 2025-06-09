@@ -3,12 +3,14 @@ using MediatR;
 using SalesService.Application.Abstracts;
 using SalesService.Application.Commands.Abstracts;
 using SalesService.Domain.Entities;
-using Shared.Exceptions;
 
 namespace SalesService.Application.Queries.Products
 {
     public record GetProductsByParamsQuery(string? Id, string? Name, string? Category, decimal? MinPrice, decimal? MaxPrice) 
-        : IRequest<IEnumerable<Product>>;
+        : IRequest<IEnumerable<Product>>, IHaveCompanyId
+    {
+        public string CompanyId { get; set; } = string.Empty;
+    }
 
     public class GetProductsByParamsQueryValidator : AbstractValidator<GetProductsByParamsQuery>
     {
@@ -35,6 +37,13 @@ namespace SalesService.Application.Queries.Products
                 .Must((command, maxPrice) => maxPrice >= command.MinPrice)
                 .WithMessage("Max price must be greater than or equal to Min price.")
                 .When(x => x.MaxPrice != null);
+
+            RuleFor(x => x.CompanyId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Service.CompanyId)} is required.")
+                .Length(17)
+                .WithMessage($"{nameof(Service.CompanyId)} must be exactly 17 characters long.");
         }
     }
 
@@ -50,6 +59,9 @@ namespace SalesService.Application.Queries.Products
         public async Task<IEnumerable<Product>> Handle(GetProductsByParamsQuery request, CancellationToken cancellationToken)
         {
             var query = _productRepository.GetQueryable();
+
+            // IMPORTANT STATEMENT (User can only get products from declared company)
+            query = query.Where(p => p.CompanyId == request.CompanyId);
 
             if (!string.IsNullOrEmpty(request.Id))
                 query = query.Where(p => p.Id == request.Id);

@@ -1,7 +1,7 @@
 using AccountService.Api.Handlers;
 using AccountService.Application;
 using AccountService.Infrastructure;
-using AccountService.Infrastructure.Options;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
@@ -10,8 +10,9 @@ using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Shared.Settings;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using HealthChecks.UI.Client;
 
 namespace AccountService.Api
 {
@@ -69,8 +70,8 @@ namespace AccountService.Api
 
             #region authentication
 
-            builder.Services.Configure<JwtOptions>(
-                builder.Configuration.GetSection(JwtOptions.JwtOptionsKey));
+            builder.Services.Configure<JwtSettings>(
+                builder.Configuration.GetSection(JwtSettings.JwtOptionsKey));
 
             builder.Services.AddAuthentication(opt =>
             {
@@ -79,8 +80,8 @@ namespace AccountService.Api
                 opt.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                var jwtOptions = builder.Configuration.GetSection(JwtOptions.JwtOptionsKey)
-                    .Get<JwtOptions>() ?? throw new ArgumentException(nameof(JwtOptions));
+                var jwtOptions = builder.Configuration.GetSection(JwtSettings.JwtOptionsKey)
+                    .Get<JwtSettings>() ?? throw new ArgumentException(nameof(JwtSettings));
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {

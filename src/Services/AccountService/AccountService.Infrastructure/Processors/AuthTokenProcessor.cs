@@ -7,16 +7,16 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using AccountService.Application.Abstracts;
 using AccountService.Domain.Entities;
-using AccountService.Infrastructure.Options;
+using Shared.Settings;
 
 namespace AccountService.Infrastructure.Processors
 {
     public class AuthTokenProcessor : IAuthTokenProcessor
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly JwtOptions _jwtOptions;
+        private readonly JwtSettings _jwtOptions;
 
-        public AuthTokenProcessor(IOptions<JwtOptions> jwtOptions, IHttpContextAccessor httpContextAccessor)
+        public AuthTokenProcessor(IOptions<JwtSettings> jwtOptions, IHttpContextAccessor httpContextAccessor)
         {
             _jwtOptions = jwtOptions.Value;
             _httpContextAccessor = httpContextAccessor;

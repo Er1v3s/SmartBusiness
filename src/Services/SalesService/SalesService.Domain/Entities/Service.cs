@@ -5,6 +5,7 @@ namespace SalesService.Domain.Entities
     public class Service
     {
         public string Id { get; private set; } = Nanoid.Generate(size: 15);
+        public string CompanyId { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;

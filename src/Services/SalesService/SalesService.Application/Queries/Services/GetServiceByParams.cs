@@ -7,7 +7,10 @@ using SalesService.Domain.Entities;
 namespace SalesService.Application.Queries.Services
 {
     public record GetServicesByParamsQuery(string? Id, string? Name, string? Category, decimal? MinPrice, decimal? MaxPrice, int? MinDuration, int? MaxDuration) 
-        : IRequest<IEnumerable<Service>>;
+        : IRequest<IEnumerable<Service>>, IHaveCompanyId
+    {
+        public string CompanyId { get; set; } = string.Empty;
+    }
 
     public class GetServicesByParamsQueryValidator : AbstractValidator<GetServicesByParamsQuery>
     {
@@ -46,6 +49,13 @@ namespace SalesService.Application.Queries.Services
                 .Must((query, maxDuration) => maxDuration >= query.MinPrice)
                 .WithMessage("Max duration must be greater than or equal to Min duration.")
                 .When(x => x.MaxDuration != null);
+
+            RuleFor(x => x.CompanyId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Service.CompanyId)} is required.")
+                .Length(17)
+                .WithMessage($"{nameof(Service.CompanyId)} must be exactly 17 characters long.");
         }
     }
 
@@ -62,26 +72,29 @@ namespace SalesService.Application.Queries.Services
         {
             var query = _serviceRepository.GetQueryable();
 
-            if(!string.IsNullOrEmpty(request.Id))
-                query = query.Where(p => p.Id == request.Id);
+            // IMPORTANT STATEMENT (User can only get services from declared company)
+            query = query.Where(s => s.CompanyId == request.CompanyId);
+
+            if (!string.IsNullOrEmpty(request.Id))
+                query = query.Where(s => s.Id == request.Id);
 
             if (!string.IsNullOrEmpty(request.Name))
-                query = query.Where(p => p.Name.Contains(request.Name));
+                query = query.Where(s => s.Name.Contains(request.Name));
 
             if (!string.IsNullOrEmpty(request.Category))
-                query = query.Where(p => p.Category.Contains(request.Category));
+                query = query.Where(s => s.Category.Contains(request.Category));
 
             if (request.MinPrice.HasValue)
-                query = query.Where(p => p.Price >= request.MinPrice.Value);
+                query = query.Where(s => s.Price >= request.MinPrice.Value);
 
             if (request.MaxPrice.HasValue)
-                query = query.Where(p => p.Price <= request.MaxPrice.Value);
+                query = query.Where(s => s.Price <= request.MaxPrice.Value);
 
             if (request.MinDuration.HasValue)
-                query = query.Where(p => p.Duration <= request.MinDuration.Value);
+                query = query.Where(s => s.Duration <= request.MinDuration.Value);
 
             if (request.MaxDuration.HasValue)
-                query = query.Where(p => p.Duration <= request.MaxDuration.Value);
+                query = query.Where(s => s.Duration <= request.MaxDuration.Value);
 
             var services = await _serviceRepository.GetFilteredServicesAsync(query, cancellationToken);
 

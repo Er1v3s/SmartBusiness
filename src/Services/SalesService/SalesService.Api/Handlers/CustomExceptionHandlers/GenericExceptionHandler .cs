@@ -9,6 +9,7 @@ namespace SalesService.Api.Handlers.CustomExceptionHandlers
         private static readonly HashSet<Type> HandledExceptions = new()
         {
             typeof(NotFoundException),
+            typeof(ForbiddenException),
             typeof(DbUpdateException),
             typeof(ConflictException),
             typeof(CustomValidationException),
@@ -32,6 +33,7 @@ namespace SalesService.Api.Handlers.CustomExceptionHandlers
             ProblemDetails problemDetails = exception switch
             {
                 NotFoundException => CreateProblemDetails(StatusCodes.Status404NotFound, "Not Found", exception.Message),
+                ForbiddenException => CreateProblemDetails(StatusCodes.Status403Forbidden, "Forbidden", exception.Message),
                 DbUpdateException => CreateProblemDetails(StatusCodes.Status409Conflict, "An conflict occured in database", exception.Message),
                 ConflictException => CreateProblemDetails(StatusCodes.Status409Conflict, "An conflict occured", exception.Message),
                 CustomValidationException => CreateProblemDetails(StatusCodes.Status400BadRequest, "Bad Request", exception.Message),

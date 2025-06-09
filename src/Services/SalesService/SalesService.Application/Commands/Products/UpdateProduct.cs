@@ -13,9 +13,10 @@ namespace SalesService.Application.Commands.Products
         string Category,
         decimal Price,
         int Tax)
-        : ProductCommand(Name, Description, Category, Price, Tax), IRequest<Product>
+        : ProductCommand(Name, Description, Category, Price, Tax), IRequest<Product>, IHaveCompanyId
     {
         public string Id { get; set; } = string.Empty;
+        public string CompanyId { get; set; } = string.Empty;
     }
 
     public class UpdateProductCommandValidator : ProductCommandValidator<UpdateProductCommand> {}
@@ -36,6 +37,9 @@ namespace SalesService.Application.Commands.Products
             var productToUpdate = await _productRepository.GetProductByIdAsync(request.Id);
             if (productToUpdate == null)
                 throw new NotFoundException($"Product with id {request.Id} not found");
+
+            if (productToUpdate.CompanyId != request.CompanyId)
+                throw new ForbiddenException("You are not able to update product from other company than you are register in");
 
             var updatedProduct = _mapper.Map<Product>(request);
             await _productRepository.UpdateProductAsync(productToUpdate, updatedProduct);

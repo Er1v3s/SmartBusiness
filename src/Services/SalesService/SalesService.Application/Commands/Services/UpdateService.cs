@@ -14,9 +14,10 @@ namespace SalesService.Application.Commands.Services
         decimal Price,
         int Tax,
         int Duration)
-        : ServiceCommand(Name, Description, Category, Price, Tax, Duration), IRequest<Service>
+        : ServiceCommand(Name, Description, Category, Price, Tax, Duration), IRequest<Service>, IHaveCompanyId
     {
         public string Id { get; set; } = string.Empty;
+        public string CompanyId { get; set; } = string.Empty;
     }
 
     public class UpdateServiceCommandValidator : ServiceCommandValidator<UpdateServiceCommand> {}
@@ -37,6 +38,9 @@ namespace SalesService.Application.Commands.Services
             var serviceToUpdate = await _serviceRepository.GetServiceByIdAsync(request.Id);
             if (serviceToUpdate == null)
                 throw new NotFoundException($"Service with id {request.Id} not found");
+
+            if (serviceToUpdate.CompanyId != request.CompanyId)
+                throw new ForbiddenException("You are not able to update service from other company than you are register in");
 
             var updatedService = _mapper.Map<Service>(request);
             await _serviceRepository.UpdateServiceAsync(serviceToUpdate, updatedService);
