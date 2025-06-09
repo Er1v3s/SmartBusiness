@@ -39,6 +39,14 @@ scrape_configs:
   # Write Service metrics
   - job_name: 'write-service'
     static_configs:
+      - targets: ['sales.smart-business:2300']
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    scrape_timeout: 5s
+
+  # Write Service metrics
+  - job_name: 'write-service'
+    static_configs:
       - targets: ['write.smart-business:2300']
     metrics_path: '/metrics'
     scrape_interval: 5s

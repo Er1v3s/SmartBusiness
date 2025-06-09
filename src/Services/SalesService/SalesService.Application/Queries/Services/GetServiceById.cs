@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SalesService.Application.Abstracts;
 using SalesService.Domain.Entities;
+using Shared.Abstracts;
 using Shared.Exceptions;
 
 namespace SalesService.Application.Queries.Services

@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using SalesService.Application.Behaviors;
 using Shared.Behaviors;
 using System.Reflection;
 

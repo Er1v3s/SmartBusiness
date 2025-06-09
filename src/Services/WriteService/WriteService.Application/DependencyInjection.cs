@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Behaviors;
-using Shared.Mappings;
 using System.Reflection;
 
 namespace WriteService.Application
@@ -10,6 +10,9 @@ namespace WriteService.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CompanyIdBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UserIdBehavior<,>));
+
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
@@ -17,7 +20,7 @@ namespace WriteService.Application
             });
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-            services.AddAutoMapper(typeof(TransactionMappingProfile));
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             return services;
         }

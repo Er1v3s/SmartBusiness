@@ -19,9 +19,12 @@ namespace SalesService.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateServiceAsync(Service serviceToUpdate, Service updatedService)
+        public async Task UpdateServiceAsync(Service service)
         {
-            _dbContext.Entry(serviceToUpdate).CurrentValues.SetValues(updatedService);
+            var serviceToUpdate = await _dbContext.Services
+                .FirstOrDefaultAsync(s => s.Id == service.Id);
+
+            _dbContext.Entry(serviceToUpdate).CurrentValues.SetValues(service);
             await _dbContext.SaveChangesAsync();
         }
 

@@ -1,4 +1,4 @@
-﻿namespace SalesService.Application.Abstracts
+﻿namespace Shared.Abstracts
 {
     public interface IHaveCompanyId
     {

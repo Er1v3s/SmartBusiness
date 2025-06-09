@@ -1,5 +1,8 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using SalesService.Application.Abstracts;
+using SalesService.Domain.Entities;
+using Shared.Abstracts;
 using Shared.Exceptions;
 
 namespace SalesService.Application.Commands.Products
@@ -7,6 +10,22 @@ namespace SalesService.Application.Commands.Products
     public record DeleteProductCommand(string ProductId) : IRequest<Unit>, IHaveCompanyId
     {
         public string CompanyId { get; set; } = string.Empty;
+    }
+
+    public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand>
+    {
+        public DeleteProductCommandValidator()
+        {
+            RuleFor(x => x.ProductId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Product.Id)} is required.");
+
+            RuleFor(x => x.CompanyId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Product.CompanyId)} is required.");
+        }
     }
 
     public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Unit>
@@ -20,14 +39,14 @@ namespace SalesService.Application.Commands.Products
 
         public async Task<Unit> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
-            var existingProduct = await _productRepository.GetProductByIdAsync(request.ProductId);
-            if (existingProduct == null)
+            var product = await _productRepository.GetProductByIdAsync(request.ProductId);
+            if (product == null)
                 throw new NotFoundException($"Product with id {request.ProductId} not found");
 
-            if (existingProduct.CompanyId != request.CompanyId)
+            if (product.CompanyId != request.CompanyId)
                 throw new ForbiddenException("You are not able to delete product from other company than you are register in");
 
-            await _productRepository.DeleteProductAsync(existingProduct);
+            await _productRepository.DeleteProductAsync(product);
 
             return Unit.Value;
         }

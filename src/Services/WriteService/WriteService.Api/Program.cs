@@ -1,15 +1,18 @@
 using HealthChecks.UI.Client;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using RabbitMQ.Client;
+using Shared.Middlewares;
 using Shared.Settings;
+using System.Text;
 using WriteService.Api.Handlers;
 using WriteService.Api.Handlers.CustomExceptionHandlers;
 using WriteService.Application;
@@ -114,6 +117,53 @@ namespace WriteService.Api
 
             #endregion
 
+            #region authentication
+
+            builder.Services.Configure<JwtSettings>(
+                builder.Configuration.GetSection(JwtSettings.JwtOptionsKey));
+
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                var jwtOptions = builder.Configuration.GetSection(JwtSettings.JwtOptionsKey)
+                    .Get<JwtSettings>() ?? throw new ArgumentException(nameof(JwtSettings));
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidAudience = jwtOptions.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret)),
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+
+                        if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
+                        {
+                            context.Token = authHeader.Substring("Bearer ".Length);
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+            builder.Services.AddAuthorization();
+
+
+            #endregion
+
             #region exceptions handling
 
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -121,10 +171,12 @@ namespace WriteService.Api
 
             #endregion
 
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddApplication();
             builder.Services.AddInfrastructure();
 
-            builder.Services.AddHttpContextAccessor();
+            #region HealtCheck
 
             builder.Services.AddHealthChecks()
                 .AddMongoDb(
@@ -139,6 +191,7 @@ namespace WriteService.Api
                     tags: new[] { "db", "mongo" },
                     timeout: TimeSpan.FromSeconds(5));
 
+            #endregion
 
             builder.Services.AddControllers();
 
@@ -154,30 +207,30 @@ namespace WriteService.Api
                     Description = "SmartBusiness.WriteService API",
                 });
 
-                //options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                //{
-                //    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
-                //    Name = "Authorization",
-                //    In = ParameterLocation.Header,
-                //    Type = SecuritySchemeType.ApiKey,
-                //    Scheme = "Bearer",
-                //    BearerFormat = "JWT",
-                //});
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                });
 
-                //options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                //{
-                //    {
-                //        new OpenApiSecurityScheme
-                //        {
-                //            Reference = new OpenApiReference
-                //            {
-                //                Type = ReferenceType.SecurityScheme,
-                //                Id = "Bearer"
-                //            }
-                //        },
-                //        new List<string> {}
-                //    }
-                //});
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new List<string> {}
+                    }
+                });
             });
 
             #endregion
@@ -208,6 +261,9 @@ namespace WriteService.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Check if the companyId from Header (X-Company-Id) equals to the companyId in the JWT token claims
+            app.UseMiddleware<CompanyValidationMiddleware>();
 
             app.MapPrometheusScrapingEndpoint();
             app.MapHealthChecks("/health", new HealthCheckOptions

@@ -9,7 +9,7 @@ namespace Shared.Abstracts
         Task<List<Transaction>> GetByCompanyIdAsync(string companyId);
         Task<List<Transaction>> GetByUserIdAsync(string userId);
         Task AddAsync(Transaction transaction);
-        Task UpdateAsync(string id, Transaction transaction);
+        Task UpdateAsync(Transaction transaction);
         Task DeleteAsync(string id);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using SalesService.Application.Abstracts;
 using SalesService.Application.Commands.Abstracts;
 using SalesService.Domain.Entities;
+using Shared.Abstracts;
 using Shared.Exceptions;
 
 namespace SalesService.Application.Commands.Products
@@ -15,11 +17,25 @@ namespace SalesService.Application.Commands.Products
         int Tax)
         : ProductCommand(Name, Description, Category, Price, Tax), IRequest<Product>, IHaveCompanyId
     {
-        public string Id { get; set; } = string.Empty;
+        public string ProductId { get; set; } = string.Empty;
         public string CompanyId { get; set; } = string.Empty;
     }
 
-    public class UpdateProductCommandValidator : ProductCommandValidator<UpdateProductCommand> {}
+    public class UpdateProductCommandValidator : ProductCommandValidator<UpdateProductCommand>
+    {
+        public UpdateProductCommandValidator()
+        {
+            RuleFor(x => x.ProductId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Product.Id)} is required.");
+
+            RuleFor(x => x.CompanyId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Service.CompanyId)} is required.");
+        }
+    }
 
     public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Product>
     {
@@ -34,17 +50,17 @@ namespace SalesService.Application.Commands.Products
         
         public async Task<Product> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var productToUpdate = await _productRepository.GetProductByIdAsync(request.Id);
-            if (productToUpdate == null)
-                throw new NotFoundException($"Product with id {request.Id} not found");
+            var product = await _productRepository.GetProductByIdAsync(request.ProductId);
+            if (product == null)
+                throw new NotFoundException($"Product with id {request.ProductId} not found");
 
-            if (productToUpdate.CompanyId != request.CompanyId)
+            if (product.CompanyId != request.CompanyId)
                 throw new ForbiddenException("You are not able to update product from other company than you are register in");
 
-            var updatedProduct = _mapper.Map<Product>(request);
-            await _productRepository.UpdateProductAsync(productToUpdate, updatedProduct);
+            _mapper.Map(request, product);
+            await _productRepository.UpdateProductAsync(product);
 
-            return updatedProduct;
+            return product;
         }
     }
 }

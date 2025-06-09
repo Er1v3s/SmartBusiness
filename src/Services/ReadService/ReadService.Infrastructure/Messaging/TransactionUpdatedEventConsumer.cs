@@ -18,11 +18,9 @@ namespace ReadService.Infrastructure.Messaging
         public async Task Consume(ConsumeContext<TransactionUpdatedEvent> context)
         {
             var transactionDto = context.Message.TransactionDto;
-            var transactionToUpdateId = transactionDto.Id;
-
             var transaction = _mapper.Map<Transaction>(transactionDto);
 
-            await _transactionRepository.UpdateAsync(transactionToUpdateId, transaction);
+            await _transactionRepository.UpdateAsync(transaction);
         }
     }
 

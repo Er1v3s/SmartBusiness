@@ -9,7 +9,6 @@ namespace SalesService.Application.Mappings
         public ServiceMappingProfile()
         {
             CreateMap<CreateServiceCommand, Service>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
 
             CreateMap<UpdateServiceCommand, Service>()

@@ -6,12 +6,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SalesService.Api.Handlers;
 using SalesService.Api.Handlers.CustomExceptionHandlers;
-using SalesService.Api.Middleware;
 using SalesService.Application;
 using SalesService.Infrastructure;
 using Shared.Settings;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Shared.Middlewares;
 
 namespace SalesService.Api
 {
@@ -94,6 +96,25 @@ namespace SalesService.Api
 
             builder.Services.AddAuthorization();
 
+
+            #endregion
+
+            #region metrics
+
+            builder.Services.AddOpenTelemetry()
+                .ConfigureResource(resource => resource.AddService("sales.smart-business"))
+                .WithTracing(tracking => tracking
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddOtlpExporter()
+                )
+                .WithMetrics(metrics => metrics
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddProcessInstrumentation()
+                    .AddPrometheusExporter()
+                );
 
             #endregion
 
@@ -196,6 +217,7 @@ namespace SalesService.Api
             // Check if the companyId from Header (X-Company-Id) equals to the companyId in the JWT token claims
             app.UseMiddleware<CompanyValidationMiddleware>();
 
+            app.MapPrometheusScrapingEndpoint();
             app.MapHealthChecks("/health", new HealthCheckOptions
             {
                 Predicate = _ => true,

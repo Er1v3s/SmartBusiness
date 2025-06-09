@@ -1,21 +1,48 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Shared.Abstracts;
 using Shared.Contracts;
 using Shared.DTOs;
 using Shared.Entities;
+using Shared.Exceptions;
 using WriteService.Application.Abstracts;
+using WriteService.Application.Commands.Abstracts;
 
 namespace WriteService.Application.Commands.Transactions
 {
     public record UpdateTransactionCommand(
-        string Id,
-        string CompanyId,
-        string UserId,
         string ProductId,
         int Quantity,
-        decimal TotalAmount
-    ) : IRequest<bool>;
+        decimal TotalAmount,
+        int Tax
+    ) : TransactionCommand(ProductId, Quantity, TotalAmount, Tax), IRequest<bool>, IHaveCompanyId, IHaveUserId
+    {
+        public string TransactionId { get; set; } = string.Empty;
+        public string CompanyId { get; set; } = string.Empty;
+        public Guid UserId { get; set; } = Guid.Empty;
+    }
+
+    public class UpdateTransactionCommandValidator : TransactionCommandValidator<UpdateTransactionCommand>
+    {
+        public UpdateTransactionCommandValidator()
+        {
+            RuleFor(x => x.TransactionId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Transaction.Id)} is required.");
+
+            RuleFor(x => x.CompanyId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Transaction.CompanyId)} is required.");
+
+            RuleFor(x => x.UserId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Transaction.UserId)} is required.");
+        }
+    }
 
     public class UpdateTransactionCommandHandler : IRequestHandler<UpdateTransactionCommand, bool>
     {
@@ -32,18 +59,15 @@ namespace WriteService.Application.Commands.Transactions
 
         public async Task<bool> Handle(UpdateTransactionCommand request, CancellationToken cancellationToken)
         {
-            var transaction = new Transaction
-            {
-                Id = request.Id,
-                CompanyId = request.CompanyId,
-                UserId = request.UserId,
-                ProductId = request.ProductId,
-                Quantity = request.Quantity,
-                TotalAmount = request.TotalAmount,
-                CreatedAt = DateTime.UtcNow
-            };
+            var transaction = await _transactionRepository.GetByIdAsync(request.TransactionId);
+            if (transaction == null)
+                throw new NotFoundException($"Transaction with id {request.TransactionId} not found");
 
-            await _transactionRepository.UpdateAsync(request.Id, transaction);
+            if (transaction.CompanyId != request.CompanyId)
+                throw new ForbiddenException("You are not able to update transaction from other company than you are register in");
+
+            _mapper.Map(request, transaction);
+            await _transactionRepository.UpdateAsync(transaction);
 
             var transactionDto = _mapper.Map<TransactionDto>(transaction);
             await _eventBus.PublishAsync(new TransactionUpdatedEvent(transactionDto), cancellationToken);
