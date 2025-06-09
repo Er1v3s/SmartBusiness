@@ -42,7 +42,7 @@ namespace WriteService.Application.Commands.Transactions
 
         public async Task<Unit> Handle(DeleteTransactionCommand request, CancellationToken cancellationToken)
         {
-            var existingTransaction = await _transactionRepository.GetByIdAsync(request.TransactionId);
+            var existingTransaction = await _transactionRepository.GetTransactionByIdAsync(request.TransactionId);
             if (existingTransaction == null)
                 throw new NotFoundException($"Transaction with id {request.TransactionId} not found");
 

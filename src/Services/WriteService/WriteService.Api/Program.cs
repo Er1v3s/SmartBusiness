@@ -262,15 +262,17 @@ namespace WriteService.Api
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // Check if the companyId from Header (X-Company-Id) equals to the companyId in the JWT token claims
-            app.UseMiddleware<CompanyValidationMiddleware>();
-
-            app.MapPrometheusScrapingEndpoint();
             app.MapHealthChecks("/health", new HealthCheckOptions
             {
                 Predicate = _ => true,
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
+
+            // Check if the companyId from Header (X-Company-Id) equals to the companyId in the JWT token claims
+            app.UseMiddleware<CompanyValidationMiddleware>();
+
+            app.MapPrometheusScrapingEndpoint();
+
             app.MapControllers();
 
             app.Run();

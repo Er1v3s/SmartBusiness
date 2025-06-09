@@ -59,7 +59,7 @@ namespace WriteService.Application.Commands.Transactions
 
         public async Task<bool> Handle(UpdateTransactionCommand request, CancellationToken cancellationToken)
         {
-            var transaction = await _transactionRepository.GetByIdAsync(request.TransactionId);
+            var transaction = await _transactionRepository.GetTransactionByIdAsync(request.TransactionId);
             if (transaction == null)
                 throw new NotFoundException($"Transaction with id {request.TransactionId} not found");
 

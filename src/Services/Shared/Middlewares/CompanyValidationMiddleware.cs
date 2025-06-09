@@ -13,6 +13,13 @@ namespace Shared.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
+            if (_excludePaths.Contains(context.Request.Path.Value))
+            {
+                await _next(context);
+
+                return;
+            }
+
             var user = context.User;
             var companyId = context.Request.Headers["X-Company-Id"].FirstOrDefault();
 
@@ -38,5 +45,14 @@ namespace Shared.Middlewares
 
             await _next(context);
         }
+
+        private static readonly HashSet<string> _excludePaths = new () 
+        {
+            "/health",
+            "/metrics",
+            "/swagger",
+            "/swagger/v1/swagger.json",
+            "/swagger/v1/swagger.yaml"
+        };
     }
 }

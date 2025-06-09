@@ -64,6 +64,15 @@ namespace SalesService.Application.Queries.Products
             // IMPORTANT STATEMENT (User can only get products from declared company)
             query = query.Where(p => p.CompanyId == request.CompanyId);
 
+            query = ApplyFilters(query, request);
+
+            var products = await _productRepository.GetFilteredProductsAsync(query, cancellationToken);
+
+            return products;
+        }
+
+        private IQueryable<Product> ApplyFilters(IQueryable<Product> query, GetProductsByParamsQuery request)
+        {
             if (!string.IsNullOrEmpty(request.Id))
                 query = query.Where(p => p.Id == request.Id);
 
@@ -79,9 +88,7 @@ namespace SalesService.Application.Queries.Products
             if (request.MaxPrice.HasValue)
                 query = query.Where(p => p.Price <= request.MaxPrice.Value);
 
-            var products = await _productRepository.GetFilteredProductsAsync(query, cancellationToken);
-
-            return products;
+            return query;
         }
     }
 }
