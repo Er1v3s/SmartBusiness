@@ -29,7 +29,7 @@ namespace SalesService.Application.Commands.Abstracts
                 .WithMessage($"{nameof(Service.Category)} is required.")
                 .MinimumLength(3)
                 .WithMessage($"{nameof(Service.Category)} must be at least 3 characters long.")
-                .MaximumLength(100)
+                .MaximumLength(50)
                 .WithMessage($"{nameof(Service.Category)} cannot be longer than 50 characters.");
             RuleFor(x => x.Price)
                 .NotNull()

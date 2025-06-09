@@ -6,7 +6,6 @@ namespace Shared.Validators
     {
         public static bool BeValidNanoId(string? str)
         {
-            if(string.IsNullOrEmpty(str)) return false;
             return Regex.IsMatch(str, @"^[a-zA-Z0-9_-]+$");
         }
     }

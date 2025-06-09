@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using SalesService.Application.Abstracts;
 using SalesService.Domain.Entities;
 using Shared.Abstracts;
@@ -9,6 +10,22 @@ namespace SalesService.Application.Queries.Services
     public record GetServicesByIdQuery(string ServiceId) : IRequest<Service>, IHaveCompanyId
     {
         public string CompanyId { get; set; } = string.Empty;
+    }
+
+    public class GetServicesByIdQueryValidator : AbstractValidator<GetServicesByIdQuery>
+    {
+        public GetServicesByIdQueryValidator()
+        {
+            RuleFor(x => x.ServiceId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Service.Id)} is required.");
+
+            RuleFor(x => x.CompanyId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Service.CompanyId)} is required.");
+        }
     }
 
     public class GetServicesByIdQueryHandler : IRequestHandler<GetServicesByIdQuery, Service>

@@ -42,9 +42,7 @@ namespace SalesService.Application.Queries.Products
             RuleFor(x => x.CompanyId)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage($"{nameof(Service.CompanyId)} is required.")
-                .Length(17)
-                .WithMessage($"{nameof(Service.CompanyId)} must be exactly 17 characters long.");
+                .WithMessage($"{nameof(Service.CompanyId)} is required.");
         }
     }
 
