@@ -1,7 +1,9 @@
-﻿using System.Reflection;
-using FluentValidation;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using SalesService.Application.Behaviors;
 using Shared.Behaviors;
+using System.Reflection;
 
 namespace SalesService.Application
 {
@@ -9,6 +11,8 @@ namespace SalesService.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CompanyIdBehavior<,>));
+
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());

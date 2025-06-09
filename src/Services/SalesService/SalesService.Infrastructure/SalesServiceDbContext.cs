@@ -15,10 +15,13 @@ namespace SalesService.Infrastructure
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.HasKey(p => p.Id);
-
                 entity.Property(p => p.Id)
                     .IsRequired()
                     .HasMaxLength(21);
+
+                entity.Property(p => p.CompanyId)
+                    .IsRequired()
+                    .HasMaxLength(17);
 
                 entity.Property(p => p.Name)
                     .IsRequired()
@@ -49,6 +52,10 @@ namespace SalesService.Infrastructure
                 entity.Property(s => s.Id)
                     .IsRequired()
                     .HasMaxLength(15);
+
+                entity.Property(p => p.CompanyId)
+                    .IsRequired()
+                    .HasMaxLength(17);
 
                 entity.Property(s => s.Name)
                     .IsRequired()

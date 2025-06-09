@@ -5,7 +5,10 @@ using Shared.Exceptions;
 
 namespace SalesService.Application.Queries.Services
 {
-    public record GetServicesByIdQuery(string ServiceId) : IRequest<Service>;
+    public record GetServicesByIdQuery(string ServiceId) : IRequest<Service>, IHaveCompanyId
+    {
+        public string CompanyId { get; set; } = string.Empty;
+    }
 
     public class GetServicesByIdQueryHandler : IRequestHandler<GetServicesByIdQuery, Service>
     {
@@ -21,6 +24,9 @@ namespace SalesService.Application.Queries.Services
             var service = await _serviceRepository.GetServiceByIdAsync(request.ServiceId);
             if(service == null)
                 throw new NotFoundException($"Services with id: {request.ServiceId} not found.");
+
+            if (service.CompanyId != request.CompanyId)
+                throw new ForbiddenException("You are not able to get product from company where you are not registered in");
 
             return service;
         }

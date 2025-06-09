@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalesService.Application.Commands.Products;
 using SalesService.Application.Queries.Products;
@@ -7,6 +8,7 @@ namespace SalesService.Api.Controllers
 {
     [ApiController]
     [Route("api/products")]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -20,6 +22,7 @@ namespace SalesService.Api.Controllers
         public async Task<IActionResult> Create([FromBody] CreateProductCommand request)
         {
             var result = await _mediator.Send(request);
+
             return Created($"/api/products/{result.Id}", result);
         }
 
@@ -28,6 +31,7 @@ namespace SalesService.Api.Controllers
         {
             request.Id = id;
             await _mediator.Send(request);
+
             return Ok($"\"{request.Name}\" - updated successfully..");
         }
 
@@ -36,14 +40,15 @@ namespace SalesService.Api.Controllers
         {
             var request = new DeleteProductCommand(id);
             await _mediator.Send(request);
+
             return NoContent();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOne(string id)
         {
-            var query = new GetProductsByIdQuery(id);
-            var result = await _mediator.Send(query);
+            var request = new GetProductsByIdQuery(id);
+            var result = await _mediator.Send(request);
 
             return Ok(result);
         }

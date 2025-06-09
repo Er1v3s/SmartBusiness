@@ -1,6 +1,6 @@
-﻿namespace AccountService.Infrastructure.Options
+﻿namespace Shared.Settings
 {
-    public class JwtOptions
+    public class JwtSettings
     {
         public const string JwtOptionsKey = "JwtOptions";
 

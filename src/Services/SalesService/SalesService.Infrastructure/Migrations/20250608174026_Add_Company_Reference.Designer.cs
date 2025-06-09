@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SalesService.Infrastructure;
 
@@ -11,9 +12,11 @@ using SalesService.Infrastructure;
 namespace SalesService.Infrastructure.Migrations
 {
     [DbContext(typeof(SalesServiceDbContext))]
-    partial class SalesServiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250608174026_Add_Company_Reference")]
+    partial class Add_Company_Reference
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
