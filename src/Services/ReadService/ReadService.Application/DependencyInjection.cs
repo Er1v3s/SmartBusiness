@@ -18,6 +18,7 @@ namespace ReadService.Application
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(typeof(TransactionMappingProfile));
+            //services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             return services;
         }

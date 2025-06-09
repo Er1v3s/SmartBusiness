@@ -1,4 +1,6 @@
-﻿namespace SalesService.Api.Middleware
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Shared.Middlewares
 {
     public class CompanyValidationMiddleware
     {
@@ -28,6 +30,7 @@
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
                 await context.Response.WriteAsync("User not authorized for the selected company.");
+
                 return;
             }
 

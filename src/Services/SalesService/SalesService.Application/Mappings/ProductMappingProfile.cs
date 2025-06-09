@@ -9,7 +9,6 @@ namespace SalesService.Application.Mappings
         public ProductMappingProfile()
         {
             CreateMap<CreateProductCommand, Product>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
 
             CreateMap<UpdateProductCommand, Product>()

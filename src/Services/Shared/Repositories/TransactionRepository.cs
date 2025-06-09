@@ -38,9 +38,9 @@ namespace Shared.Repositories
             await _transactionsCollection.InsertOneAsync(transaction);
         }
 
-        public async Task UpdateAsync(string id, Transaction transaction)
+        public async Task UpdateAsync(Transaction transaction)
         {
-            await _transactionsCollection.ReplaceOneAsync(t => t.Id == id, transaction);
+            await _transactionsCollection.ReplaceOneAsync(t => t.Id == transaction.Id, transaction);
         }
 
         public async Task DeleteAsync(string id)

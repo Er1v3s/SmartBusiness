@@ -1,14 +1,35 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Shared.Contracts;
 using Shared.Exceptions;
 using WriteService.Application.Abstracts;
 using Shared.Abstracts;
+using Shared.Entities;
 
 namespace WriteService.Application.Commands.Transactions
 {
-    public record DeleteTransactionCommand(string Id) : IRequest<bool>;
+    public record DeleteTransactionCommand(string TransactionId) : IRequest<Unit>, IHaveCompanyId
+    {
+        public string CompanyId { get; set; } = string.Empty;
+    }
 
-    public class DeleteTransactionCommandHandler : IRequestHandler<UpdateTransactionCommand, bool>
+    public class DeleteTransactionCommandValidator : AbstractValidator<DeleteTransactionCommand>
+    {
+        public DeleteTransactionCommandValidator()
+        {
+            RuleFor(x => x.TransactionId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Transaction.Id)} is required.");
+
+            RuleFor(x => x.CompanyId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Transaction.CompanyId)} is required.");
+        }
+    }
+
+    public class DeleteTransactionCommandHandler : IRequestHandler<DeleteTransactionCommand, Unit>
     {
         private readonly ITransactionRepository _transactionRepository;
         private readonly IEventBus _eventBus;
@@ -19,17 +40,20 @@ namespace WriteService.Application.Commands.Transactions
             _eventBus = eventBus;
         }
 
-        public async Task<bool> Handle(UpdateTransactionCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteTransactionCommand request, CancellationToken cancellationToken)
         {
-            var transaction = await _transactionRepository.GetByIdAsync(request.Id);
-            if (transaction == null)
-                throw new NotFoundException($"Transaction {transaction} not found");
+            var existingTransaction = await _transactionRepository.GetByIdAsync(request.TransactionId);
+            if (existingTransaction == null)
+                throw new NotFoundException($"Transaction with id {request.TransactionId} not found");
 
-            await _transactionRepository.DeleteAsync(transaction.Id);
+            if (existingTransaction.CompanyId != request.CompanyId)
+                throw new ForbiddenException("You are not able to delete transaction from other company than you are register in");
 
-            await _eventBus.PublishAsync(new TransactionDeletedEvent(transaction.Id), cancellationToken);
+            await _transactionRepository.DeleteAsync(existingTransaction.Id);
 
-            return true;
+            await _eventBus.PublishAsync(new TransactionDeletedEvent(existingTransaction.Id), cancellationToken);
+
+            return Unit.Value;
         }
     }
 }

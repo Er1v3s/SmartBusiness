@@ -1,7 +1,10 @@
+using System.Text;
 using HealthChecks.UI.Client;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using OpenTelemetry.Metrics;
@@ -119,6 +122,53 @@ namespace ReadService.Api
 
             #endregion
 
+            #region authentication
+
+            builder.Services.Configure<JwtSettings>(
+                builder.Configuration.GetSection(JwtSettings.JwtOptionsKey));
+
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                var jwtOptions = builder.Configuration.GetSection(JwtSettings.JwtOptionsKey)
+                    .Get<JwtSettings>() ?? throw new ArgumentException(nameof(JwtSettings));
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidAudience = jwtOptions.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret)),
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+
+                        if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
+                        {
+                            context.Token = authHeader.Substring("Bearer ".Length);
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+            builder.Services.AddAuthorization();
+
+
+            #endregion
+
             #region exceptions handling
 
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -126,10 +176,10 @@ namespace ReadService.Api
 
             #endregion
 
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddApplication();
             builder.Services.AddInfrastructure();
-
-            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddHealthChecks();
             builder.Services.AddControllers();

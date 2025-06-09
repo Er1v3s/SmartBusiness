@@ -1,5 +1,8 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using SalesService.Application.Abstracts;
+using SalesService.Domain.Entities;
+using Shared.Abstracts;
 using Shared.Exceptions;
 
 namespace SalesService.Application.Commands.Services
@@ -7,6 +10,22 @@ namespace SalesService.Application.Commands.Services
     public record DeleteServiceCommand(string ServiceId) : IRequest<Unit>, IHaveCompanyId
     {
         public string CompanyId { get; set; } = string.Empty;
+    }
+
+    public class DeleteServiceCommandValidator : AbstractValidator<DeleteServiceCommand>
+    {
+        public DeleteServiceCommandValidator()
+        {
+            RuleFor(x => x.ServiceId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Service.Id)} is required.");
+
+            RuleFor(x => x.CompanyId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Service.CompanyId)} is required.");
+        }
     }
 
     public class DeleteServiceCommandHandler : IRequestHandler<DeleteServiceCommand, Unit>

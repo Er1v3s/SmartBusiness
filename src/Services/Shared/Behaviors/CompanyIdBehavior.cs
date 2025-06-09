@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using SalesService.Application.Abstracts;
+using Shared.Abstracts;
 
-namespace SalesService.Application.Behaviors
+namespace Shared.Behaviors
 {
     public class CompanyIdBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : class
@@ -19,9 +19,11 @@ namespace SalesService.Application.Behaviors
             if (request is IHaveCompanyId companyScoped)
             {
                 var context = _httpContextAccessor.HttpContext;
-                if (context != null && context.Items.TryGetValue("CompanyId", out var companyId))
+                var companyId = context.Request.Headers["X-Company-Id"].FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(companyId))
                 {
-                    companyScoped.CompanyId = companyId?.ToString()!;
+                    companyScoped.CompanyId = companyId;
                 }
             }
 

@@ -29,7 +29,7 @@ namespace SalesService.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateServiceCommand request)
         {
-            request.Id = id;
+            request.ServiceId = id;
             await _mediator.Send(request);
 
             return Ok($"\"{request.Name}\" - updated successfully..");

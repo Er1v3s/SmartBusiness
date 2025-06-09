@@ -3,6 +3,7 @@ using MediatR;
 using SalesService.Application.Abstracts;
 using SalesService.Application.Commands.Abstracts;
 using SalesService.Domain.Entities;
+using Shared.Abstracts;
 
 namespace SalesService.Application.Queries.Products
 {

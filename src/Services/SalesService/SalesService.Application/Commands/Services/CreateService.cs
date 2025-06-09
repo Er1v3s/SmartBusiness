@@ -4,6 +4,7 @@ using MediatR;
 using SalesService.Application.Abstracts;
 using SalesService.Application.Commands.Abstracts;
 using SalesService.Domain.Entities;
+using Shared.Abstracts;
 
 namespace SalesService.Application.Commands.Services
 {
@@ -26,9 +27,7 @@ namespace SalesService.Application.Commands.Services
             RuleFor(x => x.CompanyId)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage($"{nameof(Service.CompanyId)} is required.")
-                .Length(17)
-                .WithMessage($"{nameof(Service.CompanyId)} must be exactly 17 characters long.");
+                .WithMessage($"{nameof(Service.CompanyId)} is required.");
         }
     }
 

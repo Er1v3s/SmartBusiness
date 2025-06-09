@@ -5,7 +5,7 @@ namespace SalesService.Application.Abstracts
     public interface IProductRepository
     {
         Task AddProductAsync(Product product);
-        Task UpdateProductAsync(Product productToUpdate, Product updatedProduct);
+        Task UpdateProductAsync(Product product);
         Task DeleteProductAsync(Product product);
         Task<Product?> GetProductByIdAsync(string productId);
         IQueryable<Product> GetQueryable();
