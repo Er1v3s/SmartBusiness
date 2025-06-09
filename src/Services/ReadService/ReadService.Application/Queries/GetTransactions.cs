@@ -112,10 +112,10 @@ namespace ReadService.Application.Queries
                 .WithMessage($"{nameof(GetTransactionsByParamsQuery.EndDateTime)} must be greater than or equal to {nameof(GetTransactionsByParamsQuery.StartDateTime)}.")
                 .When(x => x.StartDateTime.HasValue && x.EndDateTime.HasValue);
 
-            //RuleFor(x => x.CompanyId)
-            //    .NotNull()
-            //    .NotEmpty()
-            //    .WithMessage($"{nameof(Transaction.CompanyId)} is required.");
+            RuleFor(x => x.CompanyId)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage($"{nameof(Transaction.CompanyId)} is required.");
         }
     }
 

@@ -8,12 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="UnitTests\Controller\**" />
-    <EmbeddedResource Remove="UnitTests\Controller\**" />
-    <None Remove="UnitTests\Controller\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
@@ -21,12 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Xunit" />
+    <ProjectReference Include="..\..\Services\ReadService\ReadService.Application\ReadService.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Services\SalesService\SalesService.Application\SalesService.Application.csproj" />
-    <ProjectReference Include="..\..\Services\WriteService\WriteService.Application\WriteService.Application.csproj" />
+    <Using Include="Xunit" />
   </ItemGroup>
 
 </Project>

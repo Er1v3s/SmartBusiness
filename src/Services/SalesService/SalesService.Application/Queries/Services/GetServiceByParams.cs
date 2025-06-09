@@ -47,16 +47,14 @@ namespace SalesService.Application.Queries.Services
             RuleFor(x => x.MaxDuration)
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Min duration must be greater or equal to 0.")
-                .Must((query, maxDuration) => maxDuration >= query.MinPrice)
+                .Must((query, maxDuration) => maxDuration >= query.MinDuration)
                 .WithMessage("Max duration must be greater than or equal to Min duration.")
                 .When(x => x.MaxDuration != null);
 
             RuleFor(x => x.CompanyId)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage($"{nameof(Service.CompanyId)} is required.")
-                .Length(17)
-                .WithMessage($"{nameof(Service.CompanyId)} must be exactly 17 characters long.");
+                .WithMessage($"{nameof(Service.CompanyId)} is required.");
         }
     }
 

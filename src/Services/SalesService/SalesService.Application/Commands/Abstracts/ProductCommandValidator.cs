@@ -29,7 +29,7 @@ namespace SalesService.Application.Commands.Abstracts
                 .WithMessage($"{nameof(Product.Category)} is required.")
                 .MinimumLength(3)
                 .WithMessage($"{nameof(Product.Category)} must be at least 3 characters long.")
-                .MaximumLength(100)
+                .MaximumLength(50)
                 .WithMessage($"{nameof(Product.Category)} cannot be longer than 50 characters.");
             RuleFor(x => x.Price)
                 .NotNull()
@@ -37,8 +37,8 @@ namespace SalesService.Application.Commands.Abstracts
                 .WithMessage($"{nameof(Product.Price)} is required.")
                 .GreaterThan(0)
                 .WithMessage($"{nameof(Product.Price)} must be greater than 0.")
-                .PrecisionScale(7, 2, false)
-                .WithMessage($"{nameof(Product.Price)} must have up to 2 decimal places and a maximum of 5 digits.");
+                .PrecisionScale(9, 2, false)
+                .WithMessage($"{nameof(Product.Price)} must have up to 2 decimal places and a maximum of 7 digits.");
             RuleFor(x => x.Tax)
                 .NotNull()
                 .NotEmpty()

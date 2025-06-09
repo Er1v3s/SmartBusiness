@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountService.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountService.Contracts", "Services\AccountService\AccountService.Contracts\AccountService.Contracts.csproj", "{E7285402-F23F-4EB6-8160-693161A66774}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountService.Tests", "tests\AccountService.Tests\AccountService.Tests.csproj", "{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Api", "Services\SalesService\SalesService.Api\SalesService.Api.csproj", "{53BC741C-517C-4859-93C8-768AD447AB0D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Application", "Services\SalesService\SalesService.Application\SalesService.Application.csproj", "{B2BD9714-B6AD-41C9-99FD-6122F4716F51}"
@@ -68,7 +66,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4940A929-D68
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountService.Tests", "tests\AccountService.Tests\AccountService.Tests.csproj", "{C29350BC-8260-4EA2-8D2F-1889F0D3C8F6}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesService.Tests", "tests\SalesService.Tests\SalesService.Tests.csproj", "{02BADD57-9F60-42E3-9CB9-591C62A41DB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WriteService.Tests", "tests\WriteService.Tests\WriteService.Tests.csproj", "{5BDBC589-BCA7-411A-B7B7-7EACC01437B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadService.Tests", "tests\ReadService.Tests\ReadService.Tests.csproj", "{71D8960D-28FA-40C1-862B-7BCE60295F04}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -170,6 +174,14 @@ Global
 		{02BADD57-9F60-42E3-9CB9-591C62A41DB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02BADD57-9F60-42E3-9CB9-591C62A41DB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02BADD57-9F60-42E3-9CB9-591C62A41DB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BDBC589-BCA7-411A-B7B7-7EACC01437B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BDBC589-BCA7-411A-B7B7-7EACC01437B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BDBC589-BCA7-411A-B7B7-7EACC01437B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BDBC589-BCA7-411A-B7B7-7EACC01437B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71D8960D-28FA-40C1-862B-7BCE60295F04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71D8960D-28FA-40C1-862B-7BCE60295F04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71D8960D-28FA-40C1-862B-7BCE60295F04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71D8960D-28FA-40C1-862B-7BCE60295F04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -206,6 +218,8 @@ Global
 		{629913E8-592F-423D-A3F1-2AC1CCA5482E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{508166D5-EC71-489D-A175-A33ACA6483DA} = {4940A929-D68A-4A4B-A647-D2F63568B0E4}
 		{02BADD57-9F60-42E3-9CB9-591C62A41DB8} = {508166D5-EC71-489D-A175-A33ACA6483DA}
+		{5BDBC589-BCA7-411A-B7B7-7EACC01437B8} = {508166D5-EC71-489D-A175-A33ACA6483DA}
+		{71D8960D-28FA-40C1-862B-7BCE60295F04} = {508166D5-EC71-489D-A175-A33ACA6483DA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {33B935BB-76C2-4284-B33B-A385930A9C02}
