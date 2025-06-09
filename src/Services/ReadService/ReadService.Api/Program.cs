@@ -1,4 +1,3 @@
-using System.Text;
 using HealthChecks.UI.Client;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,7 +14,9 @@ using ReadService.Api.Handlers.CustomExceptionHandlers;
 using ReadService.Application;
 using ReadService.Infrastructure;
 using ReadService.Infrastructure.Messaging;
+using Shared.Middlewares;
 using Shared.Settings;
+using System.Text;
 
 namespace ReadService.Api
 {
@@ -250,6 +251,9 @@ namespace ReadService.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Check if the companyId from Header (X-Company-Id) equals to the companyId in the JWT token claims
+            app.UseMiddleware<CompanyValidationMiddleware>();
 
             app.MapPrometheusScrapingEndpoint();
             app.MapHealthChecks("/health", new HealthCheckOptions

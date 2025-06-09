@@ -1,8 +1,9 @@
-﻿using System.Reflection;
-using FluentValidation;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Behaviors;
 using Shared.Mappings;
+using System.Reflection;
 
 namespace ReadService.Application
 {
@@ -10,6 +11,8 @@ namespace ReadService.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CompanyIdBehavior<,>));
+
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
