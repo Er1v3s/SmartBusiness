@@ -1,18 +1,24 @@
 import { axiosWrite } from "./axiosInstance";
-import type { Transaction } from "../models/transaction";
+import type { NewTransaction, Transaction } from "../models/transaction";
 
 const apiWriteConnector = {
     
-  createTransaction: async (data: Transaction): Promise<void> => {
-    await axiosWrite.post("/api/write/transactions", data);
+  createTransaction: async (data: NewTransaction): Promise<void> => {
+    await axiosWrite.post("write/transactions", data);
   },
 
-  updateTransaction: async (id: string, data: Partial<Transaction>): Promise<void> => {
-    await axiosWrite.put(`/api/write/transactions/${id}`, data);
+  updateTransaction: async (data: Partial<Transaction>): Promise<void> => {
+    const { id, productId, quantity, totalAmount, tax  } = data;
+    await axiosWrite.put(`write/transactions/${id}`, {
+      productId,
+      quantity,
+      totalAmount,
+      tax,
+      });
   },
 
   deleteTransaction: async (id: string): Promise<void> => {
-    await axiosWrite.delete(`/api/write/transactions/${id}`);
+    await axiosWrite.delete(`write/transactions/${id}`);
   },
 
 };

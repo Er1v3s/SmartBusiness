@@ -35,6 +35,7 @@ import { RegisterSaleSection } from "./components/Dashboard/Company/RegisterSale
 import { ServicesSection } from "./components/Dashboard/Company/ServicesSection";
 import { ProductsSection } from "./components/Dashboard/Company/ProductsSection";
 import { ServiceProvider } from "./context/service/ServiceProvider";
+import { TransactionProvider } from "./context/transaction/TransactionProvider";
 
 // Private Route component checks if the user is authenticated
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -134,7 +135,9 @@ const AppWithProvider: React.FC = () => (
         <AlertProvider>
           <ProductProvider>
             <ServiceProvider>
-              <App />
+              <TransactionProvider>
+                <App />
+              </TransactionProvider>
             </ServiceProvider>
           </ProductProvider>
         </AlertProvider>

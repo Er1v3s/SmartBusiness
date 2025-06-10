@@ -1,5 +1,5 @@
 import { axiosRead } from "./axiosInstance";
-import type { Transaction } from "../models/transaction";
+import type { GetTransactionByParamsQuery, Transaction } from "../models/transaction";
 
 const apiReadConnector = {
 
@@ -9,8 +9,8 @@ const apiReadConnector = {
     return response.data;
   },
 
-  getTransactions: async (): Promise<Transaction[]> => {
-    const response = await axiosRead.get("/read/transactions");
+  getTransactions: async (params: GetTransactionByParamsQuery): Promise<Transaction[]> => {
+    const response = await axiosRead.get("/read/transactions", { params });
     
     return response.data;
   },
