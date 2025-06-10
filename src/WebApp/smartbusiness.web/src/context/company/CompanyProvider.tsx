@@ -1,59 +1,90 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Company, CompanyContextType } from "../../models/index.ts";
-import apiConnector from "../../api/apiConnector.ts";
+import apiAccountConnector from "../../api/apiAccountConnector.ts";
 import { CompanyContext } from "./CompanyContext.tsx";
+import { useAuth } from "../auth/AuthContext";
 
 export const CompanyProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [company, setCompany] = useState<Company | null>(null);
+  const { user } = useAuth();
 
-  // Pobierz wszystkie firmy użytkownika
   const fetchCompanies = useCallback(async () => {
     try {
-      const data = await apiConnector.getCompanies();
+      const data = await apiAccountConnector.getCompanies();
       setCompanies(data);
-      if (!company && data.length > 0) setCompany(data[0]);
+
+      const storedId = localStorage.getItem("COMPANY_ID");
+      if (storedId) {
+        const found = data.find((c) => c.id === storedId);
+        if (found) {
+          setCompany(found);
+          return;
+        }
+      }
+
+      setCompany(null);
     } catch (error) {
       console.error("Failed to fetch companies:", error);
-      // W przypadku błędu ustaw firmę na null
+
       setCompanies([]);
       setCompany(null);
     }
-  }, [company]);
+  }, []);
 
-  // Ustaw aktywną firmę po id
+  // Fetch companies on initial render OR when user changes
+  useEffect(() => {
+    if (user) {
+      fetchCompanies();
+    } else {
+      setCompanies([]);
+      setCompany(null);
+    }
+  }, [fetchCompanies, user]);
+
+  // Usuwaj COMPANY_ID jeśli nie ma ACCESS_TOKEN
+  useEffect(() => {
+    const accessToken = localStorage.getItem("ACCESS_TOKEN");
+    if (!accessToken) {
+      localStorage.removeItem("COMPANY_ID");
+      setCompany(null);
+    }
+  }, []);
+
   const setActiveCompany = async (companyId: string) => {
     const found = companies.find((c) => c.id === companyId);
-    if (found) setCompany(found);
-    // Jeśli chcesz pobrać szczegóły firmy z API:
-    // const detailed = await apiConnector.getCompany(companyId);
-    // setCompany(detailed);
-  };
 
-  useEffect(() => {
-    fetchCompanies();
-  }, [fetchCompanies]);
+    if (found) {
+      setCompany(found);
+      localStorage.setItem("COMPANY_ID", found.id);
+    }
+  };
 
   const fetchCompanyData = async (companyId: string): Promise<Company> => {
     try {
-      const companyData = await apiConnector.getCompany(companyId);
+      const companyData = await apiAccountConnector.getCompany(companyId);
       setCompany(companyData);
+
       return companyData;
     } catch (error) {
       setCompany(null);
+
       throw error;
     }
   };
 
   const createCompany = async (name: string) => {
     try {
-      await apiConnector.createCompany(name);
+      await apiAccountConnector.createCompany(name);
       await fetchCompanies();
-      // Po utworzeniu nowej firmy ustaw ją jako aktywną (ostatnia na liście)
-      const updated = await apiConnector.getCompanies();
-      if (updated.length > 0) setCompany(updated[updated.length - 1]);
+
+      // After creating a new company, we fetch the list again to ensure we have the latest data
+      const updated = await apiAccountConnector.getCompanies();
+      if (updated.length > 0) {
+        setCompany(updated[updated.length - 1]);
+      }
     } catch (error) {
       console.error("Failed to create company:", error);
     }
@@ -61,8 +92,11 @@ export const CompanyProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const updateCompany = async (name: string) => {
     try {
-      if (!company) throw new Error("No company to update");
-      await apiConnector.updateCompany(company.id, name);
+      if (!company) {
+        throw new Error("No company to update");
+      }
+
+      await apiAccountConnector.updateCompany(company.id, name);
       await fetchCompanies();
     } catch (error) {
       console.error("Failed to update company:", error);
@@ -72,10 +106,11 @@ export const CompanyProvider: React.FC<{ children: React.ReactNode }> = ({
   const deleteCompany = async () => {
     try {
       if (!company) throw new Error("No company to delete");
-      await apiConnector.deleteCompany(company.id);
+      await apiAccountConnector.deleteCompany(company.id);
       await fetchCompanies();
-      // Po usunięciu firmy ustaw pierwszą z listy jako aktywną (lub null jeśli brak)
-      const updated = await apiConnector.getCompanies();
+
+      // After deleting a company, we fetch the list again to ensure we have the latest data
+      const updated = await apiAccountConnector.getCompanies();
       setCompany(updated.length > 0 ? updated[0] : null);
     } catch (error) {
       console.error("Failed to delete company:", error);

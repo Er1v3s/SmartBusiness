@@ -1,11 +1,11 @@
+import axiosInstance from "./axiosInstance";
+import type { Company, User } from "../models/index";
 import type { AxiosResponse } from "axios";
-import axiosInstance from "./axiosInstance.ts";
-import type { Company, User } from "../models/index.ts";
-import { removeAccessTokens, setAccessTokens } from "../context/auth/TokenManager.ts";
+import { removeAccessTokens, setAccessTokens } from "../context/auth/TokenManager";
 
-const apiConnector = {
-
-    // AUTHENTICATION
+const apiAccountConnector = {
+  
+  // AUTHENTICATION
     login : async (email: string, password: string, rememberMe: boolean): Promise<void> => {
         const response: AxiosResponse = await axiosInstance.post(
             "/auth/login",
@@ -171,7 +171,6 @@ const apiConnector = {
             return Promise.reject(error);
         }
     }
+};
 
-}
-
-export default apiConnector;
+export default apiAccountConnector;

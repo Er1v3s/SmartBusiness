@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { Check, Info, TriangleAlert, X } from "lucide-react";
 
-type AlertProps = {
+export type AlertProps = {
   title: string;
   message: string;
   type: "success" | "error" | "warning" | "info";

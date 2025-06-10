@@ -8,17 +8,14 @@ import GenericModal from "./ProductServicesSection/GenericModal";
 import GenericPagination from "./ProductServicesSection/GenericPagination";
 import GenericSearchFilterBar from "./ProductServicesSection/GenericSearchFilterBar";
 
-const VAT_OPTIONS = ["23%", "8%", "5%", "0%", "zw."];
-const CATEGORIES = ["Wszystkie", "Kategoria 1", "Kategoria 2", "Kategoria 3"];
-
 const mockServices = [
   ...Array.from({ length: 30 }, (_, i) => ({
     id: 1 + i,
     name: `Usługa ${String.fromCharCode(68 + (i % 26))}`,
     description: `Opis usługi ${String.fromCharCode(68 + (i % 26))}`,
     price: 30 + ((i * 15) % 300),
-    vat: VAT_OPTIONS[i % VAT_OPTIONS.length],
-    category: CATEGORIES[1 + (i % (CATEGORIES.length - 1))],
+    vat: (23 - (i % 24)).toString(), // przykładowe liczby VAT jako string
+    category: `Kategoria ${1 + (i % 3)}`,
     duration: 30 + (i % 120),
   })),
 ];
@@ -63,8 +60,8 @@ export const ServicesSection = () => {
     const price = parseFloat(
       (form.elements.namedItem("price") as HTMLInputElement).value,
     );
-    const vat = (form.elements.namedItem("vat") as HTMLSelectElement).value;
-    const category = (form.elements.namedItem("category") as HTMLSelectElement)
+    const vat = (form.elements.namedItem("vat") as HTMLInputElement).value;
+    const category = (form.elements.namedItem("category") as HTMLInputElement)
       .value;
     const duration = parseInt(
       (form.elements.namedItem("duration") as HTMLInputElement).value,
@@ -149,16 +146,13 @@ export const ServicesSection = () => {
             <span className="mb-0.5 text-sm font-medium text-gray-700 dark:text-gray-200">
               Kategoria
             </span>
-            <select
+            <input
               id="edit-category"
               className="w-full rounded border-2 border-gray-300 px-4 py-2 shadow-sm sm:text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white"
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
-            >
-              {CATEGORIES.slice(1).map((c) => (
-                <option key={c}>{c}</option>
-              ))}
-            </select>
+              placeholder="Kategoria"
+            />
           </label>
 
           <label htmlFor="edit-duration">
@@ -197,16 +191,16 @@ export const ServicesSection = () => {
             <span className="mb-0.5 text-sm font-medium text-gray-700 dark:text-gray-200">
               VAT
             </span>
-            <select
+            <input
               id="edit-vat"
               className="w-full rounded border-2 border-gray-300 px-4 py-2 shadow-sm sm:text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white"
+              type="number"
+              min="0"
+              step="1"
               value={form.vat}
               onChange={(e) => setForm({ ...form, vat: e.target.value })}
-            >
-              {VAT_OPTIONS.map((v) => (
-                <option key={v}>{v}</option>
-              ))}
-            </select>
+              placeholder="VAT"
+            />
           </label>
         </form>
       </GenericModal>
@@ -218,29 +212,26 @@ export const ServicesSection = () => {
       {/* Form of adding new service */}
       <form
         onSubmit={handleAdd}
-        className="mb-6 flex flex-wrap justify-around rounded-lg border-2 border-gray-100 bg-white p-4 shadow dark:border-gray-700 dark:bg-gray-800"
+        className="mb-6 grid grid-cols-1 gap-2 rounded-lg border-2 border-gray-100 bg-white p-4 shadow sm:grid-cols-8 sm:gap-4 dark:border-gray-700 dark:bg-gray-800"
       >
         <input
           name="name"
           required
           placeholder="Nazwa usługi"
-          className="input w-1/5 rounded-lg border-2 border-gray-200 px-3 text-gray-800 dark:border-gray-700 dark:text-gray-100"
+          className="input col-span-1 rounded-lg border-2 border-gray-200 px-3 py-2 text-gray-800 sm:col-span-2 dark:border-gray-700 dark:text-gray-100"
         />
         <input
           name="description"
           required
           placeholder="Opis"
-          className="input w-1/5 rounded-lg border-2 border-gray-200 px-3 text-gray-800 dark:border-gray-700 dark:text-gray-100"
+          className="input col-span-1 rounded-lg border-2 border-gray-200 px-3 py-2 text-gray-800 sm:col-span-2 dark:border-gray-700 dark:text-gray-100"
         />
-        <select
+        <input
           name="category"
           required
-          className="input rounded-lg border-2 border-gray-200 bg-white px-1 text-gray-800 shadow dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-        >
-          {CATEGORIES.slice(1).map((c) => (
-            <option key={c}>{c}</option>
-          ))}
-        </select>
+          placeholder="Kategoria"
+          className="input col-span-1 rounded-lg border-2 border-gray-200 px-3 py-2 text-gray-800 sm:col-span-1 dark:border-gray-700 dark:text-gray-100"
+        />
         <input
           name="duration"
           required
@@ -248,7 +239,7 @@ export const ServicesSection = () => {
           min="1"
           step="1"
           placeholder="Czas"
-          className="input w-1/12 rounded-lg border-2 border-gray-200 px-3 text-gray-800 dark:border-gray-700 dark:text-gray-100"
+          className="input col-span-1 rounded-lg border-2 border-gray-200 px-3 py-2 text-gray-800 sm:col-span-1 dark:border-gray-700 dark:text-gray-100"
         />
         <input
           name="price"
@@ -257,18 +248,18 @@ export const ServicesSection = () => {
           min="0"
           step="0.01"
           placeholder="Cena"
-          className="input w-1/12 rounded-lg border-2 border-gray-200 px-3 text-gray-800 dark:border-gray-700 dark:text-gray-100"
+          className="input col-span-1 rounded-lg border-2 border-gray-200 px-3 py-2 text-gray-800 sm:col-span-1 dark:border-gray-700 dark:text-gray-100"
         />
-        <select
+        <input
           name="vat"
           required
-          className="input rounded-lg border-2 border-gray-200 bg-white px-1 text-gray-800 shadow dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-        >
-          {VAT_OPTIONS.map((v) => (
-            <option key={v}>{v}</option>
-          ))}
-        </select>
-        <div className="">
+          type="number"
+          min="0"
+          step="1"
+          placeholder="VAT"
+          className="input col-span-1 rounded-lg border-2 border-gray-200 px-3 py-2 text-gray-800 sm:col-span-1 dark:border-gray-700 dark:text-gray-100"
+        />
+        <div className="col-span-1 flex justify-center sm:col-span-8">
           <ButtonSuccess text="Dodaj usługę" type="submit" />
         </div>
       </form>
@@ -279,7 +270,7 @@ export const ServicesSection = () => {
         onSearchChange={setSearch}
         filterLabel="Filtruj"
         filterValue={category}
-        filterOptions={CATEGORIES}
+        filterOptions={[]}
         onFilterChange={setCategory}
         showFilter={showFilters}
         onToggleFilter={() => setShowFilters((v) => !v)}

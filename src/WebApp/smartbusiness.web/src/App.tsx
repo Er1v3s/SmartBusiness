@@ -20,6 +20,7 @@ import { ResetPassword } from "./pages/Auth/ResetPassword";
 import "./App.css";
 import { UserPage } from "./pages/User/UserPage";
 import { CompanyProvider } from "./context/company/CompanyProvider";
+import { ProductProvider } from "./context/product/ProductProvider";
 import { Outlet } from "react-router-dom";
 import { SummaryComponent } from "./components/Dashboard/User/Summary";
 import { ChangePasswordComponent } from "./components/Dashboard/User/ChangePassword";
@@ -77,6 +78,7 @@ export const App: React.FC = () => {
               <Route path="company/services" element={<ServicesSection />} />
               <Route path="company/products" element={<ProductsSection />} />
               <Route path="company/settings" element={<SettingsSection />} />
+              {/* USUNIĘTO fallback path="*" z tej sekcji */}
             </Route>
 
             <Route path="dashboard/user" element={<UserPage />}>
@@ -90,6 +92,11 @@ export const App: React.FC = () => {
               <Route
                 path="delete-account"
                 element={<DeleteAccountComponent />}
+              />
+              {/* fallback na nieistniejące podstrony usera */}
+              <Route
+                path="*"
+                element={<Navigate to="/dashboard/user" replace />}
               />
             </Route>
           </Route>
@@ -107,6 +114,8 @@ export const App: React.FC = () => {
             <Route path="register" element={<RegisterPage />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
+            {/* fallback na nieistniejące publiczne podstrony */}
+            <Route path="*" element={<Navigate to="/home" replace />} />
           </Route>
 
           {/* UNKNOWN PATH REDIRECT TO '/' */}
@@ -122,7 +131,9 @@ const AppWithProvider: React.FC = () => (
     <AccountProvider>
       <CompanyProvider>
         <AlertProvider>
-          <App />
+          <ProductProvider>
+            <App />
+          </ProductProvider>
         </AlertProvider>
       </CompanyProvider>
     </AccountProvider>

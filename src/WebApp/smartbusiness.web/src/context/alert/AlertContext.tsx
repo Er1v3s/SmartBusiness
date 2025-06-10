@@ -1,6 +1,6 @@
 import React, { useState, useCallback, type ReactNode } from "react";
 import { Alert } from "../../components/General/Alert";
-import type { AlertProps } from "../../components/General/alertProps";
+import type { AlertProps } from "../../components/General/Alert";
 import { AlertContext } from "./AlertContextDef";
 
 export const AlertProvider: React.FC<{ children: ReactNode }> = ({

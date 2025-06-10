@@ -1,5 +1,5 @@
 import type { AccountContextType } from "../../models/index.ts";
-import apiConnector from "../../api/apiConnector.ts";
+import apiAccountConnector from "../../api/apiAccountConnector.ts";
 import { AccountContext } from "./AccountContext.tsx";
 import { removeAccessTokens } from "../auth/TokenManager.ts";
 
@@ -10,18 +10,18 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({
     username: string,
     email: string,
   ): Promise<void> => {
-    await apiConnector.updateProfile(username, email);
+    await apiAccountConnector.updateProfile(username, email);
   };
 
   const changePassword = async (
     currentPassword: string,
     newPassword: string,
   ): Promise<void> => {
-    await apiConnector.changePassword(currentPassword, newPassword);
+    await apiAccountConnector.changePassword(currentPassword, newPassword);
   };
 
   const deleteAccount = async (password: string): Promise<void> => {
-    await apiConnector.deleteAccount(password);
+    await apiAccountConnector.deleteAccount(password);
     removeAccessTokens();
     // Force a re-render of the AuthContext to update the user state
     window.dispatchEvent(new Event("storage"));
