@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import type { Company, CompanyContextType } from "../../models/index.ts";
+import type { Company, CompanyContextType } from "../../models/account.ts";
 import apiAccountConnector from "../../api/apiAccountConnector.ts";
 import { CompanyContext } from "./CompanyContext.tsx";
 import { useAuth } from "../auth/AuthContext";

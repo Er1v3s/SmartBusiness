@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { ProductContextType } from "../../models";
+import type { ProductContextType } from "../../models/product.ts";
 
 export const ProductContext = createContext<ProductContextType | undefined>(
   undefined,

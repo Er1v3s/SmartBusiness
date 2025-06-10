@@ -1,6 +1,6 @@
 import { useService } from "../../../context/service/ServiceContext";
 import { useAlert } from "../../../context/alert/useAlert";
-import type { Service } from "../../../models";
+import type { Service } from "../../../models/service";
 import GenericEntitySection from "./ProductServicesSection/GenericEntitySection";
 import { serviceFields } from "./ProductServicesSection/fieldsConfig";
 import type { ServiceForm } from "./ProductServicesSection/fieldsConfig";
@@ -124,7 +124,7 @@ export const ServicesSection = () => {
           title: "Dodano",
           message: "Usługa została dodana.",
           type: "success",
-          duration: 2000,
+          duration: 3000,
         });
       }}
       updateEntity={async (id, form) => {
@@ -133,7 +133,7 @@ export const ServicesSection = () => {
           title: "Zaktualizowano",
           message: "Usługa została zaktualizowana.",
           type: "success",
-          duration: 2000,
+          duration: 3000,
         });
       }}
       deleteEntity={async (id) => {
@@ -142,7 +142,7 @@ export const ServicesSection = () => {
           title: "Usunięto",
           message: "Usługa została usunięta.",
           type: "success",
-          duration: 2000,
+          duration: 3000,
         });
       }}
       fields={serviceFields}

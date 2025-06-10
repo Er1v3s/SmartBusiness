@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
-import type { AuthContextType, User } from "../../models/index.ts";
+import type { AuthContextType, User } from "../../models/account.ts";
 import apiAccountConnector from "../../api/apiAccountConnector.ts";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({

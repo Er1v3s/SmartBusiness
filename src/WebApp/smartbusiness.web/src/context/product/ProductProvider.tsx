@@ -5,7 +5,7 @@ import type {
   Product,
   ProductContextType,
   NewProduct,
-} from "../../models/index.ts";
+} from "../../models/product.ts";
 
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

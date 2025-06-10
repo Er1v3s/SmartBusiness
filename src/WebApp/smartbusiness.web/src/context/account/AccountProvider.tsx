@@ -1,4 +1,4 @@
-import type { AccountContextType } from "../../models/index.ts";
+import type { AccountContextType } from "../../models/account.ts";
 import apiAccountConnector from "../../api/apiAccountConnector.ts";
 import { AccountContext } from "./AccountContext.tsx";
 import { removeAccessTokens } from "../auth/TokenManager.ts";

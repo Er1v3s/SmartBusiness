@@ -5,7 +5,7 @@ import type {
   Service,
   ServiceContextType,
   NewService,
-} from "../../models/index.ts";
+} from "../../models/service.ts";
 
 export const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

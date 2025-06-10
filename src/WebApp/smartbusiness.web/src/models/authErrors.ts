@@ -9,4 +9,3 @@ export type ApiResponseError = {
   detail: string;
   errors?: ApiResponseValidationError[] | null;
 };
-

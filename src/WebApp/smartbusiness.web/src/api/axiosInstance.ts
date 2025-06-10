@@ -3,13 +3,12 @@ import { API_BASE_URL } from "../../config.ts";
 import { removeAccessTokens, setAccessTokens } from "../context/auth/TokenManager.ts";
 import type { ApiResponseError, ApiResponseValidationError } from "../models/authErrors.ts";
 
-// Instancje dla mikroserwisów
+// AccountService, SalesService, WriteService, ReadService
 export const axiosAccount = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
 export const axiosSales = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
 export const axiosWrite = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
 export const axiosRead = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
 
-// let isInterceptorSetup = false;
 let isRefreshing = false;
 let refreshSubscribers: Array<(token: string) => void> = [];
 
@@ -62,7 +61,7 @@ const setupInterceptors = (instance: typeof axiosAccount, withCompanyId: boolean
           removeAccessTokens();
           refreshSubscribers = [];
 
-          // DODAJ: Wymuś reload strony lub wylogowanie użytkownika
+          // Force redirect to home page on refresh failure
           window.location.href = "/home";
           return Promise.reject(error);
         } finally {
@@ -106,10 +105,10 @@ const setupInterceptors = (instance: typeof axiosAccount, withCompanyId: boolean
   );
 };
 
-// AccountService nie wymaga X-Company-Id
+// AccountService does not require X-Company-Id
 setupInterceptors(axiosAccount, false);
 
-// Pozostałe wymagają X-Company-Id
+// SalesService, WriteService, ReadService need X-Company-Id to be set, becase each of these operations is on company context
 setupInterceptors(axiosSales, true);
 setupInterceptors(axiosWrite, true);
 setupInterceptors(axiosRead, true);

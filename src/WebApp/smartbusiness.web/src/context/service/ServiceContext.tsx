@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { ServiceContextType } from "../../models";
+import type { ServiceContextType } from "../../models/service.ts";
 
 export const ServiceContext = createContext<ServiceContextType | undefined>(
   undefined,

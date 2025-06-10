@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { AccountContextType } from "../../models";
+import type { AccountContextType } from "../../models/account";
 
 export const AccountContext = createContext<AccountContextType | undefined>(
   undefined,

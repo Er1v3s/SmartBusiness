@@ -1,5 +1,5 @@
 import axiosInstance from "./axiosInstance";
-import type { Company, User } from "../models/index";
+import type { Company, User } from "../models/account";
 import type { AxiosResponse } from "axios";
 import { removeAccessTokens, setAccessTokens } from "../context/auth/TokenManager";
 

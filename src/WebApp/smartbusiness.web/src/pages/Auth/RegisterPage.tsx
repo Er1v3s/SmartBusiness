@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, User, UserPlus } from "lucide-react";
-import type { RegisterForm } from "../../models";
+import type { RegisterForm } from "../../models/account";
 import { useNavigate } from "react-router-dom";
 import type { ApiResponseError } from "../../models/authErrors";
 import { useAuth } from "../../context/auth/AuthContext";

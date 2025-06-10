@@ -1,5 +1,5 @@
 import { axiosWrite } from "./axiosInstance";
-import type { Transaction } from "../models/index";
+import type { Transaction } from "../models/transaction";
 
 const apiWriteConnector = {
     

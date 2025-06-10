@@ -1,6 +1,6 @@
 import { useProduct } from "../../../context/product/ProductContext";
 import { useAlert } from "../../../context/alert/useAlert";
-import type { Product } from "../../../models";
+import type { Product } from "../../../models/product";
 import GenericEntitySection from "./ProductServicesSection/GenericEntitySection";
 import { productFields } from "./ProductServicesSection/fieldsConfig";
 import type { ProductForm } from "./ProductServicesSection/fieldsConfig";
@@ -111,7 +111,7 @@ export const ProductsSection = () => {
           title: "Dodano",
           message: "Produkt został dodany.",
           type: "success",
-          duration: 2000,
+          duration: 3000,
         });
       }}
       updateEntity={async (id, form) => {
@@ -120,7 +120,7 @@ export const ProductsSection = () => {
           title: "Zaktualizowano",
           message: "Produkt został zaktualizowany.",
           type: "success",
-          duration: 2000,
+          duration: 3000,
         });
       }}
       deleteEntity={async (id) => {
@@ -129,7 +129,7 @@ export const ProductsSection = () => {
           title: "Usunięto",
           message: "Produkt został usunięty.",
           type: "success",
-          duration: 2000,
+          duration: 3000,
         });
       }}
       fields={productFields}

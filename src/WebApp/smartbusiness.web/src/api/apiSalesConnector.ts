@@ -1,5 +1,6 @@
 import { axiosSales } from "./axiosInstance";
-import type { GetProductsByParamsQuery, Product, Service, NewProduct, GetServiceByParamsQuery, NewService } from "../models/index";
+import type { GetProductsByParamsQuery, Product, NewProduct } from "../models/product";
+import type { Service, GetServiceByParamsQuery, NewService } from "../models/service";
 
 const apiSalesConnector = {
 
