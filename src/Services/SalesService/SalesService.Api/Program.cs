@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using SalesService.Api.Handlers;
 using SalesService.Api.Handlers.CustomExceptionHandlers;
 using SalesService.Application;
 using SalesService.Infrastructure;
+using Shared.Middlewares;
 using Shared.Settings;
 using System.Text;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
-using Shared.Middlewares;
 
 namespace SalesService.Api
 {
@@ -80,6 +80,13 @@ namespace SalesService.Api
 
                 options.Events = new JwtBearerEvents
                 {
+                    //OnAuthenticationFailed = context =>
+                    //{
+                    //    Console.WriteLine("info: Authentication failed: " + context.Exception.Message);
+                    //    Console.WriteLine("info: Token: " + context.Request.Headers["Authorization"].FirstOrDefault());
+                    //    return Task.CompletedTask;
+                    //},
+
                     OnMessageReceived = context =>
                     {
                         var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();

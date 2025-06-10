@@ -8,7 +8,7 @@ export const ServiceContext = createContext<ServiceContextType | undefined>(
 export const useService = () => {
   const context = useContext(ServiceContext);
   if (context === undefined) {
-    throw new Error("useProduct must be used within a ProductProvider");
+    throw new Error("useService must be used within a ServiceProvider");
   }
   return context;
 };

@@ -141,7 +141,7 @@ export const ProductsSection = () => {
     return undefined;
   }
 
-  function validateAddForm(form: AddForm): AddFormErrors {
+  const validateAddForm = useCallback((form: AddForm): AddFormErrors => {
     return {
       name: validateName(form.name),
       description: validateDescription(form.description),
@@ -149,12 +149,12 @@ export const ProductsSection = () => {
       price: validatePrice(form.price),
       vat: validateVat(form.vat),
     };
-  }
+  }, []);
 
   // Update errors on change
   useEffect(() => {
     setAddFormErrors(validateAddForm(addForm));
-  }, [addForm]);
+  }, [addForm, validateAddForm]);
   // Check if form is valid
   const isAddFormValid =
     Object.values(addFormErrors).every((e) => !e) &&
@@ -275,18 +275,21 @@ export const ProductsSection = () => {
       if (num < 0 || num > 100) return "VAT musi być w zakresie 0-100.";
       return undefined;
     }
-    function validateEditForm(form: EditProductForm): EditFormErrors {
-      return {
-        name: validateEditName(form.name),
-        description: validateEditDescription(form.description),
-        category: validateEditCategory(form.category),
-        price: validateEditPrice(form.price),
-        tax: validateEditTax(form.tax),
-      };
-    }
+    const validateEditForm = useCallback(
+      (form: EditProductForm): EditFormErrors => {
+        return {
+          name: validateEditName(form.name),
+          description: validateEditDescription(form.description),
+          category: validateEditCategory(form.category),
+          price: validateEditPrice(form.price),
+          tax: validateEditTax(form.tax),
+        };
+      },
+      [],
+    );
     useEffect(() => {
       if (localForm) setEditFormErrors(validateEditForm(localForm));
-    }, [localForm]);
+    }, [localForm, validateEditForm]);
     const isEditFormValid =
       localForm &&
       Object.values(editFormErrors).every((e) => !e) &&
@@ -307,21 +310,7 @@ export const ProductsSection = () => {
         open={open}
         title="Edytuj produkt"
         onClose={onClose}
-        actions={
-          <>
-            <ButtonError
-              text={deleting ? "Usuwanie..." : "Usuń"}
-              type="button"
-              onClick={async () => {
-                setDeleting(true);
-                const success = await onDelete();
-                setDeleting(false);
-                if (success) onClose();
-              }}
-              disabled={deleting || saving}
-            />
-          </>
-        }
+        actions={null} // Remove actions from GenericModal, move all buttons to form footer
       >
         <form
           className="flex flex-col gap-2"
@@ -459,18 +448,33 @@ export const ProductsSection = () => {
               </span>
             )}
           </label>
-          <div className="mt-4 flex justify-end gap-2">
-            <ButtonNeutral
-              text="Anuluj"
-              type="button"
-              onClick={onClose}
-              disabled={deleting || saving}
-            />
-            <ButtonSuccess
-              text={saving ? "Zapisywanie..." : "Zapisz"}
-              type="submit"
-              disabled={saving || deleting || !isEditFormValid}
-            />
+          <div className="mt-4 flex flex-row justify-end gap-2">
+            <div className="flex flex-1 justify-start">
+              <ButtonError
+                text={deleting ? "Usuwanie..." : "Usuń"}
+                type="button"
+                onClick={async () => {
+                  setDeleting(true);
+                  const success = await onDelete();
+                  setDeleting(false);
+                  if (success) onClose();
+                }}
+                disabled={deleting || saving}
+              />
+            </div>
+            <div className="flex gap-2">
+              <ButtonNeutral
+                text="Anuluj"
+                type="button"
+                onClick={onClose}
+                disabled={deleting || saving}
+              />
+              <ButtonSuccess
+                text={saving ? "Zapisywanie..." : "Zapisz"}
+                type="submit"
+                disabled={saving || deleting || !isEditFormValid}
+              />
+            </div>
           </div>
         </form>
       </GenericModal>

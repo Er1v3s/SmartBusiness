@@ -1,5 +1,5 @@
 import { axiosSales } from "./axiosInstance";
-import type { GetProductsByParamsQuery, Product, Service, NewProduct } from "../models/index";
+import type { GetProductsByParamsQuery, Product, Service, NewProduct, GetServiceByParamsQuery, NewService } from "../models/index";
 
 const apiSalesConnector = {
 
@@ -36,29 +36,38 @@ const apiSalesConnector = {
   },
 
   // SERVICES
-  getServiceById: async (id: string): Promise<Service> => {
-    const response = await axiosSales.get(`/products/${id}`);
-
-    return response.data;
-  },
-
-  getServices: async (): Promise<Service[]> => {
-    const response = await axiosSales.get("/services");
-
-    return response.data;
-  },
-
-  createService: async (data: Service): Promise<void> => {
+  createService: async (data: NewService): Promise<void> => {
     await axiosSales.post("/services", data);
   },
 
-  updateService: async (id: string, data: Partial<Service>): Promise<void> => {
-    await axiosSales.put(`/services/${id}`, data);
+  updateService: async (data: Partial<Service>): Promise<void> => {
+    const { id, name, description, category, price, tax, duration } = data;
+    await axiosSales.put(`/services/${id}`, {
+      name,
+      description,
+      category,
+      price,
+      tax,
+      duration,
+    });
   },
 
   deleteService: async (id: string): Promise<void> => {
     await axiosSales.delete(`/services/${id}`);
   },
+
+  getServiceById: async (id: string): Promise<Service> => {
+    const response = await axiosSales.get(`/services/${id}`);
+
+    return response.data;
+  },
+
+  getServices: async (params: GetServiceByParamsQuery): Promise<Service[]> => {
+    const response = await axiosSales.get<Service[]>("/services", { params });
+
+    return response.data;
+  },
+
 };
 
 export default apiSalesConnector;
