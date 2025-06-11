@@ -3,6 +3,7 @@ import { useAlert } from "../../../context/alert/useAlert";
 import type { ApiResponseError } from "../../../models/authErrors";
 import { Lock, Eye, EyeOff } from "lucide-react";
 import { useAccount } from "../../../context/account/AccountContext";
+import { ButtonSuccess } from "../../General/Buttons";
 
 export const ChangePasswordComponent: React.FC = () => {
   const [currentPassword, setcurrentPassword] = useState("");
@@ -77,7 +78,7 @@ export const ChangePasswordComponent: React.FC = () => {
       </h2>
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-xl border border-gray-200 bg-gray-50 p-6 shadow-xl dark:border-gray-800 dark:bg-gray-900"
+        className="space-y-6 rounded-lg border-2 border-gray-100 bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800"
       >
         <div>
           <label>
@@ -150,14 +151,11 @@ export const ChangePasswordComponent: React.FC = () => {
             </p>
           )}
         </div>
-
-        <button
+        <ButtonSuccess
+          text={loading ? "Zapisywanie..." : "Zmień hasło"}
           type="submit"
-          className="rounded bg-gradient-to-r from-indigo-600 to-indigo-500 px-4 py-2 font-semibold text-white shadow transition hover:from-indigo-700 hover:to-indigo-600 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
           disabled={loading}
-        >
-          {loading ? "Zapisywanie..." : "Zmień hasło"}
-        </button>
+        />
       </form>
     </div>
   );

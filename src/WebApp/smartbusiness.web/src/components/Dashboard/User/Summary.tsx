@@ -4,11 +4,11 @@ export const SummaryComponent: React.FC = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-w- space-y-4">
+    <div className="space-y-4">
       <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
         Witaj, {user?.username || user?.email}!
       </h2>
-      <div className="rounded-xl border border-gray-200 bg-gray-50 p-6 shadow-xl dark:border-gray-800 dark:bg-gray-900">
+      <div className="rounded-lg border-2 border-gray-100 bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800">
         <div className="mb-2 text-gray-800 dark:text-gray-100">
           Nazwa użytkownika:{" "}
           <span className="font-semibold text-indigo-600 dark:text-indigo-300">

@@ -4,6 +4,7 @@ import { Eye, EyeOff, Lock } from "lucide-react";
 import { useAlert } from "../../../context/alert/useAlert";
 import { useAccount } from "../../../context/account/AccountContext";
 import { useNavigate } from "react-router-dom";
+import { ButtonError } from "../../General/Buttons";
 
 export const DeleteAccountComponent: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -52,12 +53,10 @@ export const DeleteAccountComponent: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-200">
-        Usuń konto
-      </h2>
+      <h2 className="text-2xl font-bold text-indigo-500">Usuń konto</h2>
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-xl border border-gray-200 bg-gray-50 p-6 shadow-xl dark:border-gray-800 dark:bg-gray-900"
+        className="space-y-6 rounded-lg border-2 border-gray-100 bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800"
       >
         <div>
           <label>
@@ -94,13 +93,11 @@ export const DeleteAccountComponent: React.FC = () => {
           )}
         </div>
 
-        <button
+        <ButtonError
+          text={loading ? "Zapisywanie..." : "Usuń konto"}
           type="submit"
-          className="rounded bg-gradient-to-r from-red-700 to-red-600 px-4 py-2 font-semibold text-white shadow transition hover:from-red-800 hover:to-red-700 focus:ring-2 focus:ring-red-400 focus:outline-none"
           disabled={loading}
-        >
-          {loading ? "Zapisywanie..." : "Usuń konto"}
-        </button>
+        />
       </form>
     </div>
   );

@@ -20,7 +20,7 @@ export const DashboardHomeSection: React.FC = () => {
         {/* Some content in the future */}
       </div>
       {/* Company Info Card */}
-      <div className="rounded-xl border border-gray-200 bg-gray-100 p-6 shadow-xl dark:border-gray-900 dark:bg-gray-800">
+      <div className="rounded-lg border-2 border-gray-100 bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800">
         <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-100">
           Informacje o firmie
         </h2>
@@ -51,7 +51,7 @@ export const DashboardHomeSection: React.FC = () => {
       </div>
 
       {/* Welcome Message */}
-      <div className="mt-8 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white shadow">
+      <div className="mt-8 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white shadow-xl">
         <h2 className="mb-2 text-2xl font-bold">Witaj w SecureApp!</h2>
         <span className="text-indigo-100">
           Twoje konto zostało pomyślnie uwierzytelnione przy użyciu JWT Token.
