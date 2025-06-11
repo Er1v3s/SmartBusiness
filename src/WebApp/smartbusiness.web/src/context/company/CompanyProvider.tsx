@@ -103,12 +103,12 @@ export const CompanyProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const deleteCompany = async () => {
+  const deleteCompany = async (password: string) => {
     try {
       if (!company) throw new Error("No company to delete");
-      await apiAccountConnector.deleteCompany(company.id);
-      await fetchCompanies();
+      await apiAccountConnector.deleteCompany(company.id, password);
 
+      await fetchCompanies();
       // After deleting a company, we fetch the list again to ensure we have the latest data
       const updated = await apiAccountConnector.getCompanies();
       setCompany(updated.length > 0 ? updated[0] : null);
@@ -126,7 +126,6 @@ export const CompanyProvider: React.FC<{ children: React.ReactNode }> = ({
     createCompany,
     updateCompany,
     deleteCompany,
-    isCompanySet: company !== null,
   };
 
   return (

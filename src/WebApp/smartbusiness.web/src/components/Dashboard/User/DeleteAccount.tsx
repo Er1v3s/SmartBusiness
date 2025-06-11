@@ -17,6 +17,8 @@ export const DeleteAccountComponent: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("handleSubmit called");
+
     e.preventDefault();
     setPasswordError(null);
     if (!password) {

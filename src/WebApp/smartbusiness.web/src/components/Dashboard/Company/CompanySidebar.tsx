@@ -248,18 +248,14 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
 
       <div className="mt-auto flex flex-col gap-2">
         <NavLink
-          to="/dashboard/company/settings"
+          to="/dashboard/company"
           className={({ isActive }) =>
             `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
               isActive
                 ? "bg-indigo-100 text-indigo-700 dark:bg-gray-800 dark:text-indigo-200"
                 : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-indigo-200"
-            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"} ${
-              isDisabled ? "pointer-events-none opacity-50" : ""
-            }`
+            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"}`
           }
-          tabIndex={isDisabled ? -1 : undefined}
-          aria-disabled={isDisabled}
         >
           <span className="flex h-6 w-6 items-center justify-center">
             <Settings className="h-5 w-5" />

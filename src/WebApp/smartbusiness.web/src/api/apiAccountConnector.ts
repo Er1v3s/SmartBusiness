@@ -164,13 +164,17 @@ const apiAccountConnector = {
         }
     },
 
-    deleteCompany : async (companyId: string): Promise<void> => {
+    deleteCompany: async (companyId: string, password: string): Promise<void> => {
         try {
-            await axiosInstance.delete(`/company/${companyId}`);
+            await axiosInstance.request({
+                url: `/company/${companyId}`,
+                method: "DELETE",
+                data: { password }
+            });
         } catch (error) {
             return Promise.reject(error);
         }
-    }
+    },
 };
 
 export default apiAccountConnector;

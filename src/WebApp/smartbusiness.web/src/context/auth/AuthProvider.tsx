@@ -107,6 +107,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     resetPassword,
     fetchUserData,
     isAuthenticated: user !== null,
+    loginUsingRefreshToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

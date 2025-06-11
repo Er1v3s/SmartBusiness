@@ -30,12 +30,16 @@ import { EditProfileComponent } from "./components/Dashboard/User/EditProfile";
 import { DashboardHomeSection } from "./components/Dashboard/Company/DashboardHomeSection";
 import { CalendarSection } from "./components/Dashboard/Company/CalendarSection";
 import { StatisticsSection } from "./components/Dashboard/Company/StatisticsSection";
-import { SettingsSection } from "./components/Dashboard/Company/SettingsSection";
 import { RegisterSaleSection } from "./components/Dashboard/Company/RegisterSaleSection";
 import { ServicesSection } from "./components/Dashboard/Company/ServicesSection";
 import { ProductsSection } from "./components/Dashboard/Company/ProductsSection";
 import { ServiceProvider } from "./context/service/ServiceProvider";
 import { TransactionProvider } from "./context/transaction/TransactionProvider";
+import { CompanyPage } from "./pages/Company/CompanyPage";
+import { CompanySummary } from "./components/Dashboard/Company/CompanySettings/CompanySummary";
+import { CompanyAdd } from "./components/Dashboard/Company/CompanySettings/CompanyAdd";
+import { CompanyList } from "./components/Dashboard/Company/CompanySettings/CompanyList";
+import { CompanyDelete } from "./components/Dashboard/Company/CompanySettings/CompanyDelete";
 
 // Private Route component checks if the user is authenticated
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -79,8 +83,18 @@ export const App: React.FC = () => {
               <Route path="company/stats" element={<StatisticsSection />} />
               <Route path="company/services" element={<ServicesSection />} />
               <Route path="company/products" element={<ProductsSection />} />
-              <Route path="company/settings" element={<SettingsSection />} />
-              {/* USUNIĘTO fallback path="*" z tej sekcji */}
+            </Route>
+
+            <Route path="dashboard/company" element={<CompanyPage />}>
+              <Route index element={<CompanySummary />} />
+              <Route path="summary" element={<CompanySummary />} />
+              <Route path="add" element={<CompanyAdd />} />
+              <Route path="list" element={<CompanyList />} />
+              <Route path="delete" element={<CompanyDelete />} />
+              <Route
+                path="*"
+                element={<Navigate to="/dashboard/company/summary" replace />}
+              />
             </Route>
 
             <Route path="dashboard/user" element={<UserPage />}>
@@ -95,7 +109,6 @@ export const App: React.FC = () => {
                 path="delete-account"
                 element={<DeleteAccountComponent />}
               />
-              {/* fallback na nieistniejące podstrony usera */}
               <Route
                 path="*"
                 element={<Navigate to="/dashboard/user" replace />}
