@@ -6,7 +6,6 @@ using Shared.Contracts;
 using Shared.DTOs;
 using Shared.Entities;
 using Shared.Exceptions;
-using WriteService.Application.Abstracts;
 using WriteService.Application.Commands.Abstracts;
 
 namespace WriteService.Application.Commands.Transactions

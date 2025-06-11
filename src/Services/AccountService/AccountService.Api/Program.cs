@@ -2,9 +2,11 @@ using AccountService.Api.Handlers;
 using AccountService.Application;
 using AccountService.Infrastructure;
 using HealthChecks.UI.Client;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
@@ -13,6 +15,7 @@ using OpenTelemetry.Trace;
 using Shared.Settings;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace AccountService.Api
 {
@@ -30,6 +33,38 @@ namespace AccountService.Api
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString"));
             });
 
+            #endregion
+
+            #region Message Broker Publisher (RabbitMQ)
+
+            builder.Services.Configure<MessageBrokerSettings>(
+                builder.Configuration.GetSection("MessageBroker"));
+
+            builder.Services.AddSingleton(sp =>
+                sp.GetRequiredService<IOptions<MessageBrokerSettings>>().Value);
+
+            builder.Services.AddMassTransit(busConfiguration =>
+            {
+                busConfiguration.SetKebabCaseEndpointNameFormatter();
+
+                busConfiguration.UsingRabbitMq((context, configurator) =>
+                {
+                    MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();
+
+                    configurator.Host(new Uri(settings.HostName), h =>
+                    {
+                        h.Username(settings.UserName);
+                        h.Password(settings.Password);
+                    });
+                });
+
+                busConfiguration.ConfigureHealthCheckOptions(options =>
+                {
+                    options.Name = "masstransit";
+                    options.MinimalFailureStatus = HealthStatus.Unhealthy;
+                    options.Tags.Add("health");
+                });
+            });
 
             #endregion
 

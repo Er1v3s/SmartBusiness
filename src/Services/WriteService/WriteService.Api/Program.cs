@@ -17,6 +17,7 @@ using WriteService.Api.Handlers;
 using WriteService.Api.Handlers.CustomExceptionHandlers;
 using WriteService.Application;
 using WriteService.Infrastructure;
+using WriteService.Infrastructure.Messaging;
 
 namespace WriteService.Api
 {
@@ -61,6 +62,8 @@ namespace WriteService.Api
             {
                 busConfiguration.SetKebabCaseEndpointNameFormatter();
 
+                busConfiguration.AddConsumer<CompanyDeletedEventConsumer>();
+
                 busConfiguration.UsingRabbitMq((context, configurator) =>
                 {
                     MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();
@@ -69,6 +72,11 @@ namespace WriteService.Api
                     {
                         h.Username(settings.UserName);
                         h.Password(settings.Password);
+                    });
+
+                    configurator.ReceiveEndpoint("writeService-company-deleted", e =>
+                    {
+                        e.ConfigureConsumer<CompanyDeletedEventConsumer>(context);
                     });
                 });
 

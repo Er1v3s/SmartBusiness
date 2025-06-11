@@ -63,10 +63,10 @@ namespace AccountService.Api.Controllers
 
         [HttpDelete("{companyId}")]
         [TypeFilter(typeof(AuthorizeCompanyOwnerAttribute))]
-        public async Task<IActionResult> DeleteCompany([FromRoute] string companyId)
+        public async Task<IActionResult> DeleteCompany([FromRoute] string companyId, [FromBody] DeleteCompanyRequest request)
         {
             Guid userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-            var command = new DeleteCompanyCommand(userId, companyId);
+            var command = new DeleteCompanyCommand(userId, companyId, request.Password);
             await _mediator.Send(command);
             
             return NoContent();

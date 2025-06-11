@@ -58,6 +58,7 @@ namespace ReadService.Api
                 busConfiguration.AddConsumer<TransactionCreatedEventConsumer>();
                 busConfiguration.AddConsumer<TransactionUpdatedEventConsumer>();
                 busConfiguration.AddConsumer<TransactionDeletedEventConsumer>();
+                busConfiguration.AddConsumer<CompanyDeletedEventConsumer>();
 
                 busConfiguration.UsingRabbitMq((context, configurator) =>
                 {
@@ -82,6 +83,11 @@ namespace ReadService.Api
                     configurator.ReceiveEndpoint("transaction-deleted", e =>
                     {
                         e.ConfigureConsumer<TransactionDeletedEventConsumer>(context);
+                    });
+
+                    configurator.ReceiveEndpoint("read-service-company-deleted", e =>
+                    {
+                        e.ConfigureConsumer<CompanyDeletedEventConsumer>(context);
                     });
                 });
             });

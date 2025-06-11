@@ -65,6 +65,8 @@ services:
     depends_on:
       database.server:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app-network
       - monitoring-network
@@ -90,6 +92,8 @@ services:
       - ./https:/https:ro
     depends_on:
       database.server:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     networks:
       - app-network

@@ -14,21 +14,6 @@ namespace Shared.Repositories
             _transactionsCollection = database.GetCollection<Transaction>("transactions");
         }
 
-        //public async Task<List<Transaction>> GetAllAsync()
-        //{
-        //    return await _transactionsCollection.Find(_ => true).ToListAsync();
-        //}
-
-        //public async Task<List<Transaction>> GetByCompanyIdAsync(string companyId)
-        //{
-        //    return await _transactionsCollection.Find(t => t.CompanyId == companyId).ToListAsync();
-        //}
-
-        //public async Task<List<Transaction>> GetByUserIdAsync(string userId)
-        //{
-        //    return await _transactionsCollection.Find(t => t.UserId == userId).ToListAsync();
-        //}
-
         public async Task AddAsync(Transaction transaction)
         {
             await _transactionsCollection.InsertOneAsync(transaction);
@@ -42,6 +27,11 @@ namespace Shared.Repositories
         public async Task DeleteAsync(string id)
         {
             await _transactionsCollection.DeleteOneAsync(t => t.Id == id);
+        }
+
+        public async Task DeleteManyAsync(string companyId)
+        {
+            await _transactionsCollection.DeleteManyAsync(t => t.CompanyId == companyId);
         }
 
         public async Task<Transaction?> GetTransactionByIdAsync(string id)

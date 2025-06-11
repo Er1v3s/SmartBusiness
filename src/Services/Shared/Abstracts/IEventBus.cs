@@ -1,4 +1,4 @@
-﻿namespace WriteService.Application.Abstracts
+﻿namespace Shared.Abstracts
 {
     public interface IEventBus
     {

@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Shared.Abstracts;
+using Shared.MessageBroker;
 using Shared.Repositories;
-using WriteService.Application.Abstracts;
-using WriteService.Infrastructure.MessageBroker;
 
 namespace WriteService.Infrastructure
 {

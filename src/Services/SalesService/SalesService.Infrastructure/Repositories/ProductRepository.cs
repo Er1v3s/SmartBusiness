@@ -34,6 +34,20 @@ namespace SalesService.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task DeleteManyProductsByCompanyIdAsync(string companyId)
+        {
+            var productsToDelete = await _dbContext.Products
+                .Where(p => p.CompanyId == companyId)
+                .ToListAsync();
+
+            if (productsToDelete.Any())
+            {
+                _dbContext.Products.RemoveRange(productsToDelete);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+
         public async Task<Product?> GetProductByIdAsync(string id)
         {
             return await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
@@ -46,7 +60,7 @@ namespace SalesService.Infrastructure.Repositories
 
         public async Task<List<Product>> GetFilteredProductsAsync(IQueryable<Product> query, CancellationToken cancellationToken)
         {
-            return await query.AsNoTracking().ToListAsync(cancellationToken);
+            return await query.ToListAsync(cancellationToken);
         }
     }
 }

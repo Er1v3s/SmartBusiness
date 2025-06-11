@@ -4,7 +4,6 @@ using MediatR;
 using Shared.Contracts;
 using Shared.DTOs;
 using Shared.Entities;
-using WriteService.Application.Abstracts;
 using Shared.Abstracts;
 using WriteService.Application.Commands.Abstracts;
 
