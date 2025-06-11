@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Services\SalesService\SalesService.Domain\SalesService.Domain.csproj" />
+    <ProjectReference Include="..\Services\SalesService\SalesService.Infrastructure\SalesService.Infrastructure.csproj" />
+    <ProjectReference Include="..\Services\Shared\Shared.csproj" />
+  </ItemGroup>
+
+</Project>
