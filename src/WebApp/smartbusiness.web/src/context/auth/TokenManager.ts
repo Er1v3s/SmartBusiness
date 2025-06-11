@@ -3,6 +3,8 @@
 export const removeAccessTokens = () => {
     localStorage.removeItem("ACCESS_TOKEN");
     localStorage.removeItem("ACCESS_TOKEN_EXPIRATION");
+    
+    localStorage.removeItem("COMPANY_ID");
   };
 
 export const setAccessTokens = (access_token : any, expiration_date : any) => {

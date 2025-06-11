@@ -6,7 +6,7 @@ export const UserSidebarComponent = () => {
   return (
     <aside className="w-64 flex-col gap-2 border-r border-gray-200 bg-white/80 px-4 py-10 text-gray-800 shadow-lg dark:border-gray-950 dark:bg-gray-900 dark:text-gray-100 dark:shadow-black/30">
       <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-2xl font-extrabold tracking-tight text-indigo-700">
+        <h1 className="text-2xl font-extrabold tracking-tight text-indigo-500">
           Panel użytkownika
         </h1>
       </div>

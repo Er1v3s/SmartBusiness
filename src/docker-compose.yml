@@ -65,6 +65,8 @@ services:
     depends_on:
       database.server:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app-network
       - monitoring-network
@@ -90,6 +92,8 @@ services:
       - ./https:/https:ro
     depends_on:
       database.server:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     networks:
       - app-network
@@ -152,22 +156,22 @@ services:
       - monitoring-network
 
   # FRONTEND APP
-  frontend.smart-business:
-    container_name: frontend.smart-business
-    image: frontend.smart-business
-    build:
-      context: WebApp/smartbusiness.web
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-    volumes:
-      - ./WebApp/smartbusiness.web:/app
-      - /app/node_modules
-    depends_on:
-      - gateway.smart-business
-      - account.smart-business
-    networks:
-      - app-network
+  # frontend.smart-business:
+  #   container_name: frontend.smart-business
+  #   image: frontend.smart-business
+  #   build:
+  #     context: WebApp/smartbusiness.web
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./WebApp/smartbusiness.web:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     - gateway.smart-business
+  #     - account.smart-business
+  #   networks:
+  #     - app-network
   
   # SQL SERVER (FOR ACCOUNT SERVICE)
   database.server:

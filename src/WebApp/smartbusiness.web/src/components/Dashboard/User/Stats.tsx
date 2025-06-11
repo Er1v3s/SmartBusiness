@@ -8,7 +8,7 @@ export const StatsComponent: React.FC = () => {
       <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
         Statystyki konta
       </h2>
-      <div className="rounded-xl border border-gray-200 bg-gray-50 p-6 shadow-xl dark:border-gray-800 dark:bg-gray-900">
+      <div className="ounded-lg border-2 border-gray-100 bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800">
         <div className="mb-2 text-gray-800 dark:text-gray-100">
           Data założenia konta:{" "}
           <span className="font-semibold text-indigo-600 dark:text-indigo-300">

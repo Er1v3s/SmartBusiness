@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useCompany } from "../../../context/company/CompanyContext";
+import { useNavigate } from "react-router-dom";
 
 export const CompanySelectionComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { companies, company, setActiveCompany } = useCompany();
+  const navigate = useNavigate();
 
   const handleSelect = async (id: string) => {
     await setActiveCompany(id);
+    navigate("/dashboard");
     setIsOpen(false);
   };
 

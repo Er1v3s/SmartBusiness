@@ -7,6 +7,8 @@ import {
   ShoppingCart,
   PackageOpen,
   Handshake,
+  ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
 import { useCompany } from "../../../context/company/CompanyContext";
 import { useEffect, useState } from "react";
@@ -22,6 +24,7 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
 }) => {
   const { company } = useCompany();
   const [showNav, setShowNav] = useState(!isCollapsed);
+  const isDisabled = !company;
 
   useEffect(() => {
     let timeout: number;
@@ -63,8 +66,12 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
               isActive
                 ? "bg-indigo-100 text-indigo-700 dark:bg-gray-800 dark:text-indigo-200"
                 : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-indigo-200"
-            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"}`
+            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"} ${
+              isDisabled ? "pointer-events-none opacity-50" : ""
+            }`
           }
+          tabIndex={isDisabled ? -1 : undefined}
+          aria-disabled={isDisabled}
         >
           <span className="flex h-6 w-6 items-center justify-center">
             <Home className="h-5 w-5" />
@@ -90,8 +97,12 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
               isActive
                 ? "bg-indigo-100 text-indigo-700 dark:bg-gray-800 dark:text-indigo-200"
                 : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-indigo-200"
-            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"}`
+            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"} ${
+              isDisabled ? "pointer-events-none opacity-50" : ""
+            }`
           }
+          tabIndex={isDisabled ? -1 : undefined}
+          aria-disabled={isDisabled}
         >
           <span className="flex h-6 w-6 items-center justify-center">
             <Calendar className="h-5 w-5" />
@@ -117,8 +128,12 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
               isActive
                 ? "bg-indigo-100 text-indigo-700 dark:bg-gray-800 dark:text-indigo-200"
                 : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-indigo-200"
-            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"}`
+            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"} ${
+              isDisabled ? "pointer-events-none opacity-50" : ""
+            }`
           }
+          tabIndex={isDisabled ? -1 : undefined}
+          aria-disabled={isDisabled}
         >
           <span className="flex h-6 w-6 items-center justify-center">
             <ShoppingCart className="h-5 w-5" />
@@ -144,8 +159,12 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
               isActive
                 ? "bg-indigo-100 text-indigo-700 dark:bg-gray-800 dark:text-indigo-200"
                 : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-indigo-200"
-            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"}`
+            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"} ${
+              isDisabled ? "pointer-events-none opacity-50" : ""
+            }`
           }
+          tabIndex={isDisabled ? -1 : undefined}
+          aria-disabled={isDisabled}
         >
           <span className="flex h-6 w-6 items-center justify-center">
             <BarChart2 className="h-5 w-5" />
@@ -171,8 +190,12 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
               isActive
                 ? "bg-indigo-100 text-indigo-700 dark:bg-gray-800 dark:text-indigo-200"
                 : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-indigo-200"
-            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"}`
+            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"} ${
+              isDisabled ? "pointer-events-none opacity-50" : ""
+            }`
           }
+          tabIndex={isDisabled ? -1 : undefined}
+          aria-disabled={isDisabled}
         >
           <span className="flex h-6 w-6 items-center justify-center">
             <Handshake className="h-5 w-5" />
@@ -198,8 +221,12 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
               isActive
                 ? "bg-indigo-100 text-indigo-700 dark:bg-gray-800 dark:text-indigo-200"
                 : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-indigo-200"
-            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"}`
+            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"} ${
+              isDisabled ? "pointer-events-none opacity-50" : ""
+            }`
           }
+          tabIndex={isDisabled ? -1 : undefined}
+          aria-disabled={isDisabled}
         >
           <span className="flex h-6 w-6 items-center justify-center">
             <PackageOpen className="h-5 w-5" />
@@ -221,7 +248,7 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
 
       <div className="mt-auto flex flex-col gap-2">
         <NavLink
-          to="/dashboard/company/settings"
+          to="/dashboard/company"
           className={({ isActive }) =>
             `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
               isActive
@@ -250,37 +277,7 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="mt-2 flex w-full items-center justify-center rounded-lg px-2 py-2 text-indigo-700 transition-colors hover:bg-indigo-50 dark:text-indigo-200 dark:hover:bg-gray-800"
         >
-          {isCollapsed ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          )}
+          {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
         </button>
       </div>
     </aside>

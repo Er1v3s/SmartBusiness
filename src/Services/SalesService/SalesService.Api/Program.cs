@@ -1,19 +1,22 @@
 using HealthChecks.UI.Client;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using SalesService.Api.Handlers;
 using SalesService.Api.Handlers.CustomExceptionHandlers;
 using SalesService.Application;
 using SalesService.Infrastructure;
+using Shared.Middlewares;
 using Shared.Settings;
 using System.Text;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
-using Shared.Middlewares;
+using SalesService.Infrastructure.Messaging;
 
 namespace SalesService.Api
 {
@@ -33,6 +36,39 @@ namespace SalesService.Api
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString"));
             });
 
+
+            #endregion
+
+            #region Message Broker Consumer (RabbitMQ)
+
+            builder.Services.Configure<MessageBrokerSettings>(
+                builder.Configuration.GetSection("MessageBroker"));
+
+            builder.Services.AddSingleton(sp =>
+                sp.GetRequiredService<IOptions<MessageBrokerSettings>>().Value);
+
+            builder.Services.AddMassTransit(busConfiguration =>
+            {
+                busConfiguration.SetKebabCaseEndpointNameFormatter();
+
+                busConfiguration.AddConsumer<CompanyDeletedEventConsumer>();
+
+                busConfiguration.UsingRabbitMq((context, configurator) =>
+                {
+                    MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();
+
+                    configurator.Host(new Uri(settings.HostName), h =>
+                    {
+                        h.Username(settings.UserName);
+                        h.Password(settings.Password);
+                    });
+
+                    configurator.ReceiveEndpoint("salesService-company-deleted", e =>
+                    {
+                        e.ConfigureConsumer<CompanyDeletedEventConsumer>(context);
+                    });
+                });
+            });
 
             #endregion
 
@@ -80,6 +116,13 @@ namespace SalesService.Api
 
                 options.Events = new JwtBearerEvents
                 {
+                    //OnAuthenticationFailed = context =>
+                    //{
+                    //    Console.WriteLine("info: Authentication failed: " + context.Exception.Message);
+                    //    Console.WriteLine("info: Token: " + context.Request.Headers["Authorization"].FirstOrDefault());
+                    //    return Task.CompletedTask;
+                    //},
+
                     OnMessageReceived = context =>
                     {
                         var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();

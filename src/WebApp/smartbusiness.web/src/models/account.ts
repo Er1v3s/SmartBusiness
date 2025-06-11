@@ -20,8 +20,7 @@ export interface CompanyContextType {
   fetchCompanyData: (companyId: string) => Promise<Company>;
   createCompany: (name: string) => Promise<void>;
   updateCompany: (name: string) => Promise<void>;
-  deleteCompany: () => Promise<void>;
-  isCompanySet: boolean;
+  deleteCompany: (password: string) => Promise<void>;
 }
 
 export interface AuthContextType {
@@ -33,7 +32,7 @@ export interface AuthContextType {
   sendResetLink: (email: string) => Promise<void>;
   resetPassword: (token: string, password: string) => Promise<void>;
   isAuthenticated: boolean;
-  // token: string | null;
+  loginUsingRefreshToken: () => Promise<void>;
 }
 
 export interface AccountContextType {

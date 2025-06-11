@@ -34,6 +34,19 @@ namespace SalesService.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task DeleteManyServicesByCompanyIdAsync(string companyId)
+        {
+            var servicesToDelete = await _dbContext.Services
+                .Where(s => s.CompanyId == companyId)
+                .ToListAsync();
+
+            if (servicesToDelete.Any())
+            {
+                _dbContext.Services.RemoveRange(servicesToDelete);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
         public async Task<Service?> GetServiceByIdAsync(string id)
         {
             return await _dbContext.Services.FirstOrDefaultAsync(p => p.Id == id);
@@ -46,7 +59,7 @@ namespace SalesService.Infrastructure.Repositories
 
         public async Task<List<Service>> GetFilteredServicesAsync(IQueryable<Service> query, CancellationToken cancellationToken)
         {
-            return await query.AsNoTracking().ToListAsync(cancellationToken);
+            return await query.ToListAsync(cancellationToken);
         }
     }
 }

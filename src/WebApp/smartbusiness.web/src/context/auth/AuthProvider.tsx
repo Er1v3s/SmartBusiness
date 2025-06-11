@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
-import type { AuthContextType, User } from "../../models/index.ts";
-import apiConnector from "../../api/apiConnector.ts";
+import type { AuthContextType, User } from "../../models/account.ts";
+import apiAccountConnector from "../../api/apiAccountConnector.ts";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -53,12 +53,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const fetchUserData = async () => {
-    const user = await apiConnector.me();
+    const user = await apiAccountConnector.me();
     setUser(user);
   };
 
   const loginUsingRefreshToken = async () => {
-    await apiConnector.loginUsingRefreshToken();
+    await apiAccountConnector.loginUsingRefreshToken();
     await fetchUserData();
   };
 
@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     password: string,
     rememberMe: boolean,
   ): Promise<void> => {
-    await apiConnector.login(email, password, rememberMe);
+    await apiAccountConnector.login(email, password, rememberMe);
     await fetchUserData();
   };
 
@@ -76,29 +76,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     email: string,
     password: string,
   ): Promise<void> => {
-    await apiConnector.register(username, email, password);
+    await apiAccountConnector.register(username, email, password);
 
     // After successful registration, automatically log in the user
     await login(email, password, true);
   };
 
   const logout = async () => {
-    await apiConnector.logout();
+    await apiAccountConnector.logout();
     setUser(null);
   };
 
   const sendResetLink = async (email: string): Promise<void> => {
-    await apiConnector.sendResetLink(email);
+    await apiAccountConnector.sendResetLink(email);
   };
 
   const resetPassword = async (
     token: string,
     password: string,
   ): Promise<void> => {
-    await apiConnector.resetPassword(token, password);
+    await apiAccountConnector.resetPassword(token, password);
   };
 
-  // Context value
   const value: AuthContextType = {
     user,
     login,
@@ -106,9 +105,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     logout,
     sendResetLink,
     resetPassword,
-    isAuthenticated: user !== null,
     fetchUserData,
-    // token: null,
+    isAuthenticated: user !== null,
+    loginUsingRefreshToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

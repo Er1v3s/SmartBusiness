@@ -4,6 +4,7 @@ import type { ApiResponseError } from "../../../models/authErrors";
 import { Mail, UserIcon } from "lucide-react";
 import { useAccount } from "../../../context/account/AccountContext";
 import { useAuth } from "../../../context/auth/AuthContext";
+import { ButtonSuccess } from "../../General/Buttons";
 
 export const EditProfileComponent: React.FC = () => {
   const { user, fetchUserData } = useAuth();
@@ -80,7 +81,7 @@ export const EditProfileComponent: React.FC = () => {
       </h2>
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-xl border border-gray-200 bg-gray-50 p-6 shadow-xl dark:border-gray-800 dark:bg-gray-900"
+        className="space-y-6 rounded-lg border-2 border-gray-100 bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800"
       >
         <div>
           <label>
@@ -132,13 +133,11 @@ export const EditProfileComponent: React.FC = () => {
           )}
         </div>
 
-        <button
+        <ButtonSuccess
+          text={loading ? "Zapisywanie..." : "Zapisz zmiany"}
           type="submit"
-          className="rounded bg-gradient-to-r from-indigo-600 to-indigo-500 px-4 py-2 font-semibold text-white shadow transition hover:from-indigo-700 hover:to-indigo-600 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
           disabled={loading}
-        >
-          {loading ? "Zapisywanie..." : "Zapisz zmiany"}
-        </button>
+        />
       </form>
     </div>
   );

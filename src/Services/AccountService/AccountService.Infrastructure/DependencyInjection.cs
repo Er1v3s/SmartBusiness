@@ -3,6 +3,8 @@ using AccountService.Application.Abstracts;
 using AccountService.Infrastructure.Processors;
 using AccountService.Infrastructure.Repositories;
 using AccountService.Infrastructure.Services;
+using Shared.Abstracts;
+using Shared.MessageBroker;
 
 namespace AccountService.Infrastructure
 {
@@ -10,6 +12,7 @@ namespace AccountService.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
+            services.AddTransient<IEventBus, EventBus>();
             services.AddScoped<IAuthTokenProcessor, AuthTokenProcessor>();
             services.AddScoped<IResetPasswordTokenProcessor, ResetPasswordTokenProcessor>();
             services.AddScoped<IEmailService, EmailService>();

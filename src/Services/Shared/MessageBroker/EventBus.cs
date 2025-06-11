@@ -1,7 +1,7 @@
 ﻿using MassTransit;
-using WriteService.Application.Abstracts;
+using Shared.Abstracts;
 
-namespace WriteService.Infrastructure.MessageBroker
+namespace Shared.MessageBroker
 {
     public class EventBus : IEventBus
     {

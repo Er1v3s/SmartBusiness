@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, Shield } from "lucide-react";
 import { useAuth } from "../../context/auth/AuthContext";
-import type { LoginForm } from "../../models";
+import type { LoginForm } from "../../models/account";
 import { useNavigate } from "react-router-dom";
 import type { ApiResponseError } from "../../models/authErrors";
 import { useAlert } from "../../context/alert/useAlert";
