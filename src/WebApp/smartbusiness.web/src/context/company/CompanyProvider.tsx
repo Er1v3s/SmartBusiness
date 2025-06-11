@@ -44,7 +44,6 @@ export const CompanyProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [fetchCompanies, user]);
 
-  // Usuwaj COMPANY_ID jeśli nie ma ACCESS_TOKEN
   useEffect(() => {
     const accessToken = localStorage.getItem("ACCESS_TOKEN");
     if (!accessToken) {
@@ -87,6 +86,8 @@ export const CompanyProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     } catch (error) {
       console.error("Failed to create company:", error);
+
+      throw error;
     }
   };
 
@@ -100,21 +101,17 @@ export const CompanyProvider: React.FC<{ children: React.ReactNode }> = ({
       await fetchCompanies();
     } catch (error) {
       console.error("Failed to update company:", error);
+
+      throw error;
     }
   };
 
   const deleteCompany = async (password: string) => {
-    try {
-      if (!company) throw new Error("No company to delete");
-      await apiAccountConnector.deleteCompany(company.id, password);
-
-      await fetchCompanies();
-      // After deleting a company, we fetch the list again to ensure we have the latest data
-      const updated = await apiAccountConnector.getCompanies();
-      setCompany(updated.length > 0 ? updated[0] : null);
-    } catch (error) {
-      console.error("Failed to delete company:", error);
-    }
+    if (!company) throw new Error("No company to delete");
+    await apiAccountConnector.deleteCompany(company.id, password);
+    await fetchCompanies();
+    const updated = await apiAccountConnector.getCompanies();
+    setCompany(updated.length > 0 ? updated[0] : null);
   };
 
   const value: CompanyContextType = {

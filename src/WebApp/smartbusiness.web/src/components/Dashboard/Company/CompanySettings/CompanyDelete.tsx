@@ -15,8 +15,6 @@ export const CompanyDelete: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("handleSubmit called");
-
     e.preventDefault();
     if (!company) return;
     if (!password) {
@@ -34,11 +32,10 @@ export const CompanyDelete: React.FC = () => {
 
       showAlert({
         title: "Usunięto!",
-        message: "Twoje firma została trwale usunięta.",
+        message: "Twoja firma została trwale usunięta.",
         type: "success",
         duration: 5000,
       });
-
       await loginUsingRefreshToken();
       await fetchCompanies();
       setPassword("");
@@ -51,7 +48,6 @@ export const CompanyDelete: React.FC = () => {
         type: "error",
         duration: 3000,
       });
-
       setPassword("");
     } finally {
       setLoading(false);
