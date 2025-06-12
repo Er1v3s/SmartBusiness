@@ -133,13 +133,13 @@ namespace DbSeeder
 
         static List<Service> GenerateServices() => new()
         {
-            new Service { CompanyId = CompanyId, Name = "Manicure hybrydowy", Description = "Stylizacja paznokci lakierem hybrydowym", Category = "Paznokcie", Price = 120, Tax = 8 },
-            new Service { CompanyId = CompanyId, Name = "Pedicure klasyczny", Description = "Zabieg pielęgnacyjny dla stóp", Category = "Paznokcie", Price = 150, Tax = 8 },
-            new Service { CompanyId = CompanyId, Name = "Masaż twarzy", Description = "Relaksujący masaż poprawiający krążenie", Category = "Twarz", Price = 90, Tax = 5 },
-            new Service { CompanyId = CompanyId, Name = "Zabieg oczyszczający", Description = "Głębokie oczyszczanie skóry twarzy", Category = "Twarz", Price = 200, Tax = 10 },
-            new Service { CompanyId = CompanyId, Name = "Henna brwi i rzęs", Description = "Podkreślenie koloru brwi i rzęs", Category = "Brwi i rzęsy", Price = 60, Tax = 5 },
-            new Service { CompanyId = CompanyId, Name = "Laminacja brwi", Description = "Zabieg nadający brwiom idealny kształt", Category = "Brwi i rzęsy", Price = 130, Tax = 8 },
-            new Service { CompanyId = CompanyId, Name = "Makijaż okolicznościowy", Description = "Profesjonalny makijaż na specjalne okazje", Category = "Makijaż", Price = 250, Tax = 12 },
+            new Service { CompanyId = CompanyId, Name = "Manicure hybrydowy", Description = "Stylizacja paznokci lakierem hybrydowym", Category = "Paznokcie", Duration = 120, Price = 120, Tax = 8 },
+            new Service { CompanyId = CompanyId, Name = "Pedicure klasyczny", Description = "Zabieg pielęgnacyjny dla stóp", Category = "Paznokcie", Duration = 60, Price = 150, Tax = 8 },
+            new Service { CompanyId = CompanyId, Name = "Masaż twarzy", Description = "Relaksujący masaż poprawiający krążenie", Category = "Twarz", Duration = 60, Price = 90, Tax = 5 },
+            new Service { CompanyId = CompanyId, Name = "Zabieg oczyszczający", Description = "Głębokie oczyszczanie skóry twarzy", Category = "Twarz", Duration = 60, Price = 200, Tax = 10 },
+            new Service { CompanyId = CompanyId, Name = "Henna brwi i rzęs", Description = "Podkreślenie koloru brwi i rzęs", Category = "Brwi i rzęsy", Duration = 30, Price = 60, Tax = 5 },
+            new Service { CompanyId = CompanyId, Name = "Laminacja brwi", Description = "Zabieg nadający brwiom idealny kształt", Category = "Brwi i rzęsy", Duration = 90, Price = 130, Tax = 8 },
+            new Service { CompanyId = CompanyId, Name = "Makijaż okolicznościowy", Description = "Profesjonalny makijaż na specjalne okazje", Category = "Makijaż", Duration = 90, Price = 250, Tax = 12 },
         };
     }
 }
