@@ -10,9 +10,9 @@ namespace DbSeeder
     {
         const string CompanyId = "a-SHEM7qn4hM_90D6";
         const string UserId = "682619a2-1fe7-4124-9676-f8eb50928b12";
-        const bool UseProducts = false;
-        const bool UseServices = true;
-        const int NumberOfTransactions = 900;
+        const bool UseProducts = true;
+        const bool UseServices = false;
+        const int NumberOfTransactions = 1000;
         static readonly DateTime StartDate = new (2023, 1, 1);
         static readonly DateTime EndDate = DateTime.Now;
 
@@ -42,6 +42,9 @@ namespace DbSeeder
             //dbContext.SaveChanges();
             // COMMENT THIS CODE IF YOU ARE ADDING MORE TRANSACTIONS
 
+            var productsWithId = dbContext.Products.Where(p => p.CompanyId == CompanyId).ToList();
+            var servicesWithId = dbContext.Services.Where(p => p.CompanyId == CompanyId).ToList();
+
 
             var transactions = new List<Transaction>();
 
@@ -51,12 +54,12 @@ namespace DbSeeder
 
                 if (UseProducts && (!UseServices || random.NextDouble() < 0.5))
                 {
-                    var product = products[random.Next(products.Count)];
+                    var product = productsWithId[random.Next(productsWithId.Count)];
                     transaction = CreateTransactionFromProduct(product, random, StartDate, EndDate);
                 }
                 else
                 {
-                    var service = services[random.Next(services.Count)];
+                    var service = servicesWithId[random.Next(servicesWithId.Count)];
                     transaction = CreateTransactionFromService(service, random, StartDate, EndDate);
                 }
 
@@ -82,7 +85,8 @@ namespace DbSeeder
             {
                 CompanyId = CompanyId,
                 UserId = UserId,
-                ProductId = product.Id,
+                ItemId = product.Id,
+                ItemType = "product",
                 Quantity = quantity,
                 TotalAmount = total,
                 Tax = tax,
@@ -100,7 +104,8 @@ namespace DbSeeder
             {
                 CompanyId = CompanyId,
                 UserId = UserId,
-                ProductId = service.Id,
+                ItemId = service.Id,
+                ItemType = "service",
                 Quantity = 1,
                 TotalAmount = total,
                 Tax = tax,

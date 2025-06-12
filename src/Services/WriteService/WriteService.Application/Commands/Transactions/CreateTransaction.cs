@@ -10,11 +10,12 @@ using WriteService.Application.Commands.Abstracts;
 namespace WriteService.Application.Commands.Transactions
 {
     public record CreateTransactionCommand(
-        string ProductId,
+        string ItemId,
+        string ItemType,
         int Quantity,
         decimal TotalAmount,
         int Tax
-        ) : TransactionCommand(ProductId, Quantity, TotalAmount, Tax), IRequest<Transaction>, IHaveCompanyId, IHaveUserId
+        ) : TransactionCommand(ItemId, ItemType, Quantity, TotalAmount, Tax), IRequest<Transaction>, IHaveCompanyId, IHaveUserId
     {
         public string CompanyId { get; set; } = string.Empty;
         public Guid UserId { get; set; } = Guid.Empty;
@@ -39,12 +40,14 @@ namespace WriteService.Application.Commands.Transactions
     public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand, Transaction>
     {
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IRedisCacheService _redisCacheService;
         private readonly IEventBus _eventBus;
         private readonly IMapper _mapper;
 
-        public CreateTransactionCommandHandler(ITransactionRepository transactionRepository, IEventBus eventBus, IMapper mapper)
+        public CreateTransactionCommandHandler(ITransactionRepository transactionRepository, IRedisCacheService redisCacheService, IEventBus eventBus, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
+            _redisCacheService = redisCacheService;
             _eventBus = eventBus;
             _mapper = mapper;
         }
@@ -56,6 +59,9 @@ namespace WriteService.Application.Commands.Transactions
 
             var transactionDto = _mapper.Map<TransactionDto>(transaction);
             await _eventBus.PublishAsync(new TransactionCreatedEvent(transactionDto), cancellationToken);
+
+            var cacheKey = $"transactions:{request.CompanyId}";
+            await _redisCacheService.RemoveAsync(cacheKey);
 
             return transaction;
         }

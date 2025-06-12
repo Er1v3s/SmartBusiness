@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
-using Shared.Contracts;
-using Shared.Exceptions;
 using Shared.Abstracts;
+using Shared.Cache;
+using Shared.Contracts;
 using Shared.Entities;
+using Shared.Exceptions;
 
 namespace WriteService.Application.Commands.Transactions
 {
@@ -31,11 +32,13 @@ namespace WriteService.Application.Commands.Transactions
     public class DeleteTransactionCommandHandler : IRequestHandler<DeleteTransactionCommand, Unit>
     {
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IRedisCacheService _redisCacheService;
         private readonly IEventBus _eventBus;
 
-        public DeleteTransactionCommandHandler(ITransactionRepository transactionRepository, IEventBus eventBus)
+        public DeleteTransactionCommandHandler(ITransactionRepository transactionRepository, IRedisCacheService redisCacheService, IEventBus eventBus)
         {
             _transactionRepository = transactionRepository;
+            _redisCacheService = redisCacheService;
             _eventBus = eventBus;
         }
 
@@ -51,6 +54,9 @@ namespace WriteService.Application.Commands.Transactions
             await _transactionRepository.DeleteAsync(existingTransaction.Id);
 
             await _eventBus.PublishAsync(new TransactionDeletedEvent(existingTransaction.Id), cancellationToken);
+
+            var cacheKey = $"transactions:{request.CompanyId}";
+            await _redisCacheService.RemoveAsync(cacheKey);
 
             return Unit.Value;
         }

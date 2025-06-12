@@ -12,6 +12,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Shared.Middlewares;
 using Shared.Settings;
+using StackExchange.Redis;
 using System.Text;
 using WriteService.Api.Handlers;
 using WriteService.Api.Handlers.CustomExceptionHandlers;
@@ -87,6 +88,15 @@ namespace WriteService.Api
                     options.Tags.Add("health");
                 });
             });
+
+            #endregion
+
+            #region Redis
+
+            var redisConnectionString = builder.Configuration.GetSection("Redis:ConnectionString").Value;
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+                ConnectionMultiplexer.Connect(redisConnectionString!));
 
             #endregion
 
