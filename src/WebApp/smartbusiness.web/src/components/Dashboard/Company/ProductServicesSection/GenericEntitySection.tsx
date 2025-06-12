@@ -45,13 +45,11 @@ export default function GenericEntitySection<
   TFormErrors extends Partial<Record<keyof TForm, string | undefined>>,
 >(props: GenericEntitySectionProps<TEntity, TForm, TFormErrors>) {
   const {
-    title,
     fetchEntities,
     createEntity,
     updateEntity,
     deleteEntity,
     fields,
-
     entityToForm,
     renderTableRow,
     getEntityId,
@@ -69,7 +67,6 @@ export default function GenericEntitySection<
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [showFilters, setShowFilters] = useState(false);
 
   // --- Add form ---
   const [addForm, setAddForm] = useState<TForm>(initialForm);
@@ -238,7 +235,6 @@ export default function GenericEntitySection<
   // --- Render ---
   return (
     <div className="h-full w-full p-4">
-      <h2 className="mb-4 text-xl font-bold">{title}</h2>
       {/* Add new entity form */}
       <form
         onSubmit={handleAdd}
@@ -287,12 +283,10 @@ export default function GenericEntitySection<
       <GenericSearchFilterBar
         search={search}
         onSearchChange={setSearch}
-        filterLabel="Filtruj"
         filterValue={""}
         filterOptions={[]}
         onFilterChange={() => {}}
-        showFilter={showFilters}
-        onToggleFilter={() => setShowFilters((v) => !v)}
+        showFilter={false}
       />
 
       {/* Tabela */}

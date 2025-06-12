@@ -100,12 +100,12 @@ const renderServiceRow = (service: Service, onEdit: () => void) => (
     className="cursor-pointer border-b border-gray-100 transition hover:bg-indigo-50/40 dark:border-gray-700 dark:hover:bg-gray-700/40"
     onClick={onEdit}
   >
-    <td className="px-4 py-2 font-medium">{service.name}</td>
-    <td className="px-4 py-2">{service.description}</td>
-    <td className="px-4 py-2">{service.category}</td>
-    <td className="px-4 py-2 text-right">{service.duration}</td>
-    <td className="px-4 py-2 text-right">{service.price.toFixed(2)} zł</td>
-    <td className="px-4 py-2 text-right">{service.tax}%</td>
+    <td className="px-4 py-2 text-left font-medium">{service.name}</td>
+    <td className="px-4 py-2 text-left">{service.description}</td>
+    <td className="px-4 py-2 text-left">{service.category}</td>
+    <td className="px-4 py-2 text-left">{service.duration}</td>
+    <td className="px-4 py-2 text-left">{service.price.toFixed(2)} zł</td>
+    <td className="px-4 py-2 text-left">{service.tax}%</td>
   </tr>
 );
 

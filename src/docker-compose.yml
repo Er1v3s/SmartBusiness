@@ -10,7 +10,7 @@ volumes:
   mongodb-data:
   prometheus-data:
   grafana-data:
-  loki-data:
+  redis-data:
 
     # MONITORING SERVICE TURN OFF WHILE DEVELOPMENT
 
@@ -236,6 +236,17 @@ services:
     networks:
       - app-network
       - monitoring-network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
 
   # MONITORING SERVICES 
 

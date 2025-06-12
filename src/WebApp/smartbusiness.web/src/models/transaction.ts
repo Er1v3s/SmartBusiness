@@ -2,7 +2,8 @@ export interface Transaction {
   id: string;
   companyId: string;
   userId: string;
-  productId: string;
+  itemId: string;
+  itemType: "product" | "service";
   quantity: number;
   totalAmount: number;
   tax: number;
@@ -20,6 +21,9 @@ export interface TransactionContextType {
   fetchTransactions: (
     params: GetTransactionByParamsQuery,
   ) => Promise<Transaction[]>;
+  fetchEnrichtedTransactions: (
+    params: GetTransactionByParamsQuery
+  ) => Promise<EnrichedTransaction[]>;
 }
 
 export interface GetTransactionByParamsQuery {
@@ -34,4 +38,9 @@ export interface GetTransactionByParamsQuery {
   maxTotalAmountMinusTax?: number;
   startDateTime?: string; // ISO string (DateTime)
   endDateTime?: string; // ISO string (DateTime)
+  numberOfTransactions?: number;
 }
+
+export interface EnrichedTransaction extends Transaction {
+  itemName: string;
+  }

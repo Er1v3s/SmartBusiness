@@ -11,11 +11,12 @@ using WriteService.Application.Commands.Abstracts;
 namespace WriteService.Application.Commands.Transactions
 {
     public record UpdateTransactionCommand(
-        string ProductId,
+        string ItemId,
+        string ItemType,
         int Quantity,
         decimal TotalAmount,
         int Tax
-    ) : TransactionCommand(ProductId, Quantity, TotalAmount, Tax), IRequest<bool>, IHaveCompanyId, IHaveUserId
+    ) : TransactionCommand(ItemId, ItemType, Quantity, TotalAmount, Tax), IRequest<bool>, IHaveCompanyId, IHaveUserId
     {
         public string TransactionId { get; set; } = string.Empty;
         public string CompanyId { get; set; } = string.Empty;
@@ -46,12 +47,14 @@ namespace WriteService.Application.Commands.Transactions
     public class UpdateTransactionCommandHandler : IRequestHandler<UpdateTransactionCommand, bool>
     {
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IRedisCacheService _redisCacheService;
         private readonly IEventBus _eventBus;
         private readonly IMapper _mapper;
 
-        public UpdateTransactionCommandHandler(ITransactionRepository transactionRepository, IEventBus eventBus, IMapper mapper)
+        public UpdateTransactionCommandHandler(ITransactionRepository transactionRepository, IRedisCacheService redisCacheService, IEventBus eventBus, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
+            _redisCacheService = redisCacheService;
             _eventBus = eventBus;
             _mapper = mapper;
         }
@@ -70,6 +73,9 @@ namespace WriteService.Application.Commands.Transactions
 
             var transactionDto = _mapper.Map<TransactionDto>(transaction);
             await _eventBus.PublishAsync(new TransactionUpdatedEvent(transactionDto), cancellationToken);
+
+            var cacheKey = $"transactions:{request.CompanyId}";
+            await _redisCacheService.RemoveAsync(cacheKey);
 
             return true;
         }

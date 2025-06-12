@@ -17,6 +17,7 @@ using ReadService.Infrastructure.Messaging;
 using Shared.Middlewares;
 using Shared.Settings;
 using System.Text;
+using StackExchange.Redis;
 
 namespace ReadService.Api
 {
@@ -91,6 +92,15 @@ namespace ReadService.Api
                     });
                 });
             });
+
+            #endregion
+
+            #region Redis
+
+            var redisConnectionString = builder.Configuration.GetSection("Redis:ConnectionString").Value;
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+                ConnectionMultiplexer.Connect(redisConnectionString!));
 
             #endregion
 

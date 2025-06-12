@@ -5,20 +5,20 @@ import { useService } from "../../../context/service/ServiceContext";
 import { useTransaction } from "../../../context/transaction/TransactionContext";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/auth/AuthContext";
-import type { Transaction } from "../../../models/transaction";
+import type { EnrichedTransaction } from "../../../models/transaction";
 
 export const DashboardHomeSection: React.FC = () => {
   const { company } = useCompany();
   const { fetchProducts } = useProduct();
   const { fetchServices } = useService();
-  const { fetchTransactions } = useTransaction();
+  const { fetchTransactions, fetchEnrichtedTransactions } = useTransaction();
   const { user } = useAuth();
   const [productCount, setProductCount] = useState(0);
   const [serviceCount, setServiceCount] = useState(0);
   const [transactionCount, setTransactionCount] = useState(0);
-  const [recentTransactions, setRecentTransactions] = useState<Transaction[]>(
-    [],
-  );
+  const [recentTransactions, setRecentTransactions] = useState<
+    EnrichedTransaction[]
+  >([]);
   const [loadingRecent, setLoadingRecent] = useState(true);
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ export const DashboardHomeSection: React.FC = () => {
     fetchServices({}).then((s) => setServiceCount(s.length));
     fetchTransactions({}).then((t) => setTransactionCount(t.length));
     setLoadingRecent(true);
-    fetchTransactions({})
+    fetchEnrichtedTransactions({ numberOfTransactions: 5 })
       .then((t) => {
         // Sortuj po dacie malejąco i weź 5 najnowszych
         const sorted = t.sort(
@@ -38,7 +38,13 @@ export const DashboardHomeSection: React.FC = () => {
         setRecentTransactions(sorted.slice(0, 5));
       })
       .finally(() => setLoadingRecent(false));
-  }, [company, fetchProducts, fetchServices, fetchTransactions]);
+  }, [
+    company,
+    fetchProducts,
+    fetchServices,
+    fetchTransactions,
+    fetchEnrichtedTransactions,
+  ]);
 
   return (
     <>
@@ -77,7 +83,7 @@ export const DashboardHomeSection: React.FC = () => {
             {recentTransactions.map((t) => (
               <li key={t.id} className="flex items-center justify-between py-2">
                 <span className="truncate text-gray-800 dark:text-gray-100">
-                  {new Date(t.createdAt).toLocaleString()} – {t.productId} –{" "}
+                  {new Date(t.createdAt).toLocaleString()} – {t.itemName} –{" "}
                   {t.totalAmount.toFixed(2)} zł
                 </span>
                 <span className="ml-2 rounded bg-indigo-100 px-2 py-1 text-xs font-semibold text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200">

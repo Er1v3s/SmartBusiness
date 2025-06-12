@@ -11,7 +11,8 @@ namespace WriteService.Tests.UnitTests.Validation.Transaction.Commands
         public void Should_Pass_Validation_When_All_Fields_Are_Valid()
         {
             var command = new UpdateTransactionCommand(
-                ProductId: "ValidProductId",
+                ItemId: "ValidProductId",
+                ItemType: "ValidItemType",
                 Quantity: 10,
                 TotalAmount: 99.99m,
                 Tax: 10
@@ -32,7 +33,8 @@ namespace WriteService.Tests.UnitTests.Validation.Transaction.Commands
         public void Should_Fail_When_TransactionId_Is_Null_Or_Empty(string transactionId)
         {
             var command = new UpdateTransactionCommand(
-                ProductId: "ValidProductId",
+                ItemId: "ValidProductId",
+                ItemType: "ValidItemType",
                 Quantity: 10,
                 TotalAmount: 99.99m,
                 Tax: 10
@@ -53,7 +55,8 @@ namespace WriteService.Tests.UnitTests.Validation.Transaction.Commands
         public void Should_Fail_When_ProductId_Is_Null_Or_Empty(string productId)
         {
             var command = new UpdateTransactionCommand(
-                ProductId: productId,
+                ItemId: productId,
+                ItemType: "ValidItemType",
                 Quantity: 10,
                 TotalAmount: 99.99m,
                 Tax: 10
@@ -65,7 +68,7 @@ namespace WriteService.Tests.UnitTests.Validation.Transaction.Commands
             };
 
             var result = _validator.TestValidate(command);
-            result.ShouldHaveValidationErrorFor(x => x.ProductId);
+            result.ShouldHaveValidationErrorFor(x => x.ItemId);
         }
 
         [Theory]
@@ -75,7 +78,8 @@ namespace WriteService.Tests.UnitTests.Validation.Transaction.Commands
         public void Should_Fail_When_Quantity_Is_Invalid(int quantity)
         {
             var command = new UpdateTransactionCommand(
-                ProductId: "ValidProductId",
+                ItemId: "ValidProductId",
+                ItemType: "ValidItemType",
                 Quantity: quantity,
                 TotalAmount: 99.99m,
                 Tax: 10
@@ -98,7 +102,8 @@ namespace WriteService.Tests.UnitTests.Validation.Transaction.Commands
         public void Should_Fail_When_TotalAmount_Is_Invalid(decimal totalAmount)
         {
             var command = new UpdateTransactionCommand(
-                ProductId: "ValidProductId",
+                ItemId: "ValidProductId",
+                ItemType: "ValidItemType",
                 Quantity: 10,
                 TotalAmount: totalAmount,
                 Tax: 10
@@ -119,7 +124,8 @@ namespace WriteService.Tests.UnitTests.Validation.Transaction.Commands
         public void Should_Fail_When_Tax_Is_Invalid(int tax)
         {
             var command = new UpdateTransactionCommand(
-                ProductId: "ValidProductId",
+                ItemId: "ValidProductId",
+                ItemType: "ValidItemType",
                 Quantity: 10,
                 TotalAmount: 99.99m,
                 Tax: tax
@@ -140,7 +146,8 @@ namespace WriteService.Tests.UnitTests.Validation.Transaction.Commands
         public void Should_Fail_When_CompanyId_Is_Null_Or_Empty(string companyId)
         {
             var command = new UpdateTransactionCommand(
-                ProductId: "ValidProductId",
+                ItemId: "ValidProductId",
+                ItemType: "ValidItemType",
                 Quantity: 10,
                 TotalAmount: 99.99m,
                 Tax: 10
@@ -159,7 +166,8 @@ namespace WriteService.Tests.UnitTests.Validation.Transaction.Commands
         public void Should_Fail_When_UserId_Is_Empty()
         {
             var command = new UpdateTransactionCommand(
-                ProductId: "ValidProductId",
+                ItemId: "ValidProductId",
+                ItemType: "ValidItemType",
                 Quantity: 10,
                 TotalAmount: 99.99m,
                 Tax: 10

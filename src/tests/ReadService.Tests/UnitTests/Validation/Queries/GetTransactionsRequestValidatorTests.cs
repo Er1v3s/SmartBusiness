@@ -14,6 +14,7 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
                 UserId: Guid.NewGuid().ToString(),
                 ProductId: "ValidNanoId",
                 Quantity: 10,
+                ItemType : "ValidType",
                 MinTotalAmount: 10.00m,
                 MaxTotalAmount: 100.00m,
                 MinTax: 5,
@@ -21,7 +22,8 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
                 MinTotalAmountMinusTax: 8.00m,
                 MaxTotalAmountMinusTax: 90.00m,
                 StartDateTime: DateTime.UtcNow.AddDays(-1),
-                EndDateTime: DateTime.UtcNow
+                EndDateTime: DateTime.UtcNow,
+                NumberOfTransactions: null
             )
             {
                 CompanyId = "ValidCompanyId"
@@ -39,6 +41,7 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
             var query = new GetTransactionsByParamsQuery(
                 UserId: userId,
                 ProductId: "ValidNanoId",
+                ItemType: "ValidType",
                 Quantity: 10,
                 MinTotalAmount: 10.00m,
                 MaxTotalAmount: 100.00m,
@@ -47,7 +50,8 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
                 MinTotalAmountMinusTax: 8.00m,
                 MaxTotalAmountMinusTax: 90.00m,
                 StartDateTime: DateTime.UtcNow.AddDays(-1),
-                EndDateTime: DateTime.UtcNow
+                EndDateTime: DateTime.UtcNow,
+                NumberOfTransactions: null
             )
             {
                 CompanyId = "ValidCompanyId"
@@ -66,6 +70,7 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
             var query = new GetTransactionsByParamsQuery(
                 UserId: Guid.NewGuid().ToString(),
                 ProductId: productId,
+                ItemType: "ValidType",
                 Quantity: 10,
                 MinTotalAmount: 10.00m,
                 MaxTotalAmount: 100.00m,
@@ -74,7 +79,8 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
                 MinTotalAmountMinusTax: 8.00m,
                 MaxTotalAmountMinusTax: 90.00m,
                 StartDateTime: DateTime.UtcNow.AddDays(-1),
-                EndDateTime: DateTime.UtcNow
+                EndDateTime: DateTime.UtcNow,
+                NumberOfTransactions: null
             )
             {
                 CompanyId = "ValidCompanyId"
@@ -94,6 +100,7 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
             var query = new GetTransactionsByParamsQuery(
                 UserId: Guid.NewGuid().ToString(),
                 ProductId: "ValidNanoId",
+                ItemType: "ValidType",
                 Quantity: quantity,
                 MinTotalAmount: 10.00m,
                 MaxTotalAmount: 100.00m,
@@ -102,7 +109,8 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
                 MinTotalAmountMinusTax: 8.00m,
                 MaxTotalAmountMinusTax: 90.00m,
                 StartDateTime: DateTime.UtcNow.AddDays(-1),
-                EndDateTime: DateTime.UtcNow
+                EndDateTime: DateTime.UtcNow,
+                NumberOfTransactions: null
             )
             {
                 CompanyId = "ValidCompanyId"
@@ -118,6 +126,7 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
             var query = new GetTransactionsByParamsQuery(
                 UserId: Guid.NewGuid().ToString(),
                 ProductId: "ValidNanoId",
+                ItemType: "ValidType",
                 Quantity: 10,
                 MinTotalAmount: 100.00m,
                 MaxTotalAmount: 50.00m,
@@ -126,7 +135,8 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
                 MinTotalAmountMinusTax: 8.00m,
                 MaxTotalAmountMinusTax: 90.00m,
                 StartDateTime: DateTime.UtcNow.AddDays(-1),
-                EndDateTime: DateTime.UtcNow
+                EndDateTime: DateTime.UtcNow,
+                NumberOfTransactions: null
             )
             {
                 CompanyId = "ValidCompanyId"
@@ -142,6 +152,7 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
             var query = new GetTransactionsByParamsQuery(
                 UserId: Guid.NewGuid().ToString(),
                 ProductId: "ValidNanoId",
+                ItemType: "ValidType",
                 Quantity: 10,
                 MinTotalAmount: 10.00m,
                 MaxTotalAmount: 100.00m,
@@ -150,7 +161,8 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
                 MinTotalAmountMinusTax: 8.00m,
                 MaxTotalAmountMinusTax: 90.00m,
                 StartDateTime: DateTime.UtcNow.AddDays(-1),
-                EndDateTime: DateTime.UtcNow
+                EndDateTime: DateTime.UtcNow,
+                NumberOfTransactions: null
             )
             {
                 CompanyId = "ValidCompanyId"
@@ -166,6 +178,7 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
             var query = new GetTransactionsByParamsQuery(
                 UserId: Guid.NewGuid().ToString(),
                 ProductId: "ValidNanoId",
+                ItemType: "ValidType",
                 Quantity: 10,
                 MinTotalAmount: 10.00m,
                 MaxTotalAmount: 100.00m,
@@ -174,7 +187,8 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
                 MinTotalAmountMinusTax: 90.00m,
                 MaxTotalAmountMinusTax: 8.00m,
                 StartDateTime: DateTime.UtcNow.AddDays(-1),
-                EndDateTime: DateTime.UtcNow
+                EndDateTime: DateTime.UtcNow,
+                NumberOfTransactions: null
             )
             {
                 CompanyId = "ValidCompanyId"
@@ -190,6 +204,7 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
             var query = new GetTransactionsByParamsQuery(
                 UserId: Guid.NewGuid().ToString(),
                 ProductId: "ValidNanoId",
+                ItemType: "ValidType",
                 Quantity: 10,
                 MinTotalAmount: 10.00m,
                 MaxTotalAmount: 100.00m,
@@ -198,7 +213,36 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
                 MinTotalAmountMinusTax: 8.00m,
                 MaxTotalAmountMinusTax: 90.00m,
                 StartDateTime: DateTime.UtcNow,
-                EndDateTime: DateTime.UtcNow.AddDays(-1)
+                EndDateTime: DateTime.UtcNow.AddDays(-1),
+                NumberOfTransactions: null
+            )
+            {
+                CompanyId = "ValidCompanyId"
+            };
+
+            var result = _validator.TestValidate(query);
+            result.ShouldHaveValidationErrorFor(x => x.EndDateTime);
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(10000001)]
+        public void Should_Fail_When_NumberOfTransactions_Is_Invalid(int numberOfTransactions)
+        {
+            var query = new GetTransactionsByParamsQuery(
+                UserId: Guid.NewGuid().ToString(),
+                ProductId: "ValidNanoId",
+                ItemType: "ValidType",
+                Quantity: 10,
+                MinTotalAmount: 10.00m,
+                MaxTotalAmount: 100.00m,
+                MinTax: 5,
+                MaxTax: 20,
+                MinTotalAmountMinusTax: 8.00m,
+                MaxTotalAmountMinusTax: 90.00m,
+                StartDateTime: DateTime.UtcNow,
+                EndDateTime: DateTime.UtcNow.AddDays(-1),
+                NumberOfTransactions: numberOfTransactions
             )
             {
                 CompanyId = "ValidCompanyId"
@@ -216,6 +260,7 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
             var query = new GetTransactionsByParamsQuery(
                 UserId: Guid.NewGuid().ToString(),
                 ProductId: "ValidNanoId",
+                ItemType: "ValidType",
                 Quantity: 10,
                 MinTotalAmount: 10.00m,
                 MaxTotalAmount: 100.00m,
@@ -224,7 +269,8 @@ namespace ReadService.Tests.UnitTests.Validation.Queries
                 MinTotalAmountMinusTax: 8.00m,
                 MaxTotalAmountMinusTax: 90.00m,
                 StartDateTime: DateTime.UtcNow.AddDays(-1),
-                EndDateTime: DateTime.UtcNow
+                EndDateTime: DateTime.UtcNow,
+                NumberOfTransactions: null
             )
             {
                 CompanyId = companyId

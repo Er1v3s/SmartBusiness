@@ -7,16 +7,20 @@ namespace WriteService.Application.Commands.Abstracts
     {
         public TransactionCommandValidator()
         {
-            RuleFor(x => x.ProductId)
+            RuleFor(x => x.ItemId)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage($"{nameof(Transaction.ProductId)} is required.");
+                .WithMessage($"{nameof(Transaction.ItemId)} is required.");
 
             RuleFor(x => x.Quantity)
                 .GreaterThan(0)
                 .WithMessage($"{nameof(Transaction.Quantity)} must be greater than zero.")
                 .LessThanOrEqualTo(1000000)
                 .WithMessage($"{nameof(Transaction.Quantity)} must be less than or equal to 1,000,000.");
+
+            RuleFor(x => x.ItemType)
+                .NotEmpty()
+                .WithMessage($"{nameof(Transaction.ItemType)} cannot be empty.");
 
             RuleFor(x => x.TotalAmount)
                 .GreaterThan(0)

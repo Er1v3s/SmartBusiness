@@ -89,7 +89,8 @@ export const RegisterSaleSection = () => {
     setProductLoading(true);
     try {
       await createTransaction({
-        productId,
+        itemId: productId, // for product, we use productId field
+        itemType: "product",
         quantity: productQuantity,
         totalAmount: productTotalAmount,
         tax: productTax,
@@ -127,7 +128,8 @@ export const RegisterSaleSection = () => {
     setServiceLoading(true);
     try {
       await createTransaction({
-        productId: serviceId, // for service, we use productId field as well
+        itemId: serviceId, // for service, we use productId field as well
+        itemType: "service",
         quantity: serviceQuantity,
         totalAmount: serviceTotalAmount,
         tax: serviceTax,

@@ -18,8 +18,11 @@ namespace Shared.Entities
         [BsonElement("userId")]
         public string UserId { get; set; } = null!;
 
-        [BsonElement("productId")]
-        public string ProductId { get; set; } = null!;
+        [BsonElement("itemId")]
+        public string ItemId { get; set; } = null!;
+
+        [BsonElement("itemType")]
+        public string ItemType { get; set; } = null!;
 
         [BsonElement("quantity")]
         public int Quantity { get; set; }
