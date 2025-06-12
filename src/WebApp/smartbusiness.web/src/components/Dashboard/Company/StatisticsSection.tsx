@@ -11,7 +11,7 @@ import { TransactionCountByProductChart } from "../StatisticsSection/Transaction
 import { TotalAmountByProductChart } from "../StatisticsSection/TotalAmountByProductChart";
 import { TaxHistogramChart } from "../StatisticsSection/TaxHistogramChart";
 import { ProductSharePieChart } from "../StatisticsSection/ProductSharePieChart";
-import type { Transaction } from "../../../models/transaction";
+import type { EnrichedTransaction } from "../../../models/transaction";
 
 const chartOptions = [
   {
@@ -72,8 +72,8 @@ const chartOptions = [
 ];
 
 export const StatisticsSection = () => {
-  const { fetchTransactions } = useTransaction();
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const { fetchEnrichtedTransactions } = useTransaction();
+  const [transactions, setTransactions] = useState<EnrichedTransaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedChart, setSelectedChart] = useState(chartOptions[0].key);
   const selectRef = useRef<HTMLSelectElement>(null);
@@ -92,10 +92,10 @@ export const StatisticsSection = () => {
   const [barColor, setBarColor] = useState<string>("#2563eb");
 
   useEffect(() => {
-    fetchTransactions({})
+    fetchEnrichtedTransactions({})
       .then(setTransactions)
       .finally(() => setLoading(false));
-  }, [fetchTransactions]);
+  }, [fetchEnrichtedTransactions]);
 
   const ChartComponent = chartOptions.find(
     (c) => c.key === selectedChart,

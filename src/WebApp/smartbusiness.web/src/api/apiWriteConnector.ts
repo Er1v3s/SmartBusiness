@@ -8,9 +8,10 @@ const apiWriteConnector = {
   },
 
   updateTransaction: async (data: Partial<Transaction>): Promise<void> => {
-    const { id, productId, quantity, totalAmount, tax  } = data;
+    const { id, itemId, itemType, quantity, totalAmount, tax  } = data;
     await axiosWrite.put(`write/transactions/${id}`, {
-      productId,
+      itemId,
+      itemType,
       quantity,
       totalAmount,
       tax,

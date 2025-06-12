@@ -1,10 +1,10 @@
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 ChartJS.register(ArcElement, Tooltip, Legend);
-import type { Transaction } from "../../../models/transaction";
+import type { EnrichedTransaction } from "../../../models/transaction";
 
 interface ProductSharePieChartProps {
-  transactions: Transaction[];
+  transactions: EnrichedTransaction[];
 }
 
 export const ProductSharePieChart: React.FC<ProductSharePieChartProps> = ({
@@ -12,8 +12,7 @@ export const ProductSharePieChart: React.FC<ProductSharePieChartProps> = ({
 }) => {
   const sumByProduct: { [productId: string]: number } = {};
   transactions.forEach((t) => {
-    sumByProduct[t.productId] =
-      (sumByProduct[t.productId] || 0) + t.totalAmount;
+    sumByProduct[t.itemName] = (sumByProduct[t.itemId] || 0) + t.totalAmount;
   });
 
   const productIds = Object.keys(sumByProduct);
@@ -29,7 +28,8 @@ export const ProductSharePieChart: React.FC<ProductSharePieChartProps> = ({
           "#f43f5e",
           "#a21caf",
           "#16a34a",
-          "#eab308",
+          "#fea308",
+          "#dea308",
         ],
       },
     ],

@@ -17,10 +17,10 @@ ChartJS.register(
   Legend,
 );
 import { parseISO, format } from "date-fns";
-import type { Transaction } from "../../../models/transaction";
+import type { EnrichedTransaction } from "../../../models/transaction";
 
 interface AvgTransactionValueChartProps {
-  transactions: Transaction[];
+    transactions: EnrichedTransaction[];
   groupBy: "day" | "month" | "year";
   barColor: string;
 }

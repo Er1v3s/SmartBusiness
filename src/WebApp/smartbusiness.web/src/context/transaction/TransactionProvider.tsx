@@ -6,6 +6,7 @@ import type {
   Transaction,
   TransactionContextType,
   NewTransaction,
+  EnrichedTransaction,
 } from "../../models/transaction.ts";
 
 export const TransactionProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -38,6 +39,12 @@ export const TransactionProvider: React.FC<{ children: React.ReactNode }> = ({
     return await apiReadConnector.getTransactions(params);
   };
 
+  const fetchEnrichtedTransactions = async (
+    params: GetTransactionByParamsQuery,
+  ): Promise<EnrichedTransaction[]> => {
+    return await apiReadConnector.getEnrichtedTransactions(params);
+  };
+
   // Context value
   const value: TransactionContextType = {
     createTransaction,
@@ -45,6 +52,7 @@ export const TransactionProvider: React.FC<{ children: React.ReactNode }> = ({
     deleteTransaction,
     fetchTransaction,
     fetchTransactions,
+    fetchEnrichtedTransactions,
   };
 
   return (
