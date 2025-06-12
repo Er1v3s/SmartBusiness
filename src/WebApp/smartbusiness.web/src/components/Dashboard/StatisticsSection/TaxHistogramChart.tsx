@@ -4,29 +4,44 @@ import type { Transaction } from "../../../models/transaction";
 interface TaxHistogramChartProps {
   transactions: Transaction[];
   barColor: string;
+  serviceColor?: string;
 }
 
 export const TaxHistogramChart: React.FC<TaxHistogramChartProps> = ({
   transactions,
   barColor,
+  serviceColor = "#a21caf",
 }) => {
-  const taxCounts: { [tax: number]: number } = {};
+  const taxCountsProduct: { [tax: number]: number } = {};
+  const taxCountsService: { [tax: number]: number } = {};
 
   transactions.forEach((t) => {
-    taxCounts[t.tax] = (taxCounts[t.tax] || 0) + 1;
+    if (t.itemType === "product") {
+      taxCountsProduct[t.tax] = (taxCountsProduct[t.tax] || 0) + 1;
+    } else if (t.itemType === "service") {
+      taxCountsService[t.tax] = (taxCountsService[t.tax] || 0) + 1;
+    }
   });
 
-  const taxLevels = Object.keys(taxCounts)
-    .map(Number)
-    .sort((a, b) => a - b);
+  const allTaxLevels = Array.from(
+    new Set([
+      ...Object.keys(taxCountsProduct).map(Number),
+      ...Object.keys(taxCountsService).map(Number),
+    ]),
+  ).sort((a, b) => a - b);
 
   const data = {
-    labels: taxLevels.map((t) => `${t}%`),
+    labels: allTaxLevels.map((t) => `${t}%`),
     datasets: [
       {
-        label: "Liczba transakcji wg podatku",
-        data: taxLevels.map((t) => taxCounts[t]),
+        label: "Produkty",
+        data: allTaxLevels.map((t) => taxCountsProduct[t] || 0),
         backgroundColor: barColor,
+      },
+      {
+        label: "Usługi",
+        data: allTaxLevels.map((t) => taxCountsService[t] || 0),
+        backgroundColor: serviceColor,
       },
     ],
   };

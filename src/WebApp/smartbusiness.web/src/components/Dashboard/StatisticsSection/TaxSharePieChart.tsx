@@ -21,7 +21,7 @@ export const TaxSharePieChart: React.FC<TaxSharePieChartProps> = ({
     datasets: [
       {
         data: [totalTax, totalAmount - totalTax],
-        backgroundColor: ["#f59e42", "#16a34a"],
+        backgroundColor: ["#2563eb", "#a21caf"],
       },
     ],
   };

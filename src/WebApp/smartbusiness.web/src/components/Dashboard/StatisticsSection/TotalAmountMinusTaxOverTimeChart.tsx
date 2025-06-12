@@ -6,17 +6,19 @@ interface TotalAmountMinusTaxOverTimeChartProps {
   transactions: Transaction[];
   groupBy: "day" | "month" | "year";
   barColor: string;
+  serviceColor?: string;
 }
 
 export const TotalAmountMinusTaxOverTimeChart: React.FC<
   TotalAmountMinusTaxOverTimeChartProps
-> = ({ transactions, groupBy, barColor }) => {
-  const dataByGroup: { [key: string]: number } = {};
+> = ({ transactions, groupBy, barColor, serviceColor = "#a21caf" }) => {
+  // Split into two series: products and services
+  const dataByGroupProduct: { [key: string]: number } = {};
+  const dataByGroupService: { [key: string]: number } = {};
 
   transactions.forEach((t) => {
     const date = parseISO(t.createdAt);
     let key = "";
-
     if (groupBy === "day") {
       key = format(date, "yyyy-MM-dd");
     } else if (groupBy === "month") {
@@ -24,13 +26,23 @@ export const TotalAmountMinusTaxOverTimeChart: React.FC<
     } else if (groupBy === "year") {
       key = format(date, "yyyy");
     }
-
-    dataByGroup[key] = (dataByGroup[key] || 0) + t.totalAmountMinusTax;
+    if (t.itemType === "product") {
+      dataByGroupProduct[key] =
+        (dataByGroupProduct[key] || 0) + t.totalAmountMinusTax;
+    } else if (t.itemType === "service") {
+      dataByGroupService[key] =
+        (dataByGroupService[key] || 0) + t.totalAmountMinusTax;
+    }
   });
 
-  const keys = Object.keys(dataByGroup).sort();
+  const allKeys = Array.from(
+    new Set([
+      ...Object.keys(dataByGroupProduct),
+      ...Object.keys(dataByGroupService),
+    ]),
+  ).sort();
 
-  const displayLabels = keys.map((k) => {
+  const displayLabels = allKeys.map((k) => {
     if (groupBy === "day") {
       return format(parseISO(k), "dd.MM.yyyy");
     }
@@ -40,7 +52,6 @@ export const TotalAmountMinusTaxOverTimeChart: React.FC<
     if (groupBy === "year") {
       return k;
     }
-
     return k;
   });
 
@@ -48,9 +59,14 @@ export const TotalAmountMinusTaxOverTimeChart: React.FC<
     labels: displayLabels,
     datasets: [
       {
-        label: "Suma sprzedaży (TotalAmount)",
-        data: keys.map((k) => dataByGroup[k]),
+        label: "Produkty",
+        data: allKeys.map((k) => dataByGroupProduct[k] || 0),
         backgroundColor: barColor,
+      },
+      {
+        label: "Usługi",
+        data: allKeys.map((k) => dataByGroupService[k] || 0),
+        backgroundColor: serviceColor,
       },
     ],
   };

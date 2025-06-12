@@ -24,6 +24,7 @@ interface TransactionBarChartProps {
   transactions: Transaction[];
   groupBy: "day" | "month" | "year";
   barColor: string;
+  serviceColor?: string;
   dateFrom: string;
   dateTo: string;
 }
@@ -32,8 +33,12 @@ export const TransactionBarChart: React.FC<TransactionBarChartProps> = ({
   transactions,
   groupBy,
   barColor,
+  serviceColor = "#6366f1",
 }) => {
-  const dataByGroup: { [key: string]: number } = {};
+  // Dwie mapy: osobno dla produktów i usług
+  const dataByGroupProduct: { [key: string]: number } = {};
+  const dataByGroupService: { [key: string]: number } = {};
+
   transactions.forEach((t) => {
     const date = parseISO(t.createdAt);
     let key = "";
@@ -46,12 +51,22 @@ export const TransactionBarChart: React.FC<TransactionBarChartProps> = ({
       key = format(date, "yyyy");
     }
 
-    dataByGroup[key] = (dataByGroup[key] || 0) + 1;
+    if (t.itemType === "product") {
+      dataByGroupProduct[key] = (dataByGroupProduct[key] || 0) + 1;
+    } else if (t.itemType === "service") {
+      dataByGroupService[key] = (dataByGroupService[key] || 0) + 1;
+    }
   });
 
-  const keys = Object.keys(dataByGroup).sort();
+  // Zbierz wszystkie klucze (daty) z obu map
+  const allKeys = Array.from(
+    new Set([
+      ...Object.keys(dataByGroupProduct),
+      ...Object.keys(dataByGroupService),
+    ]),
+  ).sort();
 
-  const displayLabels = keys.map((k) => {
+  const displayLabels = allKeys.map((k) => {
     if (groupBy === "day") {
       return format(parseISO(k), "dd.MM.yyyy");
     }
@@ -61,7 +76,6 @@ export const TransactionBarChart: React.FC<TransactionBarChartProps> = ({
     if (groupBy === "year") {
       return k;
     }
-
     return k;
   });
 
@@ -69,9 +83,14 @@ export const TransactionBarChart: React.FC<TransactionBarChartProps> = ({
     labels: displayLabels,
     datasets: [
       {
-        label: "Liczba transakcji",
-        data: keys.map((k) => dataByGroup[k]),
+        label: "Produkty",
+        data: allKeys.map((k) => dataByGroupProduct[k] || 0),
         backgroundColor: barColor,
+      },
+      {
+        label: "Usługi",
+        data: allKeys.map((k) => dataByGroupService[k] || 0),
+        backgroundColor: serviceColor,
       },
     ],
   };

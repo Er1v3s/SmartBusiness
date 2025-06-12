@@ -66,7 +66,7 @@ const chartOptions = [
   },
   {
     key: "productShare",
-    label: "Udział produktów w sprzedaży (kołowy)",
+    label: "Udział w sprzedaży (kołowy)",
     component: ProductSharePieChart,
   },
 ];
@@ -89,7 +89,49 @@ export const StatisticsSection = () => {
     today.toISOString().slice(0, 10),
   );
   const [groupBy, setGroupBy] = useState<"day" | "month" | "year">("day");
-  const [barColor, setBarColor] = useState<string>("#2563eb");
+
+  // Palety kolorów dla wykresów
+  const colorPalettes = [
+    {
+      key: "default",
+      name: "Indygo/Fiolet",
+      product: "#2563eb", // Indigo 600
+      service: "#a21caf", // Fiolet 800
+    },
+    {
+      key: "green-orange",
+      name: "Zielony/Pomarańczowy",
+      product: "#059669", // Emerald 600
+      service: "#ea580c", // Orange 600
+    },
+    {
+      key: "red-cyan",
+      name: "Czerwony/Cyjan",
+      product: "#dc2626", // Red 600
+      service: "#06b6d4", // Cyan 500
+    },
+    {
+      key: "emerald-pink",
+      name: "Szmaragdowy/Różowy",
+      service: "#ec4899", // Rose 600
+      product: "#10b981", // Emerald 600
+    },
+    {
+      key: "violet-lime",
+      name: "Fiolet/Limonka",
+      product: "#7c3aed", // Violet 600
+      service: "#84cc16", // Lime 500
+    },
+    {
+      key: "rose-blue",
+      name: "Różowy/Niebieski",
+      product: "#e11d48", // Rose 600
+      service: "#2563eb", // Indigo 600
+    },
+  ];
+  const [paletteKey, setPaletteKey] = useState(colorPalettes[0].key);
+  const palette =
+    colorPalettes.find((p) => p.key === paletteKey) || colorPalettes[0];
 
   useEffect(() => {
     fetchEnrichtedTransactions({})
@@ -137,14 +179,18 @@ export const StatisticsSection = () => {
         </select>
       </label>
       <label className="flex items-center gap-2 text-sm">
-        Kolor:
-        <input
-          type="color"
-          value={barColor}
-          onChange={(e) => setBarColor(e.target.value)}
-          className="min-w-[60px] rounded-md border border-gray-300 px-2 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-          style={{ height: 40 }}
-        />
+        Paleta kolorów:
+        <select
+          value={paletteKey}
+          onChange={(e) => setPaletteKey(e.target.value)}
+          className="min-w-[180px] rounded-md border border-gray-300 px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 dark:focus:ring-blue-500"
+        >
+          {colorPalettes.map((p) => (
+            <option key={p.key} value={p.key}>
+              {p.name}
+            </option>
+          ))}
+        </select>
       </label>
     </div>
   );
@@ -194,7 +240,8 @@ export const StatisticsSection = () => {
               <ChartComponent
                 transactions={filteredTransactions}
                 groupBy={groupBy}
-                barColor={barColor}
+                barColor={palette.product}
+                serviceColor={palette.service}
                 dateFrom={dateFrom}
                 dateTo={dateTo}
               />
