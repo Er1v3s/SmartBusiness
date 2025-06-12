@@ -1,4 +1,3 @@
-// App.tsx
 import React, { type JSX } from "react";
 import {
   BrowserRouter as Router,
@@ -6,22 +5,25 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import "./App.css";
+import { Outlet } from "react-router-dom";
 import { Navigation } from "./components/Navigation/Navigation";
 import { useAuth } from "./context/auth/AuthContext";
+import { AuthProvider } from "./context/auth/AuthProvider";
+import { TransactionProvider } from "./context/transaction/TransactionProvider";
+import { ServiceProvider } from "./context/service/ServiceProvider";
+import { AlertProvider } from "./context/alert/AlertContext";
+import { AccountProvider } from "./context/account/AccountProvider";
+import { CompanyProvider } from "./context/company/CompanyProvider";
+import { ProductProvider } from "./context/product/ProductProvider";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/Auth/LoginPage";
 import { RegisterPage } from "./pages/Auth/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
-import { AuthProvider } from "./context/auth/AuthProvider";
-import { AccountProvider } from "./context/account/AccountProvider";
-import { AlertProvider } from "./context/alert/AlertContext";
+import { UserPage } from "./pages/User/UserPage";
+import { CompanyPage } from "./pages/Company/CompanyPage";
 import { ForgotPassword } from "./pages/Auth/ForgotPassword";
 import { ResetPassword } from "./pages/Auth/ResetPassword";
-import "./App.css";
-import { UserPage } from "./pages/User/UserPage";
-import { CompanyProvider } from "./context/company/CompanyProvider";
-import { ProductProvider } from "./context/product/ProductProvider";
-import { Outlet } from "react-router-dom";
 import { SummaryComponent } from "./components/Dashboard/User/Summary";
 import { ChangePasswordComponent } from "./components/Dashboard/User/ChangePassword";
 import { StatsComponent } from "./components/Dashboard/User/Stats";
@@ -34,9 +36,6 @@ import { TransactionsSection } from "./components/Dashboard/Company/Transactions
 import { RegisterSaleSection } from "./components/Dashboard/Company/RegisterSaleSection";
 import { ServicesSection } from "./components/Dashboard/Company/ServicesSection";
 import { ProductsSection } from "./components/Dashboard/Company/ProductsSection";
-import { ServiceProvider } from "./context/service/ServiceProvider";
-import { TransactionProvider } from "./context/transaction/TransactionProvider";
-import { CompanyPage } from "./pages/Company/CompanyPage";
 import { CompanySummary } from "./components/Dashboard/Company/CompanySettings/CompanySummary";
 import { CompanyAdd } from "./components/Dashboard/Company/CompanySettings/CompanyAdd";
 import { CompanyList } from "./components/Dashboard/Company/CompanySettings/CompanyList";
