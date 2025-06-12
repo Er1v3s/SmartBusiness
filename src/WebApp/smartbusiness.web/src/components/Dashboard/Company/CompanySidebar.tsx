@@ -9,6 +9,7 @@ import {
   Handshake,
   ChevronRight,
   ChevronLeft,
+  Banknote,
 } from "lucide-react";
 import { useCompany } from "../../../context/company/CompanyContext";
 import { useEffect, useState } from "react";
@@ -153,37 +154,6 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
         </NavLink>
 
         <NavLink
-          to="/dashboard/company/stats"
-          className={({ isActive }) =>
-            `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
-              isActive
-                ? "bg-indigo-100 text-indigo-700 dark:bg-gray-800 dark:text-indigo-200"
-                : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-indigo-200"
-            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"} ${
-              isDisabled ? "pointer-events-none opacity-50" : ""
-            }`
-          }
-          tabIndex={isDisabled ? -1 : undefined}
-          aria-disabled={isDisabled}
-        >
-          <span className="flex h-6 w-6 items-center justify-center">
-            <BarChart2 className="h-5 w-5" />
-          </span>
-          <span
-            className={`transition-all duration-200 ${
-              !isCollapsed && showNav
-                ? "w-auto translate-x-0 opacity-100 delay-100"
-                : "w-0 translate-x-2 overflow-hidden opacity-0 delay-0"
-            }`}
-            style={{
-              display: !isCollapsed && showNav ? "inline-block" : "none",
-            }}
-          >
-            Statystyki
-          </span>
-        </NavLink>
-
-        <NavLink
           to="/dashboard/company/services"
           className={({ isActive }) =>
             `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
@@ -244,11 +214,73 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
             Produkty
           </span>
         </NavLink>
+
+        <NavLink
+          to="/dashboard/company/transactions"
+          className={({ isActive }) =>
+            `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
+              isActive
+                ? "bg-indigo-100 text-indigo-700 dark:bg-gray-800 dark:text-indigo-200"
+                : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-indigo-200"
+            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"} ${
+              isDisabled ? "pointer-events-none opacity-50" : ""
+            }`
+          }
+          tabIndex={isDisabled ? -1 : undefined}
+          aria-disabled={isDisabled}
+        >
+          <span className="flex h-6 w-6 items-center justify-center">
+            <Banknote className="h-5 w-5" />
+          </span>
+          <span
+            className={`transition-all duration-200 ${
+              !isCollapsed && showNav
+                ? "w-auto translate-x-0 opacity-100 delay-100"
+                : "w-0 translate-x-2 overflow-hidden opacity-0 delay-0"
+            }`}
+            style={{
+              display: !isCollapsed && showNav ? "inline-block" : "none",
+            }}
+          >
+            Transakcje
+          </span>
+        </NavLink>
+
+        <NavLink
+          to="/dashboard/company/stats"
+          className={({ isActive }) =>
+            `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
+              isActive
+                ? "bg-indigo-100 text-indigo-700 dark:bg-gray-800 dark:text-indigo-200"
+                : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-indigo-200"
+            } ${isCollapsed ? "justify-center px-0" : "gap-3 px-4"} ${
+              isDisabled ? "pointer-events-none opacity-50" : ""
+            }`
+          }
+          tabIndex={isDisabled ? -1 : undefined}
+          aria-disabled={isDisabled}
+        >
+          <span className="flex h-6 w-6 items-center justify-center">
+            <BarChart2 className="h-5 w-5" />
+          </span>
+          <span
+            className={`transition-all duration-200 ${
+              !isCollapsed && showNav
+                ? "w-auto translate-x-0 opacity-100 delay-100"
+                : "w-0 translate-x-2 overflow-hidden opacity-0 delay-0"
+            }`}
+            style={{
+              display: !isCollapsed && showNav ? "inline-block" : "none",
+            }}
+          >
+            Statystyki
+          </span>
+        </NavLink>
       </nav>
 
       <div className="mt-auto flex flex-col gap-2">
         <NavLink
-          to="/dashboard/company"
+          to="/dashboard/company/settings"
           className={({ isActive }) =>
             `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
               isActive

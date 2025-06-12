@@ -11,14 +11,14 @@ interface GenericTableProps<T> {
   columns: TableColumn<T>[];
   data: T[];
   onRowClick?: (row: T) => void;
-  rowClassName?: string;
+  renderActions?: (row: T) => React.ReactNode;
 }
 
 export function GenericTable<T extends { id: number | string }>({
   columns,
   data,
   onRowClick,
-  rowClassName = "",
+  renderActions,
 }: GenericTableProps<T>) {
   return (
     <div className="overflow-x-auto rounded-lg bg-white shadow dark:bg-gray-800">
@@ -49,19 +49,28 @@ export function GenericTable<T extends { id: number | string }>({
             data.map((row) => (
               <tr
                 key={row.id}
-                className={`cursor-pointer border-b border-gray-100 transition hover:bg-indigo-50/40 dark:border-gray-700 dark:hover:bg-gray-700/40 ${rowClassName}`}
+                className="cursor-pointer border-b border-gray-100 transition hover:bg-indigo-50/40 dark:border-gray-700 dark:hover:bg-gray-700/40"
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
               >
                 {columns.map((col) => (
                   <td
                     key={String(col.key)}
-                    className={`px-4 py-2${col.align === "right" ? "text-right" : col.align === "center" ? "text-center" : ""}${col.key === "name" ? "font-medium" : ""}`}
+                    className={`px-4 py-2${
+                      col.align === "right"
+                        ? "text-right"
+                        : col.align === "center"
+                          ? "text-center"
+                          : ""
+                    }${col.key === "name" ? "font-medium" : ""}`}
                   >
                     {col.render
                       ? col.render(row)
                       : (row[col.key] as React.ReactNode)}
                   </td>
                 ))}
+                {renderActions && (
+                  <td className="px-4 py-2">{renderActions(row)}</td>
+                )}
               </tr>
             ))
           )}

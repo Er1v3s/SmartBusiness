@@ -12,8 +12,7 @@ export const CompanySidebarComponent = () => {
       </div>
 
       <NavLink
-        to="/dashboard/company"
-        end
+        to="summary"
         className={({ isActive }) =>
           `flex w-full min-w-[180px] items-center gap-3 rounded-lg px-4 py-3 text-lg font-medium transition-colors duration-150 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-900 dark:hover:text-indigo-200 ${
             isActive || location.pathname === "/dashboard/company"
@@ -25,7 +24,7 @@ export const CompanySidebarComponent = () => {
         Podsumowanie
       </NavLink>
       <NavLink
-        to="/dashboard/company/add"
+        to="add"
         className={({ isActive }) =>
           `flex w-full min-w-[180px] items-center gap-3 rounded-lg px-4 py-3 text-lg font-medium transition-colors duration-150 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-900 dark:hover:text-indigo-200 ${
             isActive
@@ -37,7 +36,7 @@ export const CompanySidebarComponent = () => {
         Dodaj firmę
       </NavLink>
       <NavLink
-        to="/dashboard/company/list"
+        to="list"
         className={({ isActive }) =>
           `flex w-full min-w-[180px] items-center gap-3 rounded-lg px-4 py-3 text-lg font-medium transition-colors duration-150 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-900 dark:hover:text-indigo-200 ${
             isActive
@@ -49,7 +48,7 @@ export const CompanySidebarComponent = () => {
         Lista firm
       </NavLink>
       <NavLink
-        to="/dashboard/company/delete"
+        to="delete"
         className={({ isActive }) =>
           `flex w-full min-w-[180px] items-center gap-3 rounded-lg px-4 py-3 text-lg font-medium transition-colors duration-150 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-900 dark:hover:text-indigo-200 ${
             isActive

@@ -88,11 +88,11 @@ const renderProductRow = (product: Product, onEdit: () => void) => (
     className="cursor-pointer border-b border-gray-100 transition hover:bg-indigo-50/40 dark:border-gray-700 dark:hover:bg-gray-700/40"
     onClick={onEdit}
   >
-    <td className="px-4 py-2 font-medium">{product.name}</td>
-    <td className="px-4 py-2">{product.description}</td>
-    <td className="px-4 py-2">{product.category}</td>
-    <td className="px-4 py-2 text-right">{product.price.toFixed(2)} zł</td>
-    <td className="px-4 py-2 text-right">{product.tax}%</td>
+    <td className="px-4 py-2 text-left font-medium">{product.name}</td>
+    <td className="px-4 py-2 text-left">{product.description}</td>
+    <td className="px-4 py-2 text-left">{product.category}</td>
+    <td className="px-4 py-2 text-left">{product.price.toFixed(2)} zł</td>
+    <td className="px-4 py-2 text-left">{product.tax}%</td>
   </tr>
 );
 

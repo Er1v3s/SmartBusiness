@@ -30,6 +30,7 @@ import { EditProfileComponent } from "./components/Dashboard/User/EditProfile";
 import { DashboardHomeSection } from "./components/Dashboard/Company/DashboardHomeSection";
 import { CalendarSection } from "./components/Dashboard/Company/CalendarSection";
 import { StatisticsSection } from "./components/Dashboard/Company/StatisticsSection";
+import { TransactionsSection } from "./components/Dashboard/Company/TransactionsSection";
 import { RegisterSaleSection } from "./components/Dashboard/Company/RegisterSaleSection";
 import { ServicesSection } from "./components/Dashboard/Company/ServicesSection";
 import { ProductsSection } from "./components/Dashboard/Company/ProductsSection";
@@ -80,21 +81,21 @@ export const App: React.FC = () => {
               <Route index element={<DashboardHomeSection />} />
               <Route path="company/calendar" element={<CalendarSection />} />
               <Route path="company/sale" element={<RegisterSaleSection />} />
-              <Route path="company/stats" element={<StatisticsSection />} />
               <Route path="company/services" element={<ServicesSection />} />
               <Route path="company/products" element={<ProductsSection />} />
+              <Route
+                path="company/transactions"
+                element={<TransactionsSection />}
+              />
+              <Route path="company/stats" element={<StatisticsSection />} />
             </Route>
 
-            <Route path="dashboard/company" element={<CompanyPage />}>
+            <Route path="dashboard/company/settings" element={<CompanyPage />}>
               <Route index element={<CompanySummary />} />
               <Route path="summary" element={<CompanySummary />} />
               <Route path="add" element={<CompanyAdd />} />
               <Route path="list" element={<CompanyList />} />
               <Route path="delete" element={<CompanyDelete />} />
-              <Route
-                path="*"
-                element={<Navigate to="/dashboard/company/summary" replace />}
-              />
             </Route>
 
             <Route path="dashboard/user" element={<UserPage />}>
