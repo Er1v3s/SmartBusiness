@@ -12,7 +12,7 @@ export const TransactionCountByProductChart: React.FC<
   const countByProduct: { [productId: string]: number } = {};
 
   transactions.forEach((t) => {
-    countByProduct[t.productId] = (countByProduct[t.productId] || 0) + 1;
+    countByProduct[t.itemId] = (countByProduct[t.itemId] || 0) + 1;
   });
 
   const productIds = Object.keys(countByProduct);

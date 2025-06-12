@@ -120,6 +120,7 @@ export const CalendarSection = () => {
             Day
           </CalendarViewButton>
         </div>
+
         {/* Centered navigation buttons */}
         <div className="flex justify-center gap-2">
           <button

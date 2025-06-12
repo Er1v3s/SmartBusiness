@@ -51,13 +51,19 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
 // PublicRoute component checks if the user is not authenticated
 const PublicRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { isAuthenticated } = useAuth();
-  return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
+  return !isAuthenticated ? (
+    children
+  ) : (
+    <Navigate to="/dashboard/summary" replace />
+  );
 };
 
 // RedirectRoute component redirects based on authentication status
 const RedirectRoute: React.FC = () => {
   const { isAuthenticated } = useAuth();
-  return <Navigate to={isAuthenticated ? "/dashboard" : "/home"} replace />;
+  return (
+    <Navigate to={isAuthenticated ? "/dashboard/summary" : "/home"} replace />
+  );
 };
 
 export const App: React.FC = () => {
@@ -79,15 +85,13 @@ export const App: React.FC = () => {
           >
             <Route path="dashboard" element={<DashboardPage />}>
               <Route index element={<DashboardHomeSection />} />
-              <Route path="company/calendar" element={<CalendarSection />} />
-              <Route path="company/sale" element={<RegisterSaleSection />} />
-              <Route path="company/services" element={<ServicesSection />} />
-              <Route path="company/products" element={<ProductsSection />} />
-              <Route
-                path="company/transactions"
-                element={<TransactionsSection />}
-              />
-              <Route path="company/stats" element={<StatisticsSection />} />
+              <Route path="summary" element={<DashboardHomeSection />} />
+              <Route path="calendar" element={<CalendarSection />} />
+              <Route path="sales-panel" element={<RegisterSaleSection />} />
+              <Route path="services" element={<ServicesSection />} />
+              <Route path="products" element={<ProductsSection />} />
+              <Route path="transactions" element={<TransactionsSection />} />
+              <Route path="statistics" element={<StatisticsSection />} />
             </Route>
 
             <Route path="dashboard/company/settings" element={<CompanyPage />}>
@@ -98,8 +102,9 @@ export const App: React.FC = () => {
               <Route path="delete" element={<CompanyDelete />} />
             </Route>
 
-            <Route path="dashboard/user" element={<UserPage />}>
-              <Route index element={<SummaryComponent />} />
+            <Route path="dashboard/user/settings" element={<UserPage />}>
+              <Route index path="summary" element={<SummaryComponent />} />
+              <Route path="summary" element={<SummaryComponent />} />
               <Route path="edit-profile" element={<EditProfileComponent />} />
               <Route
                 path="change-password"
@@ -109,10 +114,6 @@ export const App: React.FC = () => {
               <Route
                 path="delete-account"
                 element={<DeleteAccountComponent />}
-              />
-              <Route
-                path="*"
-                element={<Navigate to="/dashboard/user" replace />}
               />
             </Route>
           </Route>
@@ -130,7 +131,7 @@ export const App: React.FC = () => {
             <Route path="register" element={<RegisterPage />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
-            {/* fallback na nieistniejące publiczne podstrony */}
+            {/* fallback when page does not exist */}
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Route>
 

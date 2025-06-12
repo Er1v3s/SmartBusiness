@@ -59,9 +59,9 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
       </div>
 
       <nav className="flex flex-1 flex-col gap-2 transition-opacity duration-200">
+        {/* DASHBOARD */}
         <NavLink
-          to="/dashboard"
-          end
+          to="summary"
           className={({ isActive }) =>
             `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
               isActive
@@ -91,8 +91,9 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
           </span>
         </NavLink>
 
+        {/* CALENDAR */}
         <NavLink
-          to="/dashboard/company/calendar"
+          to="calendar"
           className={({ isActive }) =>
             `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
               isActive
@@ -122,8 +123,9 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
           </span>
         </NavLink>
 
+        {/* SALE PANEL */}
         <NavLink
-          to="/dashboard/company/sale"
+          to="sales-panel"
           className={({ isActive }) =>
             `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
               isActive
@@ -153,8 +155,9 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
           </span>
         </NavLink>
 
+        {/* SERVICE SECTION */}
         <NavLink
-          to="/dashboard/company/services"
+          to="services"
           className={({ isActive }) =>
             `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
               isActive
@@ -184,8 +187,9 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
           </span>
         </NavLink>
 
+        {/* PRODUCTS SECTION */}
         <NavLink
-          to="/dashboard/company/products"
+          to="products"
           className={({ isActive }) =>
             `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
               isActive
@@ -215,8 +219,9 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
           </span>
         </NavLink>
 
+        {/* TRANSACTION SECTION */}
         <NavLink
-          to="/dashboard/company/transactions"
+          to="transactions"
           className={({ isActive }) =>
             `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
               isActive
@@ -246,8 +251,9 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
           </span>
         </NavLink>
 
+        {/* STATISTICS SECTION */}
         <NavLink
-          to="/dashboard/company/stats"
+          to="statistics"
           className={({ isActive }) =>
             `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
               isActive
@@ -278,9 +284,10 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
         </NavLink>
       </nav>
 
+      {/* COMPANY SETTINGS SECTION */}
       <div className="mt-auto flex flex-col gap-2">
         <NavLink
-          to="/dashboard/company/settings"
+          to="company/settings/summary"
           className={({ isActive }) =>
             `flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
               isActive
@@ -303,6 +310,8 @@ export const CompanySidebar: React.FC<CompanySidebarProps> = ({
             Ustawienia firmy
           </span>
         </NavLink>
+
+        {/* HIDE SEIDEBAR */}
         <button
           type="button"
           aria-label={isCollapsed ? "Rozwiń sidebar" : "Zwiń sidebar"}

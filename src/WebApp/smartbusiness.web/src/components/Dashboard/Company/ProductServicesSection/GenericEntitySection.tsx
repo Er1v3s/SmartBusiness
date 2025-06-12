@@ -289,7 +289,7 @@ export default function GenericEntitySection<
         showFilter={false}
       />
 
-      {/* Tabela */}
+      {/* Table */}
       <div className="overflow-x-auto rounded-lg bg-white shadow dark:bg-gray-800">
         {loading ? (
           <div className="p-8 text-center text-gray-400">Ładowanie...</div>
@@ -326,7 +326,7 @@ export default function GenericEntitySection<
         )}
       </div>
 
-      {/* Paginacja */}
+      {/* Pagination */}
       <GenericPagination
         page={page}
         pageCount={pageCount}
@@ -338,7 +338,7 @@ export default function GenericEntitySection<
         }}
       />
 
-      {/* Modal edycji */}
+      {/* Editing Modal */}
       <GenericModal
         open={modalOpen}
         title={editModalTitle}

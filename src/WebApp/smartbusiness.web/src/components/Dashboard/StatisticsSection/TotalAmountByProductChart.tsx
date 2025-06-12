@@ -12,8 +12,7 @@ export const TotalAmountByProductChart: React.FC<
   const sumByProduct: { [productId: string]: number } = {};
 
   transactions.forEach((t) => {
-    sumByProduct[t.productId] =
-      (sumByProduct[t.productId] || 0) + t.totalAmount;
+    sumByProduct[t.itemId] = (sumByProduct[t.itemId] || 0) + t.totalAmount;
   });
 
   const productIds = Object.keys(sumByProduct);

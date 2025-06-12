@@ -30,7 +30,6 @@ export const DashboardHomeSection: React.FC = () => {
     setLoadingRecent(true);
     fetchEnrichtedTransactions({ numberOfTransactions: 5 })
       .then((t) => {
-        // Sortuj po dacie malejąco i weź 5 najnowszych
         const sorted = t.sort(
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
@@ -48,7 +47,7 @@ export const DashboardHomeSection: React.FC = () => {
 
   return (
     <>
-      {/* Welcome with username */}
+      {/* Welcome User */}
       <div className="animate-fade-in mb-4 flex items-center gap-4">
         <div>
           <h1 className="mb-1 text-3xl font-bold text-gray-900 dark:text-gray-100">
@@ -60,8 +59,8 @@ export const DashboardHomeSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Ostatnie transakcje */}
-      <div className="animate-fade-in mb-8 rounded-lg border-2 border-gray-100 bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800">
+      {/* Last transactions */}
+      <div className="animate-fade-in mb-8 rounded-lg border-2 border-gray-100 bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-800">
         <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-100">
           Ostatnie transakcje
         </h2>
@@ -95,7 +94,7 @@ export const DashboardHomeSection: React.FC = () => {
         )}
       </div>
 
-      {/* Stats Cards with tooltips and animation */}
+      {/* Stats Cards */}
       <div className="animate-fade-in mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
         <div className="group relative flex flex-col items-center rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 p-6 text-white shadow-lg transition-transform hover:scale-105">
           <span className="text-lg font-semibold">Produkty</span>
@@ -116,33 +115,39 @@ export const DashboardHomeSection: React.FC = () => {
       {/* Quick Actions */}
       <div className="animate-fade-in mb-8 flex flex-wrap gap-4">
         <button
-          className="min-w-[180px] flex-1 rounded-lg bg-indigo-600 px-6 py-4 text-lg font-semibold text-white shadow transition hover:bg-indigo-700"
-          onClick={() => navigate("/dashboard/company/sale")}
+          className="min-w-[180px] flex-1 rounded-lg bg-gray-100 px-6 py-4 text-lg font-semibold text-gray-800 shadow-lg transition hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 focus:outline-none dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+          onClick={() => navigate("../sales-panel")}
         >
           Dodaj sprzedaż
         </button>
         <button
-          className="min-w-[180px] flex-1 rounded-lg bg-purple-600 px-6 py-4 text-lg font-semibold text-white shadow transition hover:bg-purple-700"
-          onClick={() => navigate("/dashboard/company/products")}
+          className="min-w-[180px] flex-1 rounded-lg bg-gray-100 px-6 py-4 text-lg font-semibold text-gray-800 shadow-lg transition hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 focus:outline-none dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+          onClick={() => navigate("../products")}
         >
           Lista produktów
         </button>
         <button
-          className="min-w-[180px] flex-1 rounded-lg bg-pink-600 px-6 py-4 text-lg font-semibold text-white shadow transition hover:bg-pink-700"
-          onClick={() => navigate("/dashboard/company/services")}
+          className="min-w-[180px] flex-1 rounded-lg bg-gray-100 px-6 py-4 text-lg font-semibold text-gray-800 shadow-lg transition hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 focus:outline-none dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+          onClick={() => navigate("../services")}
         >
           Lista usług
         </button>
         <button
-          className="min-w-[180px] flex-1 rounded-lg bg-gray-800 px-6 py-4 text-lg font-semibold text-white shadow transition hover:bg-gray-900"
-          onClick={() => navigate("/dashboard/company/stats")}
+          className="min-w-[180px] flex-1 rounded-lg bg-gray-100 px-6 py-4 text-lg font-semibold text-gray-800 shadow-lg transition hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 focus:outline-none dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+          onClick={() => navigate("../services")}
+        >
+          Transakcje
+        </button>
+        <button
+          className="min-w-[180px] flex-1 rounded-lg bg-gray-200 px-6 py-4 text-lg font-semibold text-gray-800 shadow-lg transition hover:bg-gray-300 focus:ring-2 focus:ring-gray-300 focus:outline-none dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+          onClick={() => navigate("../statistics")}
         >
           Statystyki firmy
         </button>
       </div>
 
       {/* Welcome Message */}
-      <div className="animate-fade-in mt-8 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white shadow-xl">
+      <div className="animate-fade-in mt-8 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white shadow-lg">
         <h2 className="mb-2 text-2xl font-bold">Witaj w SmartBusiness!</h2>
         <span className="text-indigo-100">
           Aplikacja do zarządzania firmą, która ułatwia życie i zwiększa

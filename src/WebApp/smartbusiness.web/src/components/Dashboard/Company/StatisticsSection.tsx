@@ -78,7 +78,7 @@ export const StatisticsSection = () => {
   const [selectedChart, setSelectedChart] = useState(chartOptions[0].key);
   const selectRef = useRef<HTMLSelectElement>(null);
 
-  // Panel opcji - stan globalny
+  // OPTIONS PANEL - WITH GLOBAL STATE FOR EVERY CHART
   const today = new Date();
   const defaultFrom = new Date(today);
   defaultFrom.setDate(today.getDate() - 31);
@@ -149,7 +149,7 @@ export const StatisticsSection = () => {
     </div>
   );
 
-  // Filtrowanie transakcji po dacie
+  // FILTERING BY DATE
   const filteredTransactions = transactions.filter((t) => {
     const date = new Date(t.createdAt);
     const from = dateFrom ? new Date(dateFrom) : null;
