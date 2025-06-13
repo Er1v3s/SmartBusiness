@@ -237,6 +237,7 @@ services:
       - app-network
       - monitoring-network
 
+  # REDIS (FOR CACHING)
   redis:
     image: redis:latest
     container_name: redis
@@ -247,6 +248,26 @@ services:
       - redis-data:/data
     networks:
       - app-network
+ 
+  # ML PREDICTOR SERVICE
+  ml.smart-business:
+    image: ml.smart-business
+    container_name: ml.smart-business
+    build:
+      context: .
+      dockerfile: ./ML.Service/Dockerfile
+    environment:
+      - MONGO_URL=mongodb://SA:SuperPassword123@mongodb.server:27017/SmartBusinessWriteDb?authSource=admin
+      - DATABASE_NAME=SmartBusinessReadDb
+    ports:
+      - "2500:2500"
+    restart: unless-stopped
+    depends_on:
+      - mongodb.server
+    volumes:
+      - ./ML.Service:/app
+    networks:
+      - app-network 
 
   # MONITORING SERVICES 
 
