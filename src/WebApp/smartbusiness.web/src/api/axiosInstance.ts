@@ -8,6 +8,7 @@ export const axiosAccount = axios.create({ baseURL: API_BASE_URL, withCredential
 export const axiosSales = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
 export const axiosWrite = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
 export const axiosRead = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
+export const axiosPrediction = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
 
 let isRefreshing = false;
 let refreshSubscribers: Array<(token: string) => void> = [];
@@ -86,9 +87,11 @@ const setupInterceptors = (instance: typeof axiosAccount, withCompanyId: boolean
     (response) => response,
     async (err) => {
       const error = err as AxiosError<ApiResponseError>;
+      
       // TO DELETE AFTER DEVELOPMENT
-      console.log("API Error:", error);
+      // console.log("API Error:", error);
       // TO DELETE AFTER DEVELOPMENT
+
       const fallbackError: ApiResponseError = {
         title: error.response?.data?.title || "Błąd serwera",
         status: error.response?.data?.status || "500",
@@ -112,5 +115,6 @@ setupInterceptors(axiosAccount, false);
 setupInterceptors(axiosSales, true);
 setupInterceptors(axiosWrite, true);
 setupInterceptors(axiosRead, true);
+setupInterceptors(axiosPrediction, true);
 
 export default axiosAccount;

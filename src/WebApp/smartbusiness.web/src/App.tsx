@@ -40,6 +40,8 @@ import { CompanySummary } from "./components/Dashboard/Company/CompanySettings/C
 import { CompanyAdd } from "./components/Dashboard/Company/CompanySettings/CompanyAdd";
 import { CompanyList } from "./components/Dashboard/Company/CompanySettings/CompanyList";
 import { CompanyDelete } from "./components/Dashboard/Company/CompanySettings/CompanyDelete";
+import { PredictionSection } from "./components/Dashboard/Company/PredictionSection";
+import { PredictionProvider } from "./context/prediction/PredictionProvider";
 
 // Private Route component checks if the user is authenticated
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -91,6 +93,7 @@ export const App: React.FC = () => {
               <Route path="products" element={<ProductsSection />} />
               <Route path="transactions" element={<TransactionsSection />} />
               <Route path="statistics" element={<StatisticsSection />} />
+              <Route path="predictions" element={<PredictionSection />} />
             </Route>
 
             <Route path="dashboard/company/settings" element={<CompanyPage />}>
@@ -150,7 +153,9 @@ const AppWithProvider: React.FC = () => (
           <ProductProvider>
             <ServiceProvider>
               <TransactionProvider>
-                <App />
+                <PredictionProvider>
+                  <App />
+                </PredictionProvider>
               </TransactionProvider>
             </ServiceProvider>
           </ProductProvider>

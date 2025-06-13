@@ -152,7 +152,7 @@ export const StatisticsSection = () => {
           type="date"
           value={dateFrom}
           onChange={(e) => setDateFrom(e.target.value)}
-          className="min-w-[140px] rounded-md border border-gray-300 px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          className="min-w-[140px] rounded-md border-2 border-gray-300 bg-white px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 dark:focus:ring-blue-500"
         />
       </label>
       <label className="flex items-center gap-2 text-sm">
@@ -161,7 +161,7 @@ export const StatisticsSection = () => {
           type="date"
           value={dateTo}
           onChange={(e) => setDateTo(e.target.value)}
-          className="min-w-[140px] rounded-md border border-gray-300 px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          className="min-w-[140px] rounded-md border-2 border-gray-300 bg-white px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 dark:focus:ring-blue-500"
         />
       </label>
       <label className="flex items-center gap-2 text-sm">
@@ -171,7 +171,7 @@ export const StatisticsSection = () => {
           onChange={(e) =>
             setGroupBy(e.target.value as "day" | "month" | "year")
           }
-          className="min-w-[120px] rounded-md border border-gray-300 px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          className="min-w-[120px] rounded-md border-2 border-gray-300 bg-white px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 dark:focus:ring-blue-500"
         >
           <option value="day">Dzień</option>
           <option value="month">Miesiąc</option>
@@ -183,7 +183,7 @@ export const StatisticsSection = () => {
         <select
           value={paletteKey}
           onChange={(e) => setPaletteKey(e.target.value)}
-          className="min-w-[180px] rounded-md border border-gray-300 px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          className="min-w-[180px] rounded-md border-2 border-gray-300 bg-white px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 dark:focus:ring-blue-500"
         >
           {colorPalettes.map((p) => (
             <option key={p.key} value={p.key}>
@@ -220,7 +220,7 @@ export const StatisticsSection = () => {
             ref={selectRef}
             value={selectedChart}
             onChange={(e) => setSelectedChart(e.target.value)}
-            className="min-w-[260px] rounded-md border border-gray-300 px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            className="min-w-[260px] rounded-md border-2 border-gray-300 bg-white px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 dark:focus:ring-blue-500"
           >
             {chartOptions.map((opt) => (
               <option key={opt.key} value={opt.key}>

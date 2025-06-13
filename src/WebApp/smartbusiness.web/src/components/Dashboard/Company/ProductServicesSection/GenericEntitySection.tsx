@@ -112,13 +112,15 @@ export default function GenericEntitySection<
     fetchAll();
   }, [fetchAll]);
 
-  // --- Search & filter (simple, only by string fields) ---
+  // --- Search & filter ---
   const filtered = entities.filter((e) => {
     if (!search) return true;
     const s = search.toLowerCase();
     return Object.keys(e as object).some((key) => {
       const v = (e as Record<string, unknown>)[key];
-      return typeof v === "string" && v.toLowerCase().includes(s);
+      if (typeof v === "string" && v.toLowerCase().includes(s)) return true;
+      if (typeof v === "number" && v.toString().includes(s)) return true;
+      return false;
     });
   });
 
