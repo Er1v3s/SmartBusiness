@@ -16,6 +16,7 @@
     <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
     <Name>ML.Service</Name>
     <RootNamespace>ML.Service</RootNamespace>
+    <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,10 +49,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".dockerignore">
+      <SubType>Content</SubType>
+      <DependentUpon>Dockerfile</DependentUpon>
+    </Content>
     <Content Include=".env">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Dockerfile" />
+    <None Include="Dockerfile" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />

@@ -8,14 +8,8 @@ from repository.transaction_repository import get_transactions_from_db
 
 class SalesPredictor:
     def __init__(self):
-        self.model_total = None
-        self.model_tax = None
-        self.model_net = None
-        self.metrics_total = {}
-        self.metrics_tax = {}
-        self.metrics_net = {}
-        self.is_trained = False
-        self.last_train_time = None
+        # Modele trenowane osobno dla każdej firmy
+        self.company_models = {}  # company_id: {model_total, model_tax, model_net, metrics_total, metrics_tax, metrics_net, last_train_time}
 
     async def fetch_data(self, db, company_id: str):
         data = await get_transactions_from_db(db, company_id)
@@ -84,99 +78,110 @@ class SalesPredictor:
         return preds
 
     async def train(self, db, company_id: str):
-        # Train Prophet models for total sales, tax, and net sales
         df = await self.fetch_data(db, company_id)
         if df.empty:
-            self.is_trained = False
-            return False
-        
+            return None
         # Prophet for total sales
         prophet_df = self.prepare_prophet_df(df, 'total_amount')
         if prophet_df is not None and len(prophet_df) >= 3:
-            self.model_total = self.train_prophet(prophet_df)
+            model_total = self.train_prophet(prophet_df)
             y_true = prophet_df['y'].values
-            y_pred = self.model_total.predict(prophet_df[['ds']])['yhat'].values
+            y_pred = model_total.predict(prophet_df[['ds']])['yhat'].values
             r2 = r2_score(y_true, y_pred)
             mae = mean_absolute_error(y_true, y_pred)
-            self.metrics_total = {'model': 'Prophet', 'r2': r2, 'mae': mae}
+            metrics_total = {'model': 'Prophet', 'r2': r2, 'mae': mae}
         else:
-            self.model_total = None
-            self.metrics_total = {}
-            
+            model_total = None
+            metrics_total = {}
         # Prophet for tax
         prophet_df_tax = self.prepare_prophet_df(df, 'tax')
         if prophet_df_tax is not None and len(prophet_df_tax) >= 3:
-            self.model_tax = self.train_prophet(prophet_df_tax)
+            model_tax = self.train_prophet(prophet_df_tax)
             y_true = prophet_df_tax['y'].values
-            y_pred = self.model_tax.predict(prophet_df_tax[['ds']])['yhat'].values
+            y_pred = model_tax.predict(prophet_df_tax[['ds']])['yhat'].values
             r2 = r2_score(y_true, y_pred)
             mae = mean_absolute_error(y_true, y_pred)
-            self.metrics_tax = {'model': 'Prophet', 'r2': r2, 'mae': mae}
+            metrics_tax = {'model': 'Prophet', 'r2': r2, 'mae': mae}
         else:
-            self.model_tax = None
-            self.metrics_tax = {}
-
-        # Prophet for net sales (total_amount minus tax)
+            model_tax = None
+            metrics_tax = {}
+        # Prophet for net sales
         prophet_df_net = self.prepare_prophet_df(df, 'total_amount_minus_tax')
         if prophet_df_net is not None and len(prophet_df_net) >= 3:
-            self.model_net = self.train_prophet(prophet_df_net)
+            model_net = self.train_prophet(prophet_df_net)
             y_true = prophet_df_net['y'].values
-            y_pred = self.model_net.predict(prophet_df_net[['ds']])['yhat'].values
+            y_pred = model_net.predict(prophet_df_net[['ds']])['yhat'].values
             r2 = r2_score(y_true, y_pred)
             mae = mean_absolute_error(y_true, y_pred)
-            self.metrics_net = {'model': 'Prophet', 'r2': r2, 'mae': mae}
+            metrics_net = {'model': 'Prophet', 'r2': r2, 'mae': mae}
         else:
-            self.model_net = None
-            self.metrics_net = {}
-        self.is_trained = self.model_total is not None and self.model_tax is not None and self.model_net is not None
-        self.last_train_time = datetime.now().isoformat()
-        return self.is_trained
+            model_net = None
+            metrics_net = {}
+        last_train_time = datetime.now().isoformat()
+        self.company_models[company_id] = {
+            'model_total': model_total,
+            'model_tax': model_tax,
+            'model_net': model_net,
+            'metrics_total': metrics_total,
+            'metrics_tax': metrics_tax,
+            'metrics_net': metrics_net,
+            'last_train_time': last_train_time
+        }
+        return self.company_models[company_id]
 
     async def predict_sales(self, db, company_id, months_ahead=1):
-        if not self.is_trained:
+        if company_id not in self.company_models:
             await self.train(db, company_id)
+        models = self.company_models.get(company_id)
+        if not models or not models['model_total']:
+            return {'error': 'Brak danych do predykcji'}
         df = await self.fetch_data(db, company_id)
         prophet_df = self.prepare_prophet_df(df, 'total_amount')
-        if prophet_df is None or self.model_total is None:
+        if prophet_df is None:
             return {'error': 'Brak danych do predykcji'}
         last_date = prophet_df['ds'].max()
-        preds = self.prophet_predict(self.model_total, months_ahead, last_date)
+        preds = self.prophet_predict(models['model_total'], months_ahead, last_date)
         return {
             'predictions': preds,
-            'metrics': self.metrics_total
+            'metrics': models['metrics_total']
         }
 
     async def predict_tax(self, db, company_id, months_ahead=1):
-        if not self.is_trained:
+        if company_id not in self.company_models:
             await self.train(db, company_id)
+        models = self.company_models.get(company_id)
+        if not models or not models['model_tax']:
+            return {'error': 'Brak danych do predykcji'}
         df = await self.fetch_data(db, company_id)
         prophet_df = self.prepare_prophet_df(df, 'tax')
-        if prophet_df is None or self.model_tax is None:
+        if prophet_df is None:
             return {'error': 'Brak danych do predykcji'}
         last_date = prophet_df['ds'].max()
-        preds = self.prophet_predict(self.model_tax, months_ahead, last_date)
+        preds = self.prophet_predict(models['model_tax'], months_ahead, last_date)
         return {
             'predictions': preds,
-            'metrics': self.metrics_tax
+            'metrics': models['metrics_tax']
         }
 
     async def predict_net_sales(self, db, company_id, months_ahead=1):
-        # Forecast net sales for the next months
-        if not self.is_trained:
+        if company_id not in self.company_models:
             await self.train(db, company_id)
+        models = self.company_models.get(company_id)
+        if not models or not models['model_net']:
+            return {'error': 'Brak danych do predykcji'}
         df = await self.fetch_data(db, company_id)
         prophet_df = self.prepare_prophet_df(df, 'total_amount_minus_tax')
-        if prophet_df is None or self.model_net is None:
+        if prophet_df is None:
             return {'error': 'Brak danych do predykcji'}
         last_date = prophet_df['ds'].max()
-        preds = self.prophet_predict(self.model_net, months_ahead, last_date)
+        preds = self.prophet_predict(models['model_net'], months_ahead, last_date)
         return {
             'predictions': preds,
-            'metrics': self.metrics_net
+            'metrics': models['metrics_net']
         }
 
     async def predict_product_sales(self, db, company_id, item_id: str, months_ahead=1):
-        if not self.is_trained:
+        if company_id not in self.company_models:
             await self.train(db, company_id)
 
         df = await self.fetch_data(db, company_id)

@@ -11,6 +11,7 @@ volumes:
   prometheus-data:
   grafana-data:
   redis-data:
+  ml.data:
 
     # MONITORING SERVICE TURN OFF WHILE DEVELOPMENT
 
@@ -255,19 +256,35 @@ services:
     container_name: ml.smart-business
     build:
       context: .
-      dockerfile: ./ML.Service/Dockerfile
-    environment:
-      - MONGO_URL=mongodb://SA:SuperPassword123@mongodb.server:27017/SmartBusinessWriteDb?authSource=admin
-      - DATABASE_NAME=SmartBusinessReadDb
+      dockerfile: ML.Service/Dockerfile
+    env_file:
+      - ML.Service/.env
     ports:
       - "2500:2500"
     restart: unless-stopped
     depends_on:
       - mongodb.server
-    volumes:
-      - ./ML.Service:/app
     networks:
       - app-network 
+
+  #     WRITE SERVICE
+  # write.smart-business:
+  #   build:
+  #     context: .
+  #     dockerfile: Services/WriteService/WriteService.Api/Dockerfile
+  #   ports:
+  #     - "2300:2300"
+  #     - "2301:2301"
+  #   volumes:
+  #     - ./https:/https:ro
+  #   depends_on:
+  #     mongodb.server:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
+  #   networks:
+  #     - app-network
+  #     - monitoring-network
 
   # MONITORING SERVICES 
 

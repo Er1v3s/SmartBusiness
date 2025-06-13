@@ -1,7 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 
 async def get_transactions_from_db(db: AsyncIOMotorClient, company_id: str ):
-    query = { "companyId" : {company_id} , "itemType": {"$in": ["service"]} }
+    query = { "companyId" : company_id, "itemType": {"$in": ["service"]} }
 
     cursor = db.transactions.find(query).sort("timestamp", 1)
 
