@@ -267,25 +267,6 @@ services:
     networks:
       - app-network 
 
-  #     WRITE SERVICE
-  # write.smart-business:
-  #   build:
-  #     context: .
-  #     dockerfile: Services/WriteService/WriteService.Api/Dockerfile
-  #   ports:
-  #     - "2300:2300"
-  #     - "2301:2301"
-  #   volumes:
-  #     - ./https:/https:ro
-  #   depends_on:
-  #     mongodb.server:
-  #       condition: service_healthy
-  #     rabbitmq:
-  #       condition: service_healthy
-  #   networks:
-  #     - app-network
-  #     - monitoring-network
-
   # MONITORING SERVICES 
 
   # prometheus:
