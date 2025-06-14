@@ -10,7 +10,7 @@ app = FastAPI()
 # COSR Configuration FOR React Frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5000", "https://localhost:5001"],  # Dodaj porty React
+    allow_origins=["http://localhost:5000"],  # Dodaj porty React
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

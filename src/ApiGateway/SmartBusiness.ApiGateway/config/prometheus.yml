@@ -25,40 +25,32 @@ scrape_configs:
     static_configs:
       - targets: ['gateway.smart-business:2000']
     metrics_path: '/metrics'
-    scrape_interval: 5s
-    scrape_timeout: 5s
+    scrape_interval: 15s
+    scrape_timeout: 15s
 
   # Account Service metrics
   - job_name: 'auth-service'
     static_configs:
       - targets: ['account.smart-business:2100']
     metrics_path: '/metrics'
-    scrape_interval: 5s
-    scrape_timeout: 5s
+    scrape_interval: 15s
+    scrape_timeout: 15s
 
   # Write Service metrics
   - job_name: 'write-service'
     static_configs:
       - targets: ['sales.smart-business:2300']
     metrics_path: '/metrics'
-    scrape_interval: 5s
-    scrape_timeout: 5s
-
-  # Write Service metrics
-  - job_name: 'write-service'
-    static_configs:
-      - targets: ['write.smart-business:2300']
-    metrics_path: '/metrics'
-    scrape_interval: 5s
-    scrape_timeout: 5s
+    scrape_interval: 15s
+    scrape_timeout: 15s
 
   # Read Service metrics
   - job_name: 'read-service'
     static_configs:
       - targets: ['read.smart-business:2400']
     metrics_path: '/metrics'
-    scrape_interval: 5s
-    scrape_timeout: 5s
+    scrape_interval: 15s
+    scrape_timeout: 15s
 
     # RabbitMQ metrics
   - job_name: 'rabbitmq'
