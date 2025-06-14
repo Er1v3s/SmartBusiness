@@ -11,6 +11,7 @@ volumes:
   prometheus-data:
   grafana-data:
   redis-data:
+  ml.data:
 
     # MONITORING SERVICE TURN OFF WHILE DEVELOPMENT
 
@@ -24,7 +25,6 @@ services:
       - ASPNETCORE_HTTPS_PORTS=2001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
-      # - Otel__Endpoint=http://otel-collector:4317 
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
     container_name: gateway.smart-business
     image: gateway.smart-business
@@ -36,9 +36,6 @@ services:
       - "2001:2001"
     volumes:
       - ./https:/https:ro
-    # depends_on:
-      # otel-collector:
-        # condition: service_started
     networks:
       - app-network
       - monitoring-network
@@ -79,7 +76,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=2201
       - ASPNETCORE_Kestrel__Certificates__Default__Password=SuperPassword123
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
-      # - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
     container_name: sales.smart-business
     image: sales.smart-business
     build:
@@ -167,9 +164,6 @@ services:
   #   volumes:
   #     - ./WebApp/smartbusiness.web:/app
   #     - /app/node_modules
-  #   depends_on:
-  #     - gateway.smart-business
-  #     - account.smart-business
   #   networks:
   #     - app-network
   
@@ -237,6 +231,7 @@ services:
       - app-network
       - monitoring-network
 
+  # REDIS (FOR CACHING)
   redis:
     image: redis:latest
     container_name: redis
@@ -247,67 +242,84 @@ services:
       - redis-data:/data
     networks:
       - app-network
+ 
+  # ML PREDICTOR SERVICE
+  ml.smart-business:
+    image: ml.smart-business
+    container_name: ml.smart-business
+    build:
+      context: .
+      dockerfile: ML.Service/Dockerfile
+    env_file:
+      - ML.Service/.env
+    ports:
+      - "2500:2500"
+    restart: unless-stopped
+    depends_on:
+      - mongodb.server
+    networks:
+      - app-network 
 
   # MONITORING SERVICES 
 
-  # prometheus:
-  #   image: prom/prometheus:latest
-  #   container_name: prometheus
-  #   ports:
-  #     - "9090:9090"
-  #   command:
-  #     - '--config.file=/etc/prometheus/prometheus.yml'
-  #     - '--storage.tsdb.path=/prometheus'
-  #     - '--web.console.libraries=/etc/prometheus/console_libraries'
-  #     - '--web.console.templates=/etc/prometheus/consoles'
-  #     - '--storage.tsdb.retention.time=200h'
-  #     - '--web.enable-lifecycle'
-  #   volumes:
-  #     - ./ApiGateway/SmartBusiness.ApiGateway/config/prometheus.yml:/etc/prometheus/prometheus.yml
-  #     - prometheus-data:/prometheus
-  #   restart: unless-stopped
-  #   networks:
-  #     - monitoring-network
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./ApiGateway/SmartBusiness.ApiGateway/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+    networks:
+      - monitoring-network
 
-  # grafana:
-  #   image: grafana/grafana:latest
-  #   container_name: grafana
-  #   ports:
-  #     - '3000:3000'
-  #   volumes:
-  #     - grafana-data:/var/lib/grafana
-  #     - ./observability/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
-  #     - ./observability/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
-  #     - ./observability/grafana/dashboards:/var/lib/grafana/dashboards
-  #   environment:
-  #     - GF_SECURITY_ADMIN_USER=admin
-  #     - GF_SECURITY_ADMIN_PASSWORD=SuperPassword123
-  #   restart: unless-stopped
-  #   networks:
-  #     - monitoring-network
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./observability/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./observability/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=SuperPassword123
+    restart: unless-stopped
+    networks:
+      - monitoring-network
 
-  # node_exporter:
-  #   image: quay.io/prometheus/node-exporter:v1.5.0
-  #   container_name: node_exporter
-  #   command: '--path.rootfs=/host'
-  #   pid: host
-  #   restart: unless-stopped
-  #   volumes:
-  #     - /proc:/host/proc:ro
-  #     - /sys:/host/sys:ro
-  #     - /:/rootfs:ro
-  #   networks:
-  #     - monitoring-network
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:v1.5.0
+    container_name: node_exporter
+    command: '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - monitoring-network
 
-  # jaeger:
-  #   image: jaegertracing/all-in-one:latest
-  #   container_name: jaeger
-  #   environment:
-  #     - COLLECTOR_OTLP_ENABLED=true
-  #   ports:
-  #     - "16686:16686"   Jaeger UI
-  #     - "14250:14250"   gRPC
-  #     - "4317:4317"     OTLP gRPC receiver
-  #     - "4318:4318"     OTLP HTTP receiver
-  #   networks:
-  #     - monitoring-network
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686"   # Jaeger UI
+      - "14250:14250"   # gRPC
+      - "4317:4317"     # OTLP gRPC receiver
+      - "4318:4318"     # OTLP HTTP receiver
+    networks:
+      - monitoring-network

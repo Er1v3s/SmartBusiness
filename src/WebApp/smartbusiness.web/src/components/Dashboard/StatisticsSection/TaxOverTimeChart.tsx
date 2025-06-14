@@ -6,14 +6,18 @@ interface TaxOverTimeChartProps {
   transactions: Transaction[];
   groupBy: "day" | "month" | "year";
   barColor: string;
+  serviceColor?: string;
 }
 
 export const TaxOverTimeChart: React.FC<TaxOverTimeChartProps> = ({
   transactions,
   groupBy,
   barColor,
+  serviceColor = "#a21caf",
 }) => {
-  const dataByGroup: { [key: string]: number } = {};
+  // Split into two series: products and services
+  const dataByGroupProduct: { [key: string]: number } = {};
+  const dataByGroupService: { [key: string]: number } = {};
 
   transactions.forEach((t) => {
     const date = parseISO(t.createdAt);
@@ -25,14 +29,22 @@ export const TaxOverTimeChart: React.FC<TaxOverTimeChartProps> = ({
     } else if (groupBy === "year") {
       key = format(date, "yyyy");
     }
-
     const taxValue = t.totalAmount - t.totalAmountMinusTax;
-    dataByGroup[key] = (dataByGroup[key] || 0) + taxValue;
+    if (t.itemType === "product") {
+      dataByGroupProduct[key] = (dataByGroupProduct[key] || 0) + taxValue;
+    } else if (t.itemType === "service") {
+      dataByGroupService[key] = (dataByGroupService[key] || 0) + taxValue;
+    }
   });
 
-  const keys = Object.keys(dataByGroup).sort();
+  const allKeys = Array.from(
+    new Set([
+      ...Object.keys(dataByGroupProduct),
+      ...Object.keys(dataByGroupService),
+    ]),
+  ).sort();
 
-  const displayLabels = keys.map((k) => {
+  const displayLabels = allKeys.map((k) => {
     if (groupBy === "day") {
       return format(parseISO(k), "dd.MM.yyyy");
     }
@@ -42,16 +54,20 @@ export const TaxOverTimeChart: React.FC<TaxOverTimeChartProps> = ({
     if (groupBy === "year") {
       return k;
     }
-
     return k;
   });
   const data = {
     labels: displayLabels,
     datasets: [
       {
-        label: "Suma podatku do zapłacenia",
-        data: keys.map((k) => dataByGroup[k]),
+        label: "Produkty",
+        data: allKeys.map((k) => dataByGroupProduct[k] || 0),
         backgroundColor: barColor,
+      },
+      {
+        label: "Usługi",
+        data: allKeys.map((k) => dataByGroupService[k] || 0),
+        backgroundColor: serviceColor,
       },
     ],
   };

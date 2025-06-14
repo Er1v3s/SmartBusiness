@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { CompanySidebar } from "../components/Dashboard/Company/CompanySidebar";
 
-// Dashboard Page Component
 export const DashboardPage: React.FC = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   return (
@@ -12,7 +11,8 @@ export const DashboardPage: React.FC = () => {
         isCollapsed={isSidebarCollapsed}
         setIsCollapsed={setIsSidebarCollapsed}
       />
-      {/* Main Content przesunięty o szerokość sidebaru lub rozciągnięty */}
+
+      {/* Main Content */}
       <div
         className={`h-full overflow-y-auto px-4 py-8 transition-all duration-200 sm:px-6 lg:px-8 ${
           isSidebarCollapsed ? "ml-16" : "ml-64"

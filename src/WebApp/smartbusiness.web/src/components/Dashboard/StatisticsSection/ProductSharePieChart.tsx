@@ -5,32 +5,28 @@ import type { EnrichedTransaction } from "../../../models/transaction";
 
 interface ProductSharePieChartProps {
   transactions: EnrichedTransaction[];
+  barColor?: string;
+  serviceColor?: string;
 }
 
 export const ProductSharePieChart: React.FC<ProductSharePieChartProps> = ({
   transactions,
+  barColor = "#2563eb",
+  serviceColor = "#a21caf",
 }) => {
-  const sumByProduct: { [productId: string]: number } = {};
+  let productSum = 0;
+  let serviceSum = 0;
   transactions.forEach((t) => {
-    sumByProduct[t.itemName] = (sumByProduct[t.itemId] || 0) + t.totalAmount;
+    if (t.itemType === "product") productSum += t.totalAmount;
+    else if (t.itemType === "service") serviceSum += t.totalAmount;
   });
 
-  const productIds = Object.keys(sumByProduct);
   const data = {
-    labels: productIds,
+    labels: ["Produkty", "Usługi"],
     datasets: [
       {
-        data: productIds.map((id) => sumByProduct[id]),
-        backgroundColor: [
-          "#2563eb",
-          "#22d3ee",
-          "#f59e42",
-          "#f43f5e",
-          "#a21caf",
-          "#16a34a",
-          "#fea308",
-          "#dea308",
-        ],
+        data: [productSum, serviceSum],
+        backgroundColor: [barColor, serviceColor],
       },
     ],
   };

@@ -20,21 +20,24 @@ import { parseISO, format } from "date-fns";
 import type { EnrichedTransaction } from "../../../models/transaction";
 
 interface AvgTransactionValueChartProps {
-    transactions: EnrichedTransaction[];
+  transactions: EnrichedTransaction[];
   groupBy: "day" | "month" | "year";
   barColor: string;
+  serviceColor?: string;
 }
 
 export const AvgTransactionValueChart: React.FC<
   AvgTransactionValueChartProps
-> = ({ transactions, groupBy, barColor }) => {
-  const sumByGroup: { [key: string]: number } = {};
-  const countByGroup: { [key: string]: number } = {};
+> = ({ transactions, groupBy, barColor, serviceColor = "#a21caf" }) => {
+  // Dwie serie: produkty i usługi
+  const sumByGroupProduct: { [key: string]: number } = {};
+  const countByGroupProduct: { [key: string]: number } = {};
+  const sumByGroupService: { [key: string]: number } = {};
+  const countByGroupService: { [key: string]: number } = {};
 
   transactions.forEach((t) => {
     const date = parseISO(t.createdAt);
     let key = "";
-
     if (groupBy === "day") {
       key = format(date, "yyyy-MM-dd");
     } else if (groupBy === "month") {
@@ -42,14 +45,23 @@ export const AvgTransactionValueChart: React.FC<
     } else if (groupBy === "year") {
       key = format(date, "yyyy");
     }
-
-    sumByGroup[key] = (sumByGroup[key] || 0) + t.totalAmount;
-    countByGroup[key] = (countByGroup[key] || 0) + 1;
+    if (t.itemType === "product") {
+      sumByGroupProduct[key] = (sumByGroupProduct[key] || 0) + t.totalAmount;
+      countByGroupProduct[key] = (countByGroupProduct[key] || 0) + 1;
+    } else if (t.itemType === "service") {
+      sumByGroupService[key] = (sumByGroupService[key] || 0) + t.totalAmount;
+      countByGroupService[key] = (countByGroupService[key] || 0) + 1;
+    }
   });
 
-  const keys = Object.keys(sumByGroup).sort();
+  const allKeys = Array.from(
+    new Set([
+      ...Object.keys(sumByGroupProduct),
+      ...Object.keys(sumByGroupService),
+    ]),
+  ).sort();
 
-  const displayLabels = keys.map((k) => {
+  const displayLabels = allKeys.map((k) => {
     if (groupBy === "day") {
       return format(parseISO(k), "dd.MM.yyyy");
     }
@@ -59,7 +71,6 @@ export const AvgTransactionValueChart: React.FC<
     if (groupBy === "year") {
       return k;
     }
-
     return k;
   });
 
@@ -67,12 +78,26 @@ export const AvgTransactionValueChart: React.FC<
     labels: displayLabels,
     datasets: [
       {
-        label: "Średnia wartość transakcji",
-        data: keys.map((k) =>
-          countByGroup[k] ? sumByGroup[k] / countByGroup[k] : 0,
+        label: "Średnia wartość transakcji (produkty)",
+        data: allKeys.map((k) =>
+          countByGroupProduct[k]
+            ? sumByGroupProduct[k] / countByGroupProduct[k]
+            : 0,
         ),
         borderColor: barColor,
         backgroundColor: barColor + "33",
+        fill: true,
+        tension: 0.3,
+      },
+      {
+        label: "Średnia wartość transakcji (usługi)",
+        data: allKeys.map((k) =>
+          countByGroupService[k]
+            ? sumByGroupService[k] / countByGroupService[k]
+            : 0,
+        ),
+        borderColor: serviceColor,
+        backgroundColor: serviceColor + "33",
         fill: true,
         tension: 0.3,
       },

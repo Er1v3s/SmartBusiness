@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import React from "react";
 
 interface GenericModalProps {
@@ -24,7 +25,9 @@ const GenericModal: React.FC<GenericModalProps> = ({
           onClick={onClose}
           aria-label="Zamknij"
         >
-          <span className="text-2xl">×</span>
+          <span className="text-2xl">
+            <X />
+          </span>
         </button>
         {title && (
           <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-100">

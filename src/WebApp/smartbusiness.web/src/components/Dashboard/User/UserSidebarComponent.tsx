@@ -12,8 +12,7 @@ export const UserSidebarComponent = () => {
       </div>
 
       <NavLink
-        to="/dashboard/user"
-        end
+        to="summary"
         className={({ isActive }) =>
           `flex w-full min-w-[180px] items-center gap-3 rounded-lg px-4 py-3 text-lg font-medium transition-colors duration-150 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-900 dark:hover:text-indigo-200 ${
             isActive || location.pathname === "/dashboard"
@@ -25,7 +24,7 @@ export const UserSidebarComponent = () => {
         Podsumowanie
       </NavLink>
       <NavLink
-        to="/dashboard/user/edit-profile"
+        to="edit-profile"
         className={({ isActive }) =>
           `flex w-full min-w-[180px] items-center gap-3 rounded-lg px-4 py-3 text-lg font-medium transition-colors duration-150 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-900 dark:hover:text-indigo-200 ${
             isActive
@@ -37,7 +36,7 @@ export const UserSidebarComponent = () => {
         Edycja profilu
       </NavLink>
       <NavLink
-        to="/dashboard/user/change-password"
+        to="change-password"
         className={({ isActive }) =>
           `flex w-full min-w-[180px] items-center gap-3 rounded-lg px-4 py-3 text-lg font-medium transition-colors duration-150 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-900 dark:hover:text-indigo-200 ${
             isActive
@@ -49,7 +48,7 @@ export const UserSidebarComponent = () => {
         Zmień hasło
       </NavLink>
       <NavLink
-        to="/dashboard/user/stats"
+        to="stats"
         className={({ isActive }) =>
           `flex w-full min-w-[180px] items-center gap-3 rounded-lg px-4 py-3 text-lg font-medium transition-colors duration-150 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-900 dark:hover:text-indigo-200 ${
             isActive
@@ -61,7 +60,7 @@ export const UserSidebarComponent = () => {
         Statystyki
       </NavLink>
       <NavLink
-        to="/dashboard/user/delete-account"
+        to="delete-account"
         className={({ isActive }) =>
           `flex w-full min-w-[180px] items-center gap-3 rounded-lg px-4 py-3 text-lg font-medium transition-colors duration-150 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-900 dark:hover:text-indigo-200 ${
             isActive

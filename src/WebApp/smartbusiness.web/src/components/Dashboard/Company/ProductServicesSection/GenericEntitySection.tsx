@@ -112,13 +112,15 @@ export default function GenericEntitySection<
     fetchAll();
   }, [fetchAll]);
 
-  // --- Search & filter (simple, only by string fields) ---
+  // --- Search & filter ---
   const filtered = entities.filter((e) => {
     if (!search) return true;
     const s = search.toLowerCase();
     return Object.keys(e as object).some((key) => {
       const v = (e as Record<string, unknown>)[key];
-      return typeof v === "string" && v.toLowerCase().includes(s);
+      if (typeof v === "string" && v.toLowerCase().includes(s)) return true;
+      if (typeof v === "number" && v.toString().includes(s)) return true;
+      return false;
     });
   });
 
@@ -289,7 +291,7 @@ export default function GenericEntitySection<
         showFilter={false}
       />
 
-      {/* Tabela */}
+      {/* Table */}
       <div className="overflow-x-auto rounded-lg bg-white shadow dark:bg-gray-800">
         {loading ? (
           <div className="p-8 text-center text-gray-400">Ładowanie...</div>
@@ -326,7 +328,7 @@ export default function GenericEntitySection<
         )}
       </div>
 
-      {/* Paginacja */}
+      {/* Pagination */}
       <GenericPagination
         page={page}
         pageCount={pageCount}
@@ -338,7 +340,7 @@ export default function GenericEntitySection<
         }}
       />
 
-      {/* Modal edycji */}
+      {/* Editing Modal */}
       <GenericModal
         open={modalOpen}
         title={editModalTitle}

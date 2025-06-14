@@ -1,4 +1,3 @@
-// App.tsx
 import React, { type JSX } from "react";
 import {
   BrowserRouter as Router,
@@ -6,22 +5,25 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import "./App.css";
+import { Outlet } from "react-router-dom";
 import { Navigation } from "./components/Navigation/Navigation";
 import { useAuth } from "./context/auth/AuthContext";
+import { AuthProvider } from "./context/auth/AuthProvider";
+import { TransactionProvider } from "./context/transaction/TransactionProvider";
+import { ServiceProvider } from "./context/service/ServiceProvider";
+import { AlertProvider } from "./context/alert/AlertContext";
+import { AccountProvider } from "./context/account/AccountProvider";
+import { CompanyProvider } from "./context/company/CompanyProvider";
+import { ProductProvider } from "./context/product/ProductProvider";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/Auth/LoginPage";
 import { RegisterPage } from "./pages/Auth/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
-import { AuthProvider } from "./context/auth/AuthProvider";
-import { AccountProvider } from "./context/account/AccountProvider";
-import { AlertProvider } from "./context/alert/AlertContext";
+import { UserPage } from "./pages/User/UserPage";
+import { CompanyPage } from "./pages/Company/CompanyPage";
 import { ForgotPassword } from "./pages/Auth/ForgotPassword";
 import { ResetPassword } from "./pages/Auth/ResetPassword";
-import "./App.css";
-import { UserPage } from "./pages/User/UserPage";
-import { CompanyProvider } from "./context/company/CompanyProvider";
-import { ProductProvider } from "./context/product/ProductProvider";
-import { Outlet } from "react-router-dom";
 import { SummaryComponent } from "./components/Dashboard/User/Summary";
 import { ChangePasswordComponent } from "./components/Dashboard/User/ChangePassword";
 import { StatsComponent } from "./components/Dashboard/User/Stats";
@@ -34,13 +36,12 @@ import { TransactionsSection } from "./components/Dashboard/Company/Transactions
 import { RegisterSaleSection } from "./components/Dashboard/Company/RegisterSaleSection";
 import { ServicesSection } from "./components/Dashboard/Company/ServicesSection";
 import { ProductsSection } from "./components/Dashboard/Company/ProductsSection";
-import { ServiceProvider } from "./context/service/ServiceProvider";
-import { TransactionProvider } from "./context/transaction/TransactionProvider";
-import { CompanyPage } from "./pages/Company/CompanyPage";
 import { CompanySummary } from "./components/Dashboard/Company/CompanySettings/CompanySummary";
 import { CompanyAdd } from "./components/Dashboard/Company/CompanySettings/CompanyAdd";
 import { CompanyList } from "./components/Dashboard/Company/CompanySettings/CompanyList";
 import { CompanyDelete } from "./components/Dashboard/Company/CompanySettings/CompanyDelete";
+import { PredictionSection } from "./components/Dashboard/Company/PredictionSection";
+import { PredictionProvider } from "./context/prediction/PredictionProvider";
 
 // Private Route component checks if the user is authenticated
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -51,13 +52,19 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
 // PublicRoute component checks if the user is not authenticated
 const PublicRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { isAuthenticated } = useAuth();
-  return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
+  return !isAuthenticated ? (
+    children
+  ) : (
+    <Navigate to="/dashboard/summary" replace />
+  );
 };
 
 // RedirectRoute component redirects based on authentication status
 const RedirectRoute: React.FC = () => {
   const { isAuthenticated } = useAuth();
-  return <Navigate to={isAuthenticated ? "/dashboard" : "/home"} replace />;
+  return (
+    <Navigate to={isAuthenticated ? "/dashboard/summary" : "/home"} replace />
+  );
 };
 
 export const App: React.FC = () => {
@@ -79,15 +86,14 @@ export const App: React.FC = () => {
           >
             <Route path="dashboard" element={<DashboardPage />}>
               <Route index element={<DashboardHomeSection />} />
-              <Route path="company/calendar" element={<CalendarSection />} />
-              <Route path="company/sale" element={<RegisterSaleSection />} />
-              <Route path="company/services" element={<ServicesSection />} />
-              <Route path="company/products" element={<ProductsSection />} />
-              <Route
-                path="company/transactions"
-                element={<TransactionsSection />}
-              />
-              <Route path="company/stats" element={<StatisticsSection />} />
+              <Route path="summary" element={<DashboardHomeSection />} />
+              <Route path="calendar" element={<CalendarSection />} />
+              <Route path="sales-panel" element={<RegisterSaleSection />} />
+              <Route path="services" element={<ServicesSection />} />
+              <Route path="products" element={<ProductsSection />} />
+              <Route path="transactions" element={<TransactionsSection />} />
+              <Route path="statistics" element={<StatisticsSection />} />
+              <Route path="predictions" element={<PredictionSection />} />
             </Route>
 
             <Route path="dashboard/company/settings" element={<CompanyPage />}>
@@ -98,8 +104,9 @@ export const App: React.FC = () => {
               <Route path="delete" element={<CompanyDelete />} />
             </Route>
 
-            <Route path="dashboard/user" element={<UserPage />}>
-              <Route index element={<SummaryComponent />} />
+            <Route path="dashboard/user/settings" element={<UserPage />}>
+              <Route index path="summary" element={<SummaryComponent />} />
+              <Route path="summary" element={<SummaryComponent />} />
               <Route path="edit-profile" element={<EditProfileComponent />} />
               <Route
                 path="change-password"
@@ -109,10 +116,6 @@ export const App: React.FC = () => {
               <Route
                 path="delete-account"
                 element={<DeleteAccountComponent />}
-              />
-              <Route
-                path="*"
-                element={<Navigate to="/dashboard/user" replace />}
               />
             </Route>
           </Route>
@@ -130,7 +133,7 @@ export const App: React.FC = () => {
             <Route path="register" element={<RegisterPage />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
-            {/* fallback na nieistniejące publiczne podstrony */}
+            {/* fallback when page does not exist */}
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Route>
 
@@ -150,7 +153,9 @@ const AppWithProvider: React.FC = () => (
           <ProductProvider>
             <ServiceProvider>
               <TransactionProvider>
-                <App />
+                <PredictionProvider>
+                  <App />
+                </PredictionProvider>
               </TransactionProvider>
             </ServiceProvider>
           </ProductProvider>

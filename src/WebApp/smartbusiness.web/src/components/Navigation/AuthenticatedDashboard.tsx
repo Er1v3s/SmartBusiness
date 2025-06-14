@@ -30,7 +30,7 @@ export const AuthenticatedDashboard: React.FC = () => {
       <div className="shadow-sm dark:border-b">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            <NavLink to="/dashboard">
+            <NavLink to="/dashboard/summary" end>
               <div className="flex items-center space-x-2">
                 <img
                   src={logo_no_text}
@@ -59,7 +59,7 @@ export const AuthenticatedDashboard: React.FC = () => {
               <CompanySelectionComponent />
 
               <ThemeToggleButton />
-              <NavLink to="/dashboard/user">
+              <NavLink to="/dashboard/user/settings/summary" end>
                 <User className="hover:purple-600 h-8 w-8 cursor-pointer text-indigo-500 hover:scale-110" />
               </NavLink>
               <span className="text-gray-700 dark:text-gray-200">

@@ -6,15 +6,20 @@ interface TotalVsNetAmountChartProps {
   transactions: Transaction[];
   groupBy: "day" | "month" | "year";
   barColor: string;
+  serviceColor?: string;
 }
 
 export const TotalVsNetAmountChart: React.FC<TotalVsNetAmountChartProps> = ({
   transactions,
   groupBy,
   barColor,
+  serviceColor = "#a21caf",
 }) => {
-  const totalByGroup: { [key: string]: number } = {};
-  const netByGroup: { [key: string]: number } = {};
+  // Split into two series: products and services, for both Brutto and Netto
+  const totalByGroupProduct: { [key: string]: number } = {};
+  const netByGroupProduct: { [key: string]: number } = {};
+  const totalByGroupService: { [key: string]: number } = {};
+  const netByGroupService: { [key: string]: number } = {};
 
   transactions.forEach((t) => {
     const date = parseISO(t.createdAt);
@@ -26,14 +31,27 @@ export const TotalVsNetAmountChart: React.FC<TotalVsNetAmountChartProps> = ({
     } else if (groupBy === "year") {
       key = format(date, "yyyy");
     }
-
-    totalByGroup[key] = (totalByGroup[key] || 0) + t.totalAmount;
-    netByGroup[key] = (netByGroup[key] || 0) + t.totalAmountMinusTax;
+    if (t.itemType === "product") {
+      totalByGroupProduct[key] =
+        (totalByGroupProduct[key] || 0) + t.totalAmount;
+      netByGroupProduct[key] =
+        (netByGroupProduct[key] || 0) + t.totalAmountMinusTax;
+    } else if (t.itemType === "service") {
+      totalByGroupService[key] =
+        (totalByGroupService[key] || 0) + t.totalAmount;
+      netByGroupService[key] =
+        (netByGroupService[key] || 0) + t.totalAmountMinusTax;
+    }
   });
 
-  const keys = Object.keys(totalByGroup).sort();
+  const allKeys = Array.from(
+    new Set([
+      ...Object.keys(totalByGroupProduct),
+      ...Object.keys(totalByGroupService),
+    ]),
+  ).sort();
 
-  const displayLabels = keys.map((k) => {
+  const displayLabels = allKeys.map((k) => {
     if (groupBy === "day") {
       return format(parseISO(k), "dd.MM.yyyy");
     }
@@ -43,7 +61,6 @@ export const TotalVsNetAmountChart: React.FC<TotalVsNetAmountChartProps> = ({
     if (groupBy === "year") {
       return k;
     }
-
     return k;
   });
 
@@ -51,14 +68,24 @@ export const TotalVsNetAmountChart: React.FC<TotalVsNetAmountChartProps> = ({
     labels: displayLabels,
     datasets: [
       {
-        label: "Brutto (TotalAmount)",
-        data: keys.map((k) => totalByGroup[k]),
+        label: "Brutto (Produkty)",
+        data: allKeys.map((k) => totalByGroupProduct[k] || 0),
         backgroundColor: barColor,
       },
       {
-        label: "Netto (TotalAmountMinusTax)",
-        data: keys.map((k) => netByGroup[k]),
-        backgroundColor: "#16a34a",
+        label: "Brutto (Usługi)",
+        data: allKeys.map((k) => totalByGroupService[k] || 0),
+        backgroundColor: serviceColor,
+      },
+      {
+        label: "Netto (Produkty)",
+        data: allKeys.map((k) => netByGroupProduct[k] || 0),
+        backgroundColor: barColor + "99",
+      },
+      {
+        label: "Netto (Usługi)",
+        data: allKeys.map((k) => netByGroupService[k] || 0),
+        backgroundColor: serviceColor + "99",
       },
     ],
   };

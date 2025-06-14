@@ -19,34 +19,34 @@ const events: CalendarEvent[] = [
   {
     id: "1",
     calendarId: "cal1",
-    title: "Lunch",
+    title: "Makijaż permanentny ust",
     category: "time",
-    start: "2025-06-04T12:00:00",
-    end: "2025-06-04T13:30:00",
+    start: "2025-06-14T11:00:00",
+    end: "2025-06-14T14:00:00",
   },
   {
-    id: "2",
+    id: "1",
     calendarId: "cal1",
-    title: "Coffee Break",
+    title: "Peeling węglowy",
     category: "time",
-    start: "2025-06-04T15:00:00",
-    end: "2025-06-04T15:30:00",
+    start: "2025-06-14T14:05:00",
+    end: "2025-06-14T14:35:00",
   },
   {
-    id: "3",
+    id: "1",
     calendarId: "cal1",
-    title: "Team Meeting",
+    title: "Lipoliza",
     category: "time",
-    start: "2025-06-05T09:00:00",
-    end: "2025-06-05T10:00:00",
+    start: "2025-06-14T15:00:00",
+    end: "2025-06-14T15:30:00",
   },
   {
-    id: "4",
+    id: "1",
     calendarId: "cal1",
-    title: "Project Review",
+    title: "Oczyszczanie manulane skóry",
     category: "time",
-    start: "2025-06-06T14:00:00",
-    end: "2025-06-06T15:00:00",
+    start: "2025-06-14T15:35:00",
+    end: "2025-06-14T16:35:00",
   },
 ];
 
@@ -120,6 +120,7 @@ export const CalendarSection = () => {
             Day
           </CalendarViewButton>
         </div>
+
         {/* Centered navigation buttons */}
         <div className="flex justify-center gap-2">
           <button

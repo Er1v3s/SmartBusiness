@@ -7,7 +7,6 @@ import { HomeFeatures } from "../components/Home/HomeFeatures";
 import { HomeTechnologies } from "../components/Home/HomeTechnologies";
 import { HomeTechDescriptionSection } from "../components/Home/HomeTechDescriptionSection";
 
-// Home Page Component
 export const HomePage: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();

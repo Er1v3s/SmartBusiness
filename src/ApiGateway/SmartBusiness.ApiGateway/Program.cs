@@ -1,13 +1,9 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using HealthChecks.UI.Core;
-using HealthChecks.UI.Configuration; // Add this namespace
-using HealthChecks.UI;
 
 namespace SmartBusiness.ApiGateway
 {
