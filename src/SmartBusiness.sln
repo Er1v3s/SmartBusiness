@@ -78,10 +78,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "z_seeder", "z_seeder", "{E9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbSeeder", "DbSeeder\DbSeeder.csproj", "{92A5DBE0-BD0D-422D-A0EC-4D381B791C25}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ml-predictor", "ml-predictor", "{4263D4DF-DDD8-4C78-8B56-468476934EB0}"
-EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ML.Service", "ML.Service\ML.Service.pyproj", "{2C2D3C8C-BD4C-4B9B-AA11-AF0EBB7D412B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
