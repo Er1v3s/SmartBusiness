@@ -271,6 +271,10 @@ Jaeger Trace: <div><img src="./docs/apple-macbookpro14-mockup-grafana&jaeger/jae
 ### Running
 > TODO
 <!-- 1. Launch the front-end:
+4. Start microservices and the API Gateway as per their documentation.
+
+### Running
+1. Launch the front-end:
    ```bash
    npm run dev
    ```
