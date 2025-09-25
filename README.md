@@ -250,13 +250,14 @@ Jaeger Trace: <div><img src="./docs/apple-macbookpro14-mockup-grafana&jaeger/jae
 ## Getting Started
 
 ### Prerequisites
-- **Node.js** (v16+)
-- **.NET SDK** (v6+)
-- **Python** (v3.8+)
+- **Node.js** (v22+)
+- **.NET SDK** (v9+)
+- **Python** (v3+)
 - **MSSQL**, **MongoDB**, **Redis**, **RabbitMQ**
 
 ### Installation
-1. Clone the repository:
+> TODO
+<!-- 1. Clone the repository:
    ```bash
    git clone <repository-url>
    ```
@@ -265,6 +266,11 @@ Jaeger Trace: <div><img src="./docs/apple-macbookpro14-mockup-grafana&jaeger/jae
    cd frontend && npm install
    ```
 3. Configure environment variables for databases, APIs, and RabbitMQ.
+4. Start microservices and the API Gateway as per their documentation. -->
+
+### Running
+> TODO
+<!-- 1. Launch the front-end:
 4. Start microservices and the API Gateway as per their documentation.
 
 ### Running
@@ -273,7 +279,7 @@ Jaeger Trace: <div><img src="./docs/apple-macbookpro14-mockup-grafana&jaeger/jae
    npm run dev
    ```
 2. Start each microservice and the API Gateway.
-3. Access the application at `http://localhost:3000`.
+3. Access the application at `http://localhost:3000`. -->
 
 
 ## License
